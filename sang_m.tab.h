@@ -39,13 +39,13 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     IDENT = 258,
-     NUMBER = 259
+     FUNC = 258,
+     INICIO = 259
    };
 #endif
 /* Tokens.  */
-#define IDENT 258
-#define NUMBER 259
+#define FUNC 258
+#define INICIO 259
 
 
 

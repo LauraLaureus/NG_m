@@ -24,7 +24,7 @@
     extern int yylex(void);
     %}
 
-%token IDENT NUMBER
+%token FUNC INICIO
 
 %union {
     Expression *exp;  /* For the expressions. Since it is a pointer, no problem. */
@@ -33,45 +33,22 @@
 }
 
 /* Lets inform Bison about the type of each terminal and non-terminal */
-%type <exp>   exp
-%type <value> NUMBER
-%type <ident> IDENT
+//%type <exp>   inicio matExp
+//%type <value> NUMBER
+//%type <ident> IDENT
 
 /* Precedence information to resolve ambiguity */
 %left '+'
 %left '*'
+
 %%
 
-prompt : exp  '\n'             {
-    if ($1) {
-        cout << $1->value () << endl;
-        clear_stack ();
-    }
-}
-|  prompt  exp  '\n'    {
-    if ($2) {
-        cout << $2->value () << endl;
-        clear_stack ();
-    }
-}
-| error '\n'            { clear_stack (); }
+inicio:
+| FUNC INICIO '{' '}' {printf("Hey yu!");}
 ;
 
-exp : exp '+' exp              {
-    $$ = new Plus ($1, $3);
-    nodes.pop ();  //  The childreen are handled by Plus so we
-    nodes.pop ();  // take them of the allocated nodes stack.
-    nodes.push ($$);
-}
-| exp '*' exp              {
-    $$ = new Times ($1, $3);
-    nodes.pop ();  // The same as above.
-    nodes.pop ();
-    nodes.push ($$);
-}
-| IDENT                    { $$ = new Ident (&vars [$1 - 'A']); nodes.push ($$); }
-| NUMBER                   { $$ = new Number ($1); nodes.push ($$); }
-;
+
+
 %%
 
 
