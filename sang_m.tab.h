@@ -39,27 +39,45 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     FUNC = 258,
-     INICIO = 259
+     PLUS = 258,
+     MINUS = 259,
+     ASTERISK = 260,
+     FSLASH = 261,
+     EQUALS = 262,
+     PRINT = 263,
+     LPAREN = 264,
+     RPAREN = 265,
+     SEMICOLON = 266,
+     VARIABLE = 267,
+     NUMBER = 268
    };
 #endif
 /* Tokens.  */
-#define FUNC 258
-#define INICIO 259
+#define PLUS 258
+#define MINUS 259
+#define ASTERISK 260
+#define FSLASH 261
+#define EQUALS 262
+#define PRINT 263
+#define LPAREN 264
+#define RPAREN 265
+#define SEMICOLON 266
+#define VARIABLE 267
+#define NUMBER 268
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 29 "sang_m.y"
+#line 14 "sang_m.y"
 {
-    Expression *exp;  /* For the expressions. Since it is a pointer, no problem. */
-    int       value;  /* For the lexical analyser. NUMBER tokens */
-    char      ident;  /* For the lexical analyser. IDENT tokens */
+    int      int_val;
+    double   double_val;
+    string* str_val;
 }
 /* Line 1529 of yacc.c.  */
-#line 63 "sang_m.tab.h"
+#line 81 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

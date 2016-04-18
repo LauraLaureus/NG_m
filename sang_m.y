@@ -1,79 +1,44 @@
+//  BISON  file  example1.y
 %{
-    #include <iostream.h>
-    #include <cctype>
-    #include <cstring>
-    #include <vector>
-    #include <stack>
-    
-    #include "ast.h"
-    
-    // Bring the standard library into the
-    // global namespace
-    using namespace std;
-    
-    // Prototypes to keep the compiler happy
-    void yyerror (const char *error);
-    int  yylex ();
-    void clear_stack ();
-    
-    // Variables
-    int vars ['Z'- 'A' + 1];
-    
-    // stack class that takes care of all the nodes that were allocated
-    stack <Expression *> nodes;
-    extern int yylex(void);
+    #include  <stdio.h>
+    #include  <stdlib.h>
+    #include  <string>
+    #include  <map>
+    using  namespace  std;
+    map <string ,double > vars;    // map  from  variable  name to value
+    extern  int  yylex ();
+    extern  void  yyerror(char *);
+    void  Div0Error(void);
+    void  UnknownVarError(string s);
     %}
-
-%token FUNC INICIO
-
 %union {
-    Expression *exp;  /* For the expressions. Since it is a pointer, no problem. */
-    int       value;  /* For the lexical analyser. NUMBER tokens */
-    char      ident;  /* For the lexical analyser. IDENT tokens */
+    int      int_val;
+    double   double_val;
+    string* str_val;
 }
-
-/* Lets inform Bison about the type of each terminal and non-terminal */
-//%type <exp>   inicio matExp
-//%type <value> NUMBER
-//%type <ident> IDENT
-
-/* Precedence information to resolve ambiguity */
-%left '+'
-%left '*'
-
+%token <int_val >     PLUS  MINUS  ASTERISK  FSLASH  EQUALS  PRINT  LPAREN  RPAREN  SEMICOLON
+%token <str_val >     VARIABLE
+%token <double_val > NUMBER
+%type <double_val > expression;
+%type <double_val > inner1;
+%type <double_val > inner2;
+%start  parsetree
 %%
-
-inicio:
-| FUNC INICIO '{' '}' {printf("Hey yu!");}
-;
-
-
-
+parsetree:     lines;
+lines:          lines  line | line;
+line:           PRINT  expression  SEMICOLON             {printf("%lf\n",$2);}
+| VARIABLE  EQUALS  expression  SEMICOLON {vars[*$1] = $3; delete  $1;}
+expression:    expression  PLUS  inner1                  {$$ = $1 + $3;}
+| expression  MINUS  inner1                 {$$ = $1 - $3;}
+| inner1                                     {$$ = $1;};
+inner1:         inner1  ASTERISK  inner2                  {$$ = $1 * $3;}
+| inner1  FSLASH  inner2
+{if($3 == 0)  Div0Error ();  else $$ = $1 / $3;}
+| inner2                                     {$$ = $1;};
+inner2:         VARIABLE
+{if(!vars.count(*$1))  UnknownVarError (*$1); else $$ = vars[*$1];  delete  $1;}
+| NUMBER                                     {$$ = $1;}
+| LPAREN  expression  RPAREN                {$$ = $2;};
 %%
-
-
-void yyerror (const char *error)
-{
-    cout << error << endl;
-}
-
-
-
-// Deletes all the nodes that were allocated
-void clear_stack ()
-{
-    while (!nodes.empty ()) {
-        delete nodes.top ();
-        nodes.pop ();
-    }
-}
-
-int main (int argc, char** argv){
-    
-    if(argc > 1)
-    yyin=fopen(argv[1], “rt”);
-    else
-    yyin=fopen(“entrada.txt”,”rt”);
-    yyparse();
-    return 0;
-}
+void  Div0Error(void) {printf("Error: division  by zero\n"); exit (0);}
+void  UnknownVarError(string s) {printf("Error: %s does  not  exist !\n", s.c_str ());  exit (0);}
