@@ -39,45 +39,43 @@
    /* Put the tokens into the symbol table, so that GDB and other debuggers
       know about them.  */
    enum yytokentype {
-     PLUS = 258,
-     MINUS = 259,
-     ASTERISK = 260,
-     FSLASH = 261,
-     EQUALS = 262,
-     PRINT = 263,
-     LPAREN = 264,
-     RPAREN = 265,
-     SEMICOLON = 266,
-     VARIABLE = 267,
-     NUMBER = 268
+     ASIGNA = 258,
+     ABRECORCHETES = 259,
+     CIERRACORCHETES = 260,
+     COMA = 261,
+     VARIABLE = 262,
+     REAL = 263,
+     PUNTOYCOMA = 264,
+     VECTOR = 265,
+     VALORREAL = 266,
+     VALORVECTOR = 267
    };
 #endif
 /* Tokens.  */
-#define PLUS 258
-#define MINUS 259
-#define ASTERISK 260
-#define FSLASH 261
-#define EQUALS 262
-#define PRINT 263
-#define LPAREN 264
-#define RPAREN 265
-#define SEMICOLON 266
-#define VARIABLE 267
-#define NUMBER 268
+#define ASIGNA 258
+#define ABRECORCHETES 259
+#define CIERRACORCHETES 260
+#define COMA 261
+#define VARIABLE 262
+#define REAL 263
+#define PUNTOYCOMA 264
+#define VECTOR 265
+#define VALORREAL 266
+#define VALORVECTOR 267
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 14 "sang_m.y"
+#line 15 "sang_m.y"
 {
     int      int_val;
     double   double_val;
     string* str_val;
 }
 /* Line 1529 of yacc.c.  */
-#line 81 "sang_m.tab.h"
+#line 79 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

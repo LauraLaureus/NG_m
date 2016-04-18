@@ -1,4 +1,7 @@
-a=177;
-b=99.3;
-goulash = a*(a-b)/(a+b);
-print goulash;
+REAL alcachofa ;
+VECTOR fuego ;
+REAL cocido  = 2;
+[2]
+[4,7]
+
+[5,8,9,4.4]

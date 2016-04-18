@@ -3,27 +3,31 @@
     #include  <stdlib.h>
     #include  <string>
     using  namespace  std;
-    #include "sang_m.tab.h"   //  output  of  bison on  example1.y
+    #include "sang_m.tab.h"   //  output  of  bison
     void  yyerror(char *);
     int  yyparse(void);
 %}
 %option noyywrap
 %option yylineno
 
+digitos [0-9]
+letras [a-zA-Z]
+ignora " "|\t|\n
+
 %%
-[ \t\n]+                  ;   // do  nothing  on  whitespace
-"print"                   return  PRINT;
-"="                        {return  EQUALS;}
-"+"                        {return  PLUS;}
-"-"                        {return  MINUS;}
-"*"                        {return  ASTERISK;}
-"/"                        {return  FSLASH;}
-"("                        {return  LPAREN;}
-")"                        {return  RPAREN;}
-";"                        {return  SEMICOLON;}
-[a-zA -Z][a-zA -Z0 -9]*    {yylval.str_val = new  string(yytext );  return  VARIABLE ;}
-[0 -9][0 -9]*(.[0 -9]+)?   {yylval.double_val = atof(yytext );  return  NUMBER ;}
-<<EOF>>             {printf("END\n");exit(0);}
+"REAL"                     {return REAL;}
+"VECTOR"                   {return VECTOR;}
+";"                        {return PUNTOYCOMA;}
+"="                        {return ASIGNA;}
+"["                        {return ABRECORCHETES;}
+"]"                        {return CIERRACORCHETES;}
+","                        {return COMA;}
+{digitos}+("."{digitos})* {yylval.double_val=atof(yytext);return VALORREAL;}
+{letras}({letras}|{digitos})*    {yylval.str_val = new  string(yytext ); return  VARIABLE;}
+{ignora}+ {;}
+<<EOF>>             {printf("\nEND\n");exit(0);}
+.   {yyerror("Unknown character\n"); exit(-1);}
+
 %%
 void  yyerror(char* str) {printf("Parse  Error: \n%s\n",str );}
 
