@@ -44,6 +44,7 @@ ignora " "|\t|\n
 "inicio"                   {return INICIO;}
 "{"                        {return ABRELLAVES;}
 "}"                        {return CIERRALLAVES;}
+"global"                   {return GLOBAL;}
 {digitos}+("."{digitos})* {yylval.double_val=atof(yytext);return VALORREAL;}
 {letras}({letras}|{digitos})*    {yylval.str_val = new  string(yytext ); return  VARIABLE;}
 {ignora}+ {;}

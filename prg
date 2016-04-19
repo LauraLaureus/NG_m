@@ -1,3 +1,4 @@
+global REAL singapur;
 func inicio {
 REAL alcachofa ;
 VECTOR fuego ;
@@ -10,3 +11,5 @@ VECTOR ciguna = [5,8;9,4.4];
 lee ;
 escribe fish ;
 }
+
+global VECTOR chachipistachi;
