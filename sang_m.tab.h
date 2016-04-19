@@ -64,12 +64,14 @@
      ABRELLAVES = 280,
      CIERRALLAVES = 281,
      GLOBAL = 282,
-     VARIABLE = 283,
-     REAL = 284,
-     PUNTOYCOMA = 285,
-     VECTOR = 286,
-     VALORREAL = 287,
-     VALORVECTOR = 288
+     ABREPARENTESIS = 283,
+     CIERRAPARENTESIS = 284,
+     VARIABLE = 285,
+     REAL = 286,
+     PUNTOYCOMA = 287,
+     VECTOR = 288,
+     VALORREAL = 289,
+     VALORVECTOR = 290
    };
 #endif
 /* Tokens.  */
@@ -98,12 +100,14 @@
 #define ABRELLAVES 280
 #define CIERRALLAVES 281
 #define GLOBAL 282
-#define VARIABLE 283
-#define REAL 284
-#define PUNTOYCOMA 285
-#define VECTOR 286
-#define VALORREAL 287
-#define VALORVECTOR 288
+#define ABREPARENTESIS 283
+#define CIERRAPARENTESIS 284
+#define VARIABLE 285
+#define REAL 286
+#define PUNTOYCOMA 287
+#define VECTOR 288
+#define VALORREAL 289
+#define VALORVECTOR 290
 
 
 
@@ -118,7 +122,7 @@ typedef union YYSTYPE
     vector<double> *vector;
 }
 /* Line 1529 of yacc.c.  */
-#line 122 "sang_m.tab.h"
+#line 126 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

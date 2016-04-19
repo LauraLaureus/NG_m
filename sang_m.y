@@ -18,7 +18,7 @@
     string*  str_val;
     vector<double> *vector;
 }
-%token <int_val >    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL
+%token <int_val >    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS
 %token <str_val >    VARIABLE REAL PUNTOYCOMA VECTOR
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
@@ -32,17 +32,27 @@
 %%
 
 
-parsetree: lines ;
+parsetree: espacios ;
 
-lines:  lines  line
+espacios:
+    |variablesGlobales espacios
+    |funcion espacios
+;
+
+variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR\n");}
+    ;
+
+funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n");}
+    |FUNC VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN \n");}
+
+lineas:  lineas  line
     | line
     ;
 
-line: declaracion PUNTOYCOMA {printf("DECLARACION \n");}
+line:
+    |declaracion PUNTOYCOMA {printf("DECLARACION \n");}
     |asignacion PUNTOYCOMA {printf("ASIGNA\n");}
     |expresion PUNTOYCOMA
-    |GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR");}
-    |FUNC INICIO ABRELLAVES  lines CIERRALLAVES;
     ;
 
 vectorNT: ABRECORCHETES elementos CIERRACORCHETES;
@@ -69,6 +79,11 @@ expresion: VALORREAL
         |INPUT {printf("lee");}
         |OUTPUT VARIABLE {printf("escribe");}
 ;
+
+parametros:
+        | declaracion
+        | declaracion COMA parametros
+        ;
 
 declaracion: REAL VARIABLE
             |VECTOR VARIABLE

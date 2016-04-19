@@ -13,3 +13,4 @@ escribe fish ;
 }
 
 global VECTOR chachipistachi;
+func inventadatotal (REAL azucar, VECTOR especias){}
