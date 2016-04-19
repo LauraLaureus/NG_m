@@ -47,6 +47,9 @@ ignora " "|\t|\n
 "global"                   {return GLOBAL;}
 ")"                        {return CIERRAPARENTESIS;}
 "("                        {return ABREPARENTESIS;}
+"devuelve"                 {return DEVUELVE;}
+"si"                        {return IF;}
+"mientras"                  {return WHILE;}
 {digitos}+("."{digitos})* {yylval.double_val=atof(yytext);return VALORREAL;}
 {letras}({letras}|{digitos})*    {yylval.str_val = new  string(yytext ); return  VARIABLE;}
 {ignora}+ {;}
