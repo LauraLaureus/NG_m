@@ -2,6 +2,8 @@
     #include  <stdio.h>
     #include  <stdlib.h>
     #include  <string>
+    #include <vector>
+    #include <map>
     using  namespace  std;
     #include "sang_m.tab.h"   //  output  of  bison
     void  yyerror(char *);
@@ -22,6 +24,26 @@ ignora " "|\t|\n
 "["                        {return ABRECORCHETES;}
 "]"                        {return CIERRACORCHETES;}
 ","                        {return COMA;}
+"espacio"                  {return RESERVAESPACIO;}
+"+"                        {return SUMA;}
+"-"                        {return MENOS;}
+"/"                        {return DIVIDE;}
+"*"                        {return MULTIPLICA;}
+"||"                       {return OR;}
+"&&"                       {return AND;}
+"!"                        {return NOT;}
+"=="                       {return IGUALVALOR;}
+"!="                       {return DISTINTOVALOR;}
+">"                        {return MAYORQUE;}
+">="                       {return MAYORIGUAL;}
+"<"                        {return MENORQUE;}
+"<="                       {return MENORIGUAL;}
+"lee"                      {return INPUT;}
+"escribe"                  {return OUTPUT;}
+"func"                     {return FUNC;}
+"inicio"                   {return INICIO;}
+"{"                        {return ABRELLAVES;}
+"}"                        {return CIERRALLAVES;}
 {digitos}+("."{digitos})* {yylval.double_val=atof(yytext);return VALORREAL;}
 {letras}({letras}|{digitos})*    {yylval.str_val = new  string(yytext ); return  VARIABLE;}
 {ignora}+ {;}

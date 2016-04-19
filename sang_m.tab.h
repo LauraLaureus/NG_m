@@ -43,12 +43,32 @@
      ABRECORCHETES = 259,
      CIERRACORCHETES = 260,
      COMA = 261,
-     VARIABLE = 262,
-     REAL = 263,
-     PUNTOYCOMA = 264,
-     VECTOR = 265,
-     VALORREAL = 266,
-     VALORVECTOR = 267
+     RESERVAESPACIO = 262,
+     SUMA = 263,
+     MENOS = 264,
+     DIVIDE = 265,
+     MULTIPLICA = 266,
+     OR = 267,
+     AND = 268,
+     NOT = 269,
+     IGUALVALOR = 270,
+     DISTINTOVALOR = 271,
+     MAYORQUE = 272,
+     MENORQUE = 273,
+     MAYORIGUAL = 274,
+     MENORIGUAL = 275,
+     INPUT = 276,
+     OUTPUT = 277,
+     FUNC = 278,
+     INICIO = 279,
+     ABRELLAVES = 280,
+     CIERRALLAVES = 281,
+     VARIABLE = 282,
+     REAL = 283,
+     PUNTOYCOMA = 284,
+     VECTOR = 285,
+     VALORREAL = 286,
+     VALORVECTOR = 287
    };
 #endif
 /* Tokens.  */
@@ -56,12 +76,32 @@
 #define ABRECORCHETES 259
 #define CIERRACORCHETES 260
 #define COMA 261
-#define VARIABLE 262
-#define REAL 263
-#define PUNTOYCOMA 264
-#define VECTOR 265
-#define VALORREAL 266
-#define VALORVECTOR 267
+#define RESERVAESPACIO 262
+#define SUMA 263
+#define MENOS 264
+#define DIVIDE 265
+#define MULTIPLICA 266
+#define OR 267
+#define AND 268
+#define NOT 269
+#define IGUALVALOR 270
+#define DISTINTOVALOR 271
+#define MAYORQUE 272
+#define MENORQUE 273
+#define MAYORIGUAL 274
+#define MENORIGUAL 275
+#define INPUT 276
+#define OUTPUT 277
+#define FUNC 278
+#define INICIO 279
+#define ABRELLAVES 280
+#define CIERRALLAVES 281
+#define VARIABLE 282
+#define REAL 283
+#define PUNTOYCOMA 284
+#define VECTOR 285
+#define VALORREAL 286
+#define VALORVECTOR 287
 
 
 
@@ -72,10 +112,11 @@ typedef union YYSTYPE
 {
     int      int_val;
     double   double_val;
-    string* str_val;
+    string*  str_val;
+    vector<double> *vector;
 }
 /* Line 1529 of yacc.c.  */
-#line 79 "sang_m.tab.h"
+#line 120 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

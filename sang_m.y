@@ -15,37 +15,67 @@
 %union {
     int      int_val;
     double   double_val;
-    string* str_val;
+    string*  str_val;
+    vector<double> *vector;
 }
-%token <int_val >     ASIGNA ABRECORCHETES CIERRACORCHETES COMA
+%token <int_val >    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES
 %token <str_val >    VARIABLE REAL PUNTOYCOMA VECTOR
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
 
 %start  parsetree
 
+%left SUMA MENOS
+%left DIVIDE MULTIPLICA
+%nonassoc OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MAYORIGUAL MENORQUE MENORIGUAL
+
 %%
 
 
-parsetree:     lines;
+parsetree:  FUNC INICIO ABRELLAVES  lines CIERRALLAVES;
 
 lines:          lines  line | line;
 
-line: //REAL {printf("Token:real \n");}
-    //|VARIABLE {printf("Token:nombre variable \n");}
-    //|PUNTOYCOMA {printf("Token: punto y coma");}
-    //|VECTOR {printf("Token: VECTOR");}
-    |REAL VARIABLE PUNTOYCOMA {printf("DECLARACION \n");}
-    |VECTOR VARIABLE PUNTOYCOMA {printf("DECLARA VECTOR\n");}
-    |REAL VARIABLE ASIGNA VALORREAL PUNTOYCOMA {printf("ASIGNA REAL\n");}
-|vectorNT {printf("VECTOR VALOR\n");}
-;
+line: declaracion PUNTOYCOMA {printf("DECLARACION \n");}
+    |asignacion PUNTOYCOMA {printf("ASIGNA\n");}
+    |expresion PUNTOYCOMA
+    ;
 
-vectorNT: ABRECORCHETES elementos CIERRACORCHETES ;
+vectorNT: ABRECORCHETES elementos CIERRACORCHETES;
 
 elementos: VALORREAL
         | VALORREAL COMA elementos
+        | VALORREAL PUNTOYCOMA elementos
+        ;
+expresion: VALORREAL
+        |VECTOR
+        |expresion SUMA expresion {printf("SUMA");}
+        |expresion MENOS expresion {printf("MENOS");}
+        |expresion DIVIDE expresion {printf("DIVIDE");}
+        |expresion MULTIPLICA expresion {printf("MULTIPLICA");}
+        |expresion OR expresion {printf("OR");}
+        |expresion AND expresion {printf("AND");}
+        |expresion NOT expresion {printf("NOT");}
+        |expresion IGUALVALOR expresion {printf("==");}
+        |expresion DISTINTOVALOR expresion {printf("!=");}
+        |expresion MAYORQUE expresion {printf(">");}
+        |expresion MAYORIGUAL expresion {printf(">=");}
+        |expresion MENORQUE expresion {printf("<");}
+        |expresion MENORIGUAL expresion {printf("<=");}
+        |INPUT {printf("lee");}
+        |OUTPUT VARIABLE {printf("escribe");}
 ;
+
+declaracion: REAL VARIABLE
+            |VECTOR VARIABLE
+            ;
+
+asignacion: REAL VARIABLE ASIGNA VALORREAL
+        |VECTOR VARIABLE ASIGNA vectorNT
+        |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
+        |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES ABRECORCHETES VALORREAL CIERRACORCHETES
+        ;
+
 
 %%
 void  Div0Error(void) {printf("Error: division  by zero\n"); exit (0);}
