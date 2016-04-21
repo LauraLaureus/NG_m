@@ -4,6 +4,7 @@
     #include  <string>
     #include <vector>
     #include <map>
+    #include "ASTNodes.hpp"
     using  namespace  std;
     #include "sang_m.tab.h"   //  output  of  bison
     void  yyerror(char *);

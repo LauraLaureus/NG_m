@@ -153,6 +153,7 @@
     #include  <string>
     #include  <map>
     #include  <vector>
+    #include "ASTNodes.hpp"
     using  namespace  std;
     map <string ,double > vars;    // map  from  variable  name to value
     extern  int  yylex ();
@@ -181,7 +182,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 15 "sang_m.y"
+#line 16 "sang_m.y"
 {
     int      int_val;
     double   double_val;
@@ -189,7 +190,7 @@ typedef union YYSTYPE
     vector<double> *vector;
 }
 /* Line 193 of yacc.c.  */
-#line 193 "sang_m.tab.c"
+#line 194 "sang_m.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -202,7 +203,7 @@ typedef union YYSTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 206 "sang_m.tab.c"
+#line 207 "sang_m.tab.c"
 
 #ifdef short
 # undef short
@@ -511,12 +512,12 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    35,    35,    37,    38,    39,    42,    45,    46,    47,
-      50,    52,    53,    56,    57,    60,    61,    62,    63,    64,
-      65,    68,    70,    72,    73,    74,    76,    77,    78,    79,
-      80,    81,    82,    83,    84,    85,    86,    87,    88,    89,
-      90,    91,    92,    97,    98,    99,   102,   103,   106,   107,
-     108,   109
+       0,    36,    36,    38,    39,    40,    43,    46,    47,    48,
+      51,    53,    54,    57,    58,    61,    62,    63,    64,    65,
+      66,    69,    71,    73,    74,    75,    77,    78,    79,    80,
+      81,    82,    83,    84,    85,    86,    87,    88,    89,    90,
+      91,    92,    93,    98,    99,   100,   103,   104,   107,   108,
+     109,   110
 };
 #endif
 
@@ -1507,123 +1508,123 @@ yyreduce:
   switch (yyn)
     {
         case 6:
-#line 42 "sang_m.y"
+#line 43 "sang_m.y"
     {printf("GLOBAL VAR\n");;}
     break;
 
   case 7:
-#line 45 "sang_m.y"
+#line 46 "sang_m.y"
     {printf("FIN FUNCIÓN INICIO\n");;}
     break;
 
   case 8:
-#line 46 "sang_m.y"
+#line 47 "sang_m.y"
     {printf("FIN FUNCIÓN \n");;}
     break;
 
   case 9:
-#line 47 "sang_m.y"
+#line 48 "sang_m.y"
     { printf("FUNCIÓN CON DEVOLUCIÓN");;}
     break;
 
   case 15:
-#line 60 "sang_m.y"
+#line 61 "sang_m.y"
     {printf("DECLARACION \n");;}
     break;
 
   case 16:
-#line 61 "sang_m.y"
+#line 62 "sang_m.y"
     {printf("ASIGNA\n");;}
     break;
 
   case 18:
-#line 63 "sang_m.y"
+#line 64 "sang_m.y"
     { printf("IF");;}
     break;
 
   case 19:
-#line 64 "sang_m.y"
+#line 65 "sang_m.y"
     { printf("WHILE");;}
     break;
 
   case 28:
-#line 78 "sang_m.y"
+#line 79 "sang_m.y"
     {printf("SUMA");;}
     break;
 
   case 29:
-#line 79 "sang_m.y"
+#line 80 "sang_m.y"
     {printf("MENOS");;}
     break;
 
   case 30:
-#line 80 "sang_m.y"
+#line 81 "sang_m.y"
     {printf("DIVIDE");;}
     break;
 
   case 31:
-#line 81 "sang_m.y"
+#line 82 "sang_m.y"
     {printf("MULTIPLICA");;}
     break;
 
   case 32:
-#line 82 "sang_m.y"
+#line 83 "sang_m.y"
     {printf("OR");;}
     break;
 
   case 33:
-#line 83 "sang_m.y"
+#line 84 "sang_m.y"
     {printf("AND");;}
     break;
 
   case 34:
-#line 84 "sang_m.y"
+#line 85 "sang_m.y"
     {printf("NOT");;}
     break;
 
   case 35:
-#line 85 "sang_m.y"
+#line 86 "sang_m.y"
     {printf("==");;}
     break;
 
   case 36:
-#line 86 "sang_m.y"
+#line 87 "sang_m.y"
     {printf("!=");;}
     break;
 
   case 37:
-#line 87 "sang_m.y"
+#line 88 "sang_m.y"
     {printf(">");;}
     break;
 
   case 38:
-#line 88 "sang_m.y"
+#line 89 "sang_m.y"
     {printf(">=");;}
     break;
 
   case 39:
-#line 89 "sang_m.y"
+#line 90 "sang_m.y"
     {printf("<");;}
     break;
 
   case 40:
-#line 90 "sang_m.y"
+#line 91 "sang_m.y"
     {printf("<=");;}
     break;
 
   case 41:
-#line 91 "sang_m.y"
+#line 92 "sang_m.y"
     {printf("lee");;}
     break;
 
   case 42:
-#line 92 "sang_m.y"
+#line 93 "sang_m.y"
     {printf("escribe");;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1627 "sang_m.tab.c"
+#line 1628 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -1837,7 +1838,7 @@ yyreturn:
 }
 
 
-#line 113 "sang_m.y"
+#line 114 "sang_m.y"
 
 void  Div0Error(void) {printf("Error: division  by zero\n"); exit (0);}
 void  UnknownVarError(string s) {printf("Error: %s does  not  exist !\n", s.c_str ());  exit (0);}

@@ -8,4 +8,4 @@
 
 bison -d sang_m.y
 flex lang_m.l
-g++ -o parser -x c++ lex.yy.c sang_m.tab.c -Wno-write-strings
+g++ -o parser -x c++ lex.yy.c sang_m.tab.c ASTNodes.cpp -Wno-write-strings
