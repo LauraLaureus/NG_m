@@ -54,19 +54,20 @@ devolucion: VALORREAL
     | VARIABLE
     ;
 
+bloque: ABRELLAVES lineas CIERRALLAVES ;
+
+
 lineas:  lineas  line
-    | line
-    ;
+| line
+;
 
 line:declaracion PUNTOYCOMA {printf("DECLARACION \n");}
     |asignacion PUNTOYCOMA {printf("ASIGNA\n");}
-    |expresion PUNTOYCOMA
     |IF ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF");}
     |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");}
     |
-;
+    ;
 
-bloque: ABRELLAVES lineas CIERRALLAVES ;
 
 vectorNT: ABRECORCHETES elementos CIERRACORCHETES;
 
@@ -74,25 +75,28 @@ elementos: VALORREAL
         | VALORREAL COMA elementos
         | VALORREAL PUNTOYCOMA elementos
         ;
-expresion: VALORREAL
-        |VECTOR
-        |expresion SUMA expresion {printf("SUMA");}
-        |expresion MENOS expresion {printf("MENOS");}
-        |expresion DIVIDE expresion {printf("DIVIDE");}
-        |expresion MULTIPLICA expresion {printf("MULTIPLICA");}
-        |expresion OR expresion {printf("OR");}
-        |expresion AND expresion {printf("AND");}
-        |expresion NOT expresion {printf("NOT");}
-        |expresion IGUALVALOR expresion {printf("==");}
-        |expresion DISTINTOVALOR expresion {printf("!=");}
-        |expresion MAYORQUE expresion {printf(">");}
-        |expresion MAYORIGUAL expresion {printf(">=");}
-        |expresion MENORQUE expresion {printf("<");}
-        |expresion MENORIGUAL expresion {printf("<=");}
-        |INPUT {printf("lee");}
-        |OUTPUT VARIABLE {printf("escribe");}
+
+termino: VALORREAL
+        |VALORVECTOR
+        |VARIABLE
 ;
 
+operacion: SUMA
+        | MENOS
+        |DIVIDE
+        |MULTIPLICA
+        |OR
+        |AND
+        |NOT
+        |IGUALVALOR
+        |DISTINTOVALOR
+        |MAYORQUE
+        |MAYORIGUAL
+        |MENORQUE
+        |MENORIGUAL
+        ;
+
+expresion: termino operacion termino ;
 
 
 parametros:
@@ -108,6 +112,7 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
         |VECTOR VARIABLE ASIGNA vectorNT
         |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
         |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES ABRECORCHETES VALORREAL CIERRACORCHETES
+        |VARIABLE ASIGNA expresion
         ;
 
 
