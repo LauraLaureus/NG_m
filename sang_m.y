@@ -14,6 +14,7 @@
     void  UnknownVarError(string s);
 %}
 %union {
+    Node    node;
     int      int_val;
     double   double_val;
     string*  str_val;
@@ -44,7 +45,7 @@ variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR\n");}
     ;
 
 funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n");}
-    |FUNC VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN \n");}
+    |FUNC VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS bloque {printf("FIN FUNCIÓN \n");}
     |FUNC REAL VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES { printf("FUNCIÓN CON DEVOLUCIÓN");}
     ;
 
@@ -57,7 +58,7 @@ devolucion: VALORREAL
 bloque: ABRELLAVES lineas CIERRALLAVES ;
 
 
-lineas:  lineas  line
+lineas:  line lineas
 | line
 ;
 
@@ -65,9 +66,8 @@ line:declaracion PUNTOYCOMA {printf("DECLARACION \n");}
     |asignacion PUNTOYCOMA {printf("ASIGNA\n");}
     |IF ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF");}
     |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");}
-    |
+    |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee");}
     ;
-
 
 vectorNT: ABRECORCHETES elementos CIERRACORCHETES;
 
@@ -96,7 +96,9 @@ operacion: SUMA
         |MENORIGUAL
         ;
 
-expresion: termino operacion termino ;
+expresion: termino operacion termino
+| OUTPUT VARIABLE  {printf("escribe");}
+        ;
 
 
 parametros:
