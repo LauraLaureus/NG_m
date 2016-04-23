@@ -18,17 +18,20 @@
 %union {
     Node    node;
     Asignation* r_asignation;
+    Math_Expression* expression;
     int      int_val;
     double   double_val;
     string*  str_val;
     vector<double> *vector;
 }
-%token <int_val >    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE
-%token <str_val >    VARIABLE REAL PUNTOYCOMA VECTOR
+%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE
+%token <str_val>    VARIABLE REAL PUNTOYCOMA VECTOR STRING
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
 
+%type<int_val> operacion
 %type<node> termino
+%type<expression> expresion
 %type<r_asignation> asignacion
 
 %start  parsetree
@@ -102,8 +105,12 @@ operacion: SUMA
         ;
 
 expresion: termino operacion termino
+{
+    $$ = new  Math_Expression($1,$2,$3);
+}
 | OUTPUT VARIABLE  {printf("escribe");}
-        ;
+| OUTPUT STRING {printf("escribe string");}
+        ; //expresssionnnnn fin
 
 
 parametros:

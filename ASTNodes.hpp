@@ -80,5 +80,15 @@ public:
 };
 
 class Math_Expression: public Node{
+    Node term1;
+    Node term2;
+    int op;
+
+public:
+    Math_Expression(Node t1, int o, Node t2){
+        this->term1 = t1;
+        this->term2 = t2;
+        this->op = o;
+    }
 
 };

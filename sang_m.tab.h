@@ -73,8 +73,9 @@
      REAL = 289,
      PUNTOYCOMA = 290,
      VECTOR = 291,
-     VALORREAL = 292,
-     VALORVECTOR = 293
+     STRING = 292,
+     VALORREAL = 293,
+     VALORVECTOR = 294
    };
 #endif
 /* Tokens.  */
@@ -112,8 +113,9 @@
 #define REAL 289
 #define PUNTOYCOMA 290
 #define VECTOR 291
-#define VALORREAL 292
-#define VALORVECTOR 293
+#define STRING 292
+#define VALORREAL 293
+#define VALORVECTOR 294
 
 
 
@@ -124,13 +126,14 @@ typedef union YYSTYPE
 {
     Node    node;
     Asignation* r_asignation;
+    Math_Expression* expression;
     int      int_val;
     double   double_val;
     string*  str_val;
     vector<double> *vector;
 }
 /* Line 1529 of yacc.c.  */
-#line 134 "sang_m.tab.h"
+#line 137 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

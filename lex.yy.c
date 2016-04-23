@@ -1002,7 +1002,7 @@ case 34:
 /* rule 34 can match eol */
 YY_RULE_SETUP
 #line 54 "lang_m.l"
-{ printf("STRING"); }
+{yylval.str_val = new  string(yytext ); return STRING; }
 	YY_BREAK
 case 35:
 YY_RULE_SETUP
