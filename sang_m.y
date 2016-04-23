@@ -27,6 +27,8 @@
 %token <str_val >    VARIABLE REAL PUNTOYCOMA VECTOR
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
+
+%type<node> termino
 %type<r_asignation> asignacion
 
 %start  parsetree
@@ -80,9 +82,8 @@ elementos: VALORREAL {current_vector->push_back($1);printf("PUSH_BACK\n");}
         | VALORREAL COMA elementos {current_vector->push_back($1);printf("PUSH_BACK\n");}
         ;
 
-termino: VALORREAL
-        |VALORVECTOR
-        |VARIABLE
+termino: VALORREAL {$$ = *new Math_Term<double>($1);}
+        |VARIABLE {$$ = *new Math_Term<std::string>(*$1);}
         ;
 
 operacion: SUMA

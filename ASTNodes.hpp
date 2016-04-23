@@ -69,6 +69,16 @@ public:
     
 };
 
+template <class Data>
+class Math_Term : public Node {
+    Data value;
+public:
+    
+    Math_Term(Data d){
+        this->value = d;
+    }
+};
+
 class Math_Expression: public Node{
 
-}
+};
