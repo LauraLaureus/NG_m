@@ -42,3 +42,33 @@ public:
         this->limit = lim;
     };
 };
+
+
+class ELEM_VECTOR_Asignation: public Asignation{
+    std::string* identification;
+    int position;
+    double value;
+    
+public:
+    ELEM_VECTOR_Asignation (std::string* id,int pos, double v){
+        this->identification = id;
+        this->position = pos;
+        this->value = v;
+    }
+};
+
+class VAR2VAR_Asignation: public Asignation{
+    std::string* var1;
+    std::string* var2;
+
+public:
+    VAR2VAR_Asignation (std::string* id,std::string* id2){
+        this->var1 = id;
+        this->var2 = id2;
+    }
+    
+};
+
+class Math_Expression: public Node{
+
+}

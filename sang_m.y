@@ -114,14 +114,37 @@ declaracion: REAL VARIABLE
             |VECTOR VARIABLE
             ;
 
-asignacion: REAL VARIABLE ASIGNA VALORREAL {printf("Asigna valor real\n"); $$ = new REAL_Asignation(true, $2, $4);}
-        |VECTOR VARIABLE ASIGNA vectorNT {printf("Asigna valor vector\n"); $$ = new VECTOR_Asignation(true, $2, current_vector,current_vector->size()); current_vector->clear();}
-        |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
-                {printf("Asigna espacio vector\n");
-                    $$ = new VECTOR_Asignation(true, $2, new std::vector<double>,(int)$6);}
+asignacion: REAL VARIABLE ASIGNA VALORREAL
+{
+    printf("Asigna valor real\n");
+    $$ = new REAL_Asignation(true, $2, $4);
+}
+|VECTOR VARIABLE ASIGNA vectorNT
+{
+    printf("Asigna valor vector\n");
+    $$ = new VECTOR_Asignation(true, $2, current_vector,current_vector->size());
+    current_vector->clear();
+}
+|VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
+{
+    printf("Asigna espacio vector\n");
+    $$ = new VECTOR_Asignation(true, $2, new std::vector<double>,(int)$6);
+}
         |VARIABLE ASIGNA expresion
-        |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
-        ;
+|VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
+{
+    printf("Asigna valor a elemento de vector\n");
+    $$ = new ELEM_VECTOR_Asignation($1,(int)$3,$6);
+}
+        |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA expresion
+        |VARIABLE ASIGNA VARIABLE
+{
+    printf("Asigna variable a variable\n");
+    $$ = new VAR2VAR_Asignation($1,$3);
+}
+        ; //fin asignacion
+
+
 
 llamadaFuncion: VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS
         ;
