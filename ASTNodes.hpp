@@ -11,7 +11,7 @@
 
 class Node{};
 
-class Asignation:Node{};
+class Asignation:public Node{};
 
 class REAL_Asignation: public Asignation{
     bool declaration;
@@ -146,3 +146,97 @@ public:
     
 };
 
+
+/////////////////////////FUNCTION CALL
+class FunctionCall: public Node{
+    std::string* identification;
+    std::vector<Node>*  params;
+public:
+    FunctionCall(std::string* id, std::vector<Node>* parm){
+        this->identification = id;
+        this->params = parm;
+    }
+};
+
+
+////////////////////////RETURN CALL
+class ReturnNode: public Node{
+    Node* return_value;
+public:
+    ReturnNode(Node* r){
+        this->return_value = r;
+    }
+};
+
+
+
+class AsignationFunctionCall : public Node {
+    std::string* identification;
+    Node* expression;
+    
+    
+public:
+    AsignationFunctionCall(std::string* id, Node* n){
+        this->identification = id;
+        this->expression = n;
+    }
+};
+
+
+class AsignationInput : public Node{
+};
+
+
+class FlowControl : public Node {
+    bool loop;
+    Node* expression;
+    std::vector<Node>* block;
+    
+public:
+    FlowControl(bool l, Node* exp, std::vector<Node>* bl){
+        this->loop = l;
+        this->expression = exp;
+        this->block = bl;
+    }
+};
+
+class FunctionDefinition: public Node{
+    std::string* id;
+    bool returnSthg;
+    Node* params;
+    Node* lines;
+    Node* returnNode;
+    
+public:
+    FunctionDefinition(std::string* i,Node* p,Node* l,bool ret,Node* thing){
+        this->id = i;
+        this->returnSthg = ret;
+        this->params = p;
+        this->lines = l;
+        this->returnNode = thing;
+    }
+    
+    FunctionDefinition(std::string* i,Node* p,Node* l){
+        this->id = i;
+        this->returnSthg = false;
+        this->params = p;
+        this->lines = l;
+        this->returnNode = nullptr;
+    }
+    
+    FunctionDefinition(std::string* i,Node* l){
+        this->id = i;
+        this->returnSthg = false;
+        this->params = nullptr;
+        this->lines = l;
+        this->returnNode = nullptr;
+    }
+};
+
+class GlobalVar: public Node{
+    Node* declaration;
+public:
+    GlobalVar(Node* declar){
+        this->declaration = declar;
+    }
+};

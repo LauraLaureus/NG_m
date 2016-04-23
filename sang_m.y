@@ -8,6 +8,9 @@
     #include "ASTNodes.hpp"
     using  namespace  std;
     vector<double>* current_vector;
+    vector<Node>* param_vector;
+    vector<Node>* lines_vector;
+    vector<Node>* spaces_vector;
     int current_vector_dimensions;
     int current_vector_width;
     extern  int  yylex ();
@@ -24,13 +27,13 @@
     string*  str_val;
     vector<double> *vector;
 }
-%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE BREAK
-%token <str_val>    VARIABLE REAL PUNTOYCOMA VECTOR STRING
+%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC  ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE BREAK
+%token <str_val>    VARIABLE REAL PUNTOYCOMA VECTOR STRING INICIO
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
 
 %type<int_val> operacion
-%type<node> termino line declaracion
+%type<node> termino line declaracion llamadaFuncion devolucion devuelve funcion lineas variablesGlobales
 %type<expression> expresion
 %type<r_asignation> asignacion
 
@@ -43,52 +46,55 @@
 %%
 
 
-parsetree: espacios ;
+parsetree: { spaces_vector = new vector<Node>(); }espacios ;
 
 espacios:
-    |variablesGlobales espacios
-    |funcion espacios
+    |variablesGlobales {spaces_vector->push_back($1);} espacios
+    |funcion {spaces_vector->push_back($1);} espacios
 ;
 
-variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR\n");}
+variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR\n");$$ = GlobalVar(&$2);}
     ;
 
-funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n");}
-    |FUNC VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS bloque {printf("FIN FUNCIÓN \n");}
-    |FUNC REAL VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES { printf("FUNCIÓN CON DEVOLUCIÓN");}
+funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n"); $$ = FunctionDefinition($2,&$4);}
+    |FUNC VARIABLE ABREPARENTESIS
+        {param_vector = new vector<Node>();}
+    parametros CIERRAPARENTESIS bloque {printf("FIN FUNCIÓN \n"); $$ = FunctionDefinition($2,&$4,&$6);}
+    |FUNC REAL VARIABLE ABREPARENTESIS {param_vector = new vector<Node>();} parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES { printf("FUNCIÓN CON DEVOLUCIÓN"); $$ = FunctionDefinition($3,&$5,&$8,true,&$9);}
     ;
 
-devuelve: DEVUELVE devolucion PUNTOYCOMA;
-
-devolucion: VALORREAL
-    | VARIABLE
-    ;
-
-bloque: ABRELLAVES lineas CIERRALLAVES ;
 
 
-lineas:  line lineas
-| line
-;
-
-line:declaracion PUNTOYCOMA {printf("DECLARACION \n");}
-    |asignacion PUNTOYCOMA {printf("ASIGNA\n");}
-    |IF ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF");}
-    |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");}
-    |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee");}
-    |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");}
+line:declaracion PUNTOYCOMA {printf("DECLARACION \n"); $$ = $1;}
+    |asignacion PUNTOYCOMA {printf("ASIGNA\n"); $$ = *$1;}
+    |IF ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF"); $$ = *new FlowControl(false,$3,lines_vector);}
+    |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");  $$ = *new FlowControl(true,$3,lines_vector);}
+    |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee"); $$ = *new AsignationInput();}
+    |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");$$ = *new AsignationFunctionCall($1,&$3);}
     |OUTPUT VARIABLE PUNTOYCOMA {printf("escribe"); $$ = *new Output_Expression(true, $2);}
     |OUTPUT STRING PUNTOYCOMA {printf("escribe string");  $$ = *new Output_Expression(false, $2);}
     |BREAK PUNTOYCOMA {$$ = *new BreakNode();}
     ;
 
+bloque: ABRELLAVES {lines_vector = new std::vector<Node>();} lineas CIERRALLAVES ;
 
-llamadaFuncion: VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS
+lineas:  line {lines_vector->push_back($1);} lineas
+| line {lines_vector->push_back($1);}
+;
+
+devuelve: DEVUELVE devolucion PUNTOYCOMA { $$ = *new ReturnNode(&$2);};
+
+devolucion: VALORREAL  {$$ = *new Math_Term<double>($1);}
+| VARIABLE {$$ = *new Math_Term<std::string>(*$1);}
+;
+
+
+llamadaFuncion: VARIABLE ABREPARENTESIS {param_vector = new std::vector<Node>();} parametros CIERRAPARENTESIS { $$ = *new FunctionCall($1,param_vector);}
 ;
 
 parametros:
-| declaracion
-| declaracion COMA parametros
+| declaracion { param_vector->push_back($1);}
+| declaracion { param_vector->push_back($1);} COMA parametros
 ;
 
 

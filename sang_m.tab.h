@@ -60,21 +60,21 @@
      INPUT = 276,
      OUTPUT = 277,
      FUNC = 278,
-     INICIO = 279,
-     ABRELLAVES = 280,
-     CIERRALLAVES = 281,
-     GLOBAL = 282,
-     ABREPARENTESIS = 283,
-     CIERRAPARENTESIS = 284,
-     DEVUELVE = 285,
-     IF = 286,
-     WHILE = 287,
-     BREAK = 288,
-     VARIABLE = 289,
-     REAL = 290,
-     PUNTOYCOMA = 291,
-     VECTOR = 292,
-     STRING = 293,
+     ABRELLAVES = 279,
+     CIERRALLAVES = 280,
+     GLOBAL = 281,
+     ABREPARENTESIS = 282,
+     CIERRAPARENTESIS = 283,
+     DEVUELVE = 284,
+     IF = 285,
+     WHILE = 286,
+     BREAK = 287,
+     VARIABLE = 288,
+     REAL = 289,
+     PUNTOYCOMA = 290,
+     VECTOR = 291,
+     STRING = 292,
+     INICIO = 293,
      VALORREAL = 294,
      VALORVECTOR = 295
    };
@@ -101,21 +101,21 @@
 #define INPUT 276
 #define OUTPUT 277
 #define FUNC 278
-#define INICIO 279
-#define ABRELLAVES 280
-#define CIERRALLAVES 281
-#define GLOBAL 282
-#define ABREPARENTESIS 283
-#define CIERRAPARENTESIS 284
-#define DEVUELVE 285
-#define IF 286
-#define WHILE 287
-#define BREAK 288
-#define VARIABLE 289
-#define REAL 290
-#define PUNTOYCOMA 291
-#define VECTOR 292
-#define STRING 293
+#define ABRELLAVES 279
+#define CIERRALLAVES 280
+#define GLOBAL 281
+#define ABREPARENTESIS 282
+#define CIERRAPARENTESIS 283
+#define DEVUELVE 284
+#define IF 285
+#define WHILE 286
+#define BREAK 287
+#define VARIABLE 288
+#define REAL 289
+#define PUNTOYCOMA 290
+#define VECTOR 291
+#define STRING 292
+#define INICIO 293
 #define VALORREAL 294
 #define VALORVECTOR 295
 
@@ -124,7 +124,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 18 "sang_m.y"
+#line 20 "sang_m.y"
 {
     Node    node;
     Asignation* r_asignation;
