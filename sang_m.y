@@ -7,8 +7,9 @@
     #include  <vector>
     #include "ASTNodes.hpp"
     using  namespace  std;
-    map <string ,double > vars;    // map  from  variable  name to value
     vector<double>* current_vector;
+    int current_vector_dimensions;
+    int current_vector_width;
     extern  int  yylex ();
     extern  void  yyerror(char *);
     void  Div0Error(void);
@@ -16,7 +17,7 @@
 %}
 %union {
     Node    node;
-    REAL_Asignation* r_asignation;
+    Asignation* r_asignation;
     int      int_val;
     double   double_val;
     string*  str_val;
@@ -77,13 +78,12 @@ vectorNT: ABRECORCHETES {current_vector = new vector<double>();} elementos { for
 
 elementos: VALORREAL {current_vector->push_back($1);printf("PUSH_BACK\n");}
         | VALORREAL COMA elementos {current_vector->push_back($1);printf("PUSH_BACK\n");}
-        | VALORREAL PUNTOYCOMA elementos {current_vector->push_back($1);printf("PUSH_BACK\n");}
         ;
 
 termino: VALORREAL
         |VALORVECTOR
         |VARIABLE
-;
+        ;
 
 operacion: SUMA
         | MENOS
@@ -114,13 +114,13 @@ declaracion: REAL VARIABLE
             |VECTOR VARIABLE
             ;
 
-asignacion: REAL VARIABLE ASIGNA VALORREAL {printf("Asigna valor real\n"); $$ = new REAL_Asignation(true, $2, $3);}
-        |VECTOR VARIABLE ASIGNA vectorNT
+asignacion: REAL VARIABLE ASIGNA VALORREAL {printf("Asigna valor real\n"); $$ = new REAL_Asignation(true, $2, $4);}
+        |VECTOR VARIABLE ASIGNA vectorNT {printf("Asigna valor vector\n"); $$ = new VECTOR_Asignation(true, $2, current_vector,current_vector->size()); current_vector->clear();}
         |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
-        |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES ABRECORCHETES VALORREAL CIERRACORCHETES
+                {printf("Asigna espacio vector\n");
+                    $$ = new VECTOR_Asignation(true, $2, new std::vector<double>,(int)$6);}
         |VARIABLE ASIGNA expresion
         |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
-        |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
         ;
 
 llamadaFuncion: VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS

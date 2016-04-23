@@ -1,6 +1,7 @@
 global REAL singapur;
 func inicio {
 VECTOR a = [1,2,3];
+VECTOR z = espacio [3];
 b = devuelvoUnCodigoError();
 c[3][4] = 4 ;
 REAL genious = 0;
