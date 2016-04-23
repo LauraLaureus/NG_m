@@ -51,6 +51,7 @@ ignora " "|\t|\n
 "devuelve"                 {return DEVUELVE;}
 "si"                        {return IF;}
 "mientras"                  {return WHILE;}
+"parar"                     {return BREAK;}
 L?\"(\\.|[^\\"])*\"	{yylval.str_val = new  string(yytext ); return STRING; }
 {digitos}+("."{digitos})* {yylval.double_val=atof(yytext);return VALORREAL;}
 {letras}({letras}|{digitos})*    {yylval.str_val = new  string(yytext ); return  VARIABLE;}

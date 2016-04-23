@@ -18,19 +18,19 @@
 %union {
     Node    node;
     Asignation* r_asignation;
-    Math_Expression* expression;
+    Expression* expression;
     int      int_val;
     double   double_val;
     string*  str_val;
     vector<double> *vector;
 }
-%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE
+%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC INICIO ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE BREAK
 %token <str_val>    VARIABLE REAL PUNTOYCOMA VECTOR STRING
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
 
 %type<int_val> operacion
-%type<node> termino
+%type<node> termino line declaracion
 %type<expression> expresion
 %type<r_asignation> asignacion
 
@@ -77,7 +77,20 @@ line:declaracion PUNTOYCOMA {printf("DECLARACION \n");}
     |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");}
     |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee");}
     |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");}
+    |OUTPUT VARIABLE PUNTOYCOMA {printf("escribe"); $$ = *new Output_Expression(true, $2);}
+    |OUTPUT STRING PUNTOYCOMA {printf("escribe string");  $$ = *new Output_Expression(false, $2);}
+    |BREAK PUNTOYCOMA {$$ = *new BreakNode();}
     ;
+
+
+llamadaFuncion: VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS
+;
+
+parametros:
+| declaracion
+| declaracion COMA parametros
+;
+
 
 vectorNT: ABRECORCHETES {current_vector = new vector<double>();} elementos { for(int i = 0; i < current_vector->size();i++){printf("%F\n",(*current_vector)[i]);} }CIERRACORCHETES;
 
@@ -107,19 +120,13 @@ operacion: SUMA
 expresion: termino operacion termino
 {
     $$ = new  Math_Expression($1,$2,$3);
-}
-| OUTPUT VARIABLE  {printf("escribe");}
-| OUTPUT STRING {printf("escribe string");}
-        ; //expresssionnnnn fin
+}; //expresssionnnnn fin
 
-
-parametros:
-        | declaracion
-        | declaracion COMA parametros
-        ;
 
 declaracion: REAL VARIABLE
+{ $$ = *new Declaration($2,true);}
             |VECTOR VARIABLE
+{ $$ = *new Declaration($2,false);}
             ;
 
 asignacion: REAL VARIABLE ASIGNA VALORREAL
@@ -138,24 +145,27 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
     printf("Asigna espacio vector\n");
     $$ = new VECTOR_Asignation(true, $2, new std::vector<double>,(int)$6);
 }
-        |VARIABLE ASIGNA expresion
+|VARIABLE ASIGNA expresion{
+    printf("Asigna expression a variable\n");
+    $$ = new Expression2Var($1,$3);
+} //Hey falto yo
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
 {
     printf("Asigna valor a elemento de vector\n");
     $$ = new ELEM_VECTOR_Asignation($1,(int)$3,$6);
 }
-        |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA expresion
-        |VARIABLE ASIGNA VARIABLE
+|VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA expresion
+{
+    printf("Asigna expression a variable\n");
+    $$ = new Expression2Var($1,$3,$6);
+}
+|VARIABLE ASIGNA VARIABLE
 {
     printf("Asigna variable a variable\n");
     $$ = new VAR2VAR_Asignation($1,$3);
 }
-        ; //fin asignacion
+; //fin asignacion
 
-
-
-llamadaFuncion: VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS
-        ;
 
 
 %%

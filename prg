@@ -6,6 +6,10 @@ b = devuelvoUnCodigoError();
 c[3] = 4 ;
 REAL genious = 0;
 a = z;
+escribe fish ;
+escribe "nanoha";
+parar ;
+a = 4 + 5 ;
 }
 
 global VECTOR chachipistachi;
