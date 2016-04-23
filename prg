@@ -1,8 +1,9 @@
 global REAL singapur;
 func inicio {
-    a = 4 + 2 ;
-leido = lee ;
-a = escribe fish ;
+VECTOR a = [1,2,3];
+b = devuelvoUnCodigoError();
+c[3][4] = 4 ;
+REAL genious = 0;
 }
 
 global VECTOR chachipistachi;

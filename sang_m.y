@@ -8,6 +8,7 @@
     #include "ASTNodes.hpp"
     using  namespace  std;
     map <string ,double > vars;    // map  from  variable  name to value
+    vector<double>* current_vector;
     extern  int  yylex ();
     extern  void  yyerror(char *);
     void  Div0Error(void);
@@ -15,6 +16,7 @@
 %}
 %union {
     Node    node;
+    REAL_Asignation* r_asignation;
     int      int_val;
     double   double_val;
     string*  str_val;
@@ -24,6 +26,7 @@
 %token <str_val >    VARIABLE REAL PUNTOYCOMA VECTOR
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
+%type<r_asignation> asignacion
 
 %start  parsetree
 
@@ -67,13 +70,14 @@ line:declaracion PUNTOYCOMA {printf("DECLARACION \n");}
     |IF ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF");}
     |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");}
     |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee");}
+    |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");}
     ;
 
-vectorNT: ABRECORCHETES elementos CIERRACORCHETES;
+vectorNT: ABRECORCHETES {current_vector = new vector<double>();} elementos { for(int i = 0; i < current_vector->size();i++){printf("%F\n",(*current_vector)[i]);} }CIERRACORCHETES;
 
-elementos: VALORREAL
-        | VALORREAL COMA elementos
-        | VALORREAL PUNTOYCOMA elementos
+elementos: VALORREAL {current_vector->push_back($1);printf("PUSH_BACK\n");}
+        | VALORREAL COMA elementos {current_vector->push_back($1);printf("PUSH_BACK\n");}
+        | VALORREAL PUNTOYCOMA elementos {current_vector->push_back($1);printf("PUSH_BACK\n");}
         ;
 
 termino: VALORREAL
@@ -110,11 +114,16 @@ declaracion: REAL VARIABLE
             |VECTOR VARIABLE
             ;
 
-asignacion: REAL VARIABLE ASIGNA VALORREAL
+asignacion: REAL VARIABLE ASIGNA VALORREAL {printf("Asigna valor real\n"); $$ = new REAL_Asignation(true, $2, $3);}
         |VECTOR VARIABLE ASIGNA vectorNT
         |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
         |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES ABRECORCHETES VALORREAL CIERRACORCHETES
         |VARIABLE ASIGNA expresion
+        |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
+        |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
+        ;
+
+llamadaFuncion: VARIABLE ABREPARENTESIS parametros CIERRAPARENTESIS
         ;
 
 

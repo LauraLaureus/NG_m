@@ -120,16 +120,17 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 16 "sang_m.y"
+#line 17 "sang_m.y"
 {
     Node    node;
+    REAL_Asignation* r_asignation;
     int      int_val;
     double   double_val;
     string*  str_val;
     vector<double> *vector;
 }
 /* Line 1529 of yacc.c.  */
-#line 133 "sang_m.tab.h"
+#line 134 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
