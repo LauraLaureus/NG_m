@@ -70,6 +70,27 @@ public:
 };
 
 
+class ELEM_VECTOR2VAR_Asignation: public Asignation{
+    std::string* identification;
+    int position;
+    std::string* value; //destiny variable
+    std::string* var_pos;
+    
+public:
+    ELEM_VECTOR2VAR_Asignation (std::string* id,int pos, std::string* v){
+        this->identification = id;
+        this->position = pos;
+        this->value = v;
+    }
+    
+    ELEM_VECTOR2VAR_Asignation (std::string* id,std::string* pos, std::string* v){
+        this->identification = id;
+        this->var_pos = pos;
+        this->value = v;
+    }
+};
+
+
 ////////////////MATH EXPRESSIONS
 
 template <class Data>
@@ -240,3 +261,6 @@ public:
         this->declaration = declar;
     }
 };
+
+class NewBlock : public Node{};
+class ResumeBlock: public Node{};

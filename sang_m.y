@@ -19,6 +19,7 @@
     void  UnknownVarError(string s);
 %}
 
+%locations
 
 %union {
     Node    node;
@@ -48,7 +49,9 @@
 %%
 
 
-parsetree: { spaces_vector = *new vector<Node>(); }espacios ;
+parsetree: { spaces_vector = *new vector<Node>(); }espacios
+        |error {spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear();} // colocamos el error en la raíz del árbol para limpiar facilmente el árbol de nodos. 
+        ;
 
 espacios:
     |variablesGlobales {spaces_vector.push_back($1);} espacios
@@ -69,10 +72,12 @@ funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO
 
 line:declaracion PUNTOYCOMA {printf("DECLARACION \n"); $$ = $1;}
     |asignacion PUNTOYCOMA {printf("ASIGNA\n"); $$ = $1;}
-    |IF ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF"); $$ = *new FlowControl(false,$3,lines_vector);}
-    |WHILE ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");  $$ = *new FlowControl(true,$3,lines_vector);}
+    |IF{ lines_vector.push_back(*new NewBlock() );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF"); $$ = *new FlowControl(false,$4,lines_vector); lines_vector.push_back(*new ResumeBlock() );}
+    |WHILE { lines_vector.push_back(*new NewBlock() );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");  $$ = *new FlowControl(true,$4,lines_vector);lines_vector.push_back(*new ResumeBlock() );}
     |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee"); $$ = *new AsignationInput();}
     |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");$$ = *new AsignationFunctionCall($1,&$3);}
+    |llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");$$ = *new AsignationFunctionCall(nullptr,&$1);}
+
     |OUTPUT VARIABLE PUNTOYCOMA {printf("escribe"); $$ = *new Output_Expression(true, $2);}
     |OUTPUT STRING PUNTOYCOMA {printf("escribe string");  $$ = *new Output_Expression(false, $2);}
     |BREAK PUNTOYCOMA {$$ = *new BreakNode();}
@@ -171,6 +176,14 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 {
     printf("Asigna variable a variable\n");
     $$ = *new VAR2VAR_Asignation($1,$3);
+}
+|VARIABLE ASIGNA VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES
+{
+    $$ = *new  ELEM_VECTOR2VAR_Asignation ($3,$5, $1);
+}
+|VARIABLE ASIGNA VARIABLE ABRECORCHETES  VARIABLE CIERRACORCHETES
+{
+    $$ = *new  ELEM_VECTOR2VAR_Asignation ($3,$5, $1);
 }
 ; //fin asignacion
 

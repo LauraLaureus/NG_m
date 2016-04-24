@@ -1,25 +1,24 @@
-global REAL singapur;
+global REAL coincidencias;
+
 func inicio {
-REAL a = 3 ;
-REAL b = 3 ;
-VECTOR c = [3,4] ;
-VECTOR d = espacio [2];
-REAL e;
-f = lee ;
-escribe a ;
-si ( a > 2){
-    mientras (b == 3){
-        b = calculaTerror();
-        parar;
+    VECTOR v = [16,35,66,16,5,9];
+    REAL elementoBuscado = 16;
+    REAL pos = 0;
+    REAL coincidencias = 0;
+
+    REAL d;
+
+    mientras (pos < 6){
+        d = v[pos];
+        esCoincidencia(REAL d, REAL elementoBuscado);
+        pos = pos + 1;
     }
 
 }
-}
 
-global VECTOR variableGlobalExtra;
+func esCoincidencia(REAL e1, REAL e2){
+    si (e1 == e2){
+        coincidencias = coincidencias + 1;
+    }
 
-func REAL calculaTerror(){
-    REAL a;
-    a = calculaTerror( REAL b);
-    devuelve 3 ;
 }
