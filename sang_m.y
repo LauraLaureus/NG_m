@@ -102,8 +102,8 @@ parametros:
 
 vectorNT: ABRECORCHETES {current_vector = *new vector<double>();} elementos { for(int i = 0; i < current_vector.size();i++){printf("%F\n",current_vector[i]);} }CIERRACORCHETES;
 
-elementos: VALORREAL {current_vector.push_back($1);printf("PUSH_BACK\n");}
-        | VALORREAL COMA elementos {current_vector.push_back($1);printf("PUSH_BACK\n");}
+elementos: VALORREAL {current_vector.push_back($1);}
+        | VALORREAL COMA elementos {current_vector.push_back($1);}
         ;
 
 termino: VALORREAL {$$ = *new Math_Term<double>($1);}

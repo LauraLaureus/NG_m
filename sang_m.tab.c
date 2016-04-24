@@ -1672,12 +1672,12 @@ yyreduce:
 
   case 41:
 #line 105 "sang_m.y"
-    {current_vector.push_back((yyvsp[(1) - (1)].double_val ));printf("PUSH_BACK\n");;}
+    {current_vector.push_back((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 42:
 #line 106 "sang_m.y"
-    {current_vector.push_back((yyvsp[(1) - (3)].double_val ));printf("PUSH_BACK\n");;}
+    {current_vector.push_back((yyvsp[(1) - (3)].double_val ));;}
     break;
 
   case 43:
