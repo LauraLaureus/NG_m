@@ -124,7 +124,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 21 "sang_m.y"
+#line 23 "sang_m.y"
 {
     Node    node;
     Asignation* r_asignation;

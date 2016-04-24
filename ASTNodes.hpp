@@ -35,10 +35,10 @@ class VECTOR_Asignation: public Asignation{
     
     
 public:
-    VECTOR_Asignation(bool d, std::string* id, std::vector<double>* v,int lim){
+    VECTOR_Asignation(bool d, std::string* id, std::vector<double> v,int lim){
         this->declaration = d;
         this->identification = id;
-        this->value = v;
+        this->value = &v;
         this->limit = lim;
     };
 };
@@ -115,7 +115,7 @@ public:
 
 /////////////////////ASIGNATION AN EXPRESSION
 
-class Expression2Var : public Expression, public Asignation{ //Cambiar la herencia a Node?
+class Expression2Var : public Node{ //Cambiar la herencia a Node?
     std::string* identification;
     int position;
     Node* expression;
@@ -152,9 +152,9 @@ class FunctionCall: public Node{
     std::string* identification;
     std::vector<Node>*  params;
 public:
-    FunctionCall(std::string* id, std::vector<Node>* parm){
+    FunctionCall(std::string* id, std::vector<Node> parm){
         this->identification = id;
-        this->params = parm;
+        this->params = &parm;
     }
 };
 
@@ -190,10 +190,10 @@ class AsignationInput : public Node{
 class FlowControl : public Node {
     bool loop;
     Node* expression;
-    std::vector<Node>* block;
+    std::vector<Node> block;
     
 public:
-    FlowControl(bool l, Node* exp, std::vector<Node>* bl){
+    FlowControl(bool l, Node* exp, std::vector<Node> bl){
         this->loop = l;
         this->expression = exp;
         this->block = bl;
@@ -208,27 +208,27 @@ class FunctionDefinition: public Node{
     Node* returnNode;
     
 public:
-    FunctionDefinition(std::string* i,std::vector<Node>* p,std::vector<Node>* l,bool ret,Node* thing){
+    FunctionDefinition(std::string* i,std::vector<Node> p,std::vector<Node> l,bool ret,Node* thing){
         this->id = i;
         this->returnSthg = ret;
-        this->params = p;
-        this->lines = l;
+        this->params = &p;
+        this->lines = &l;
         this->returnNode = thing;
     }
     
-    FunctionDefinition(std::string* i,std::vector<Node>* p,std::vector<Node>* l){
+    FunctionDefinition(std::string* i,std::vector<Node> p,std::vector<Node> l){
         this->id = i;
         this->returnSthg = false;
-        this->params = p;
-        this->lines = l;
+        this->params = &p;
+        this->lines = &l;
         this->returnNode = nullptr;
     }
     
-    FunctionDefinition(std::string* i,std::vector<Node>* l){
+    FunctionDefinition(std::string* i,std::vector<Node> l){
         this->id = i;
         this->returnSthg = false;
         this->params = nullptr;
-        this->lines = l;
+        this->lines = &l;
         this->returnNode = nullptr;
     }
 };

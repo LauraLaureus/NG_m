@@ -159,10 +159,10 @@
     #include  <vector>
     #include "ASTNodes.hpp"
     using  namespace  std;
-    vector<double>* current_vector;
-    vector<Node>* param_vector;
-    vector<Node>* lines_vector;
-    vector<Node>* spaces_vector;
+    static vector<Node> param_vector;
+    static vector<Node> lines_vector;
+    static vector<Node> spaces_vector;
+    static vector<double> current_vector;
     int current_vector_dimensions;
     int current_vector_width;
     extern  int  yylex ();
@@ -191,7 +191,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 21 "sang_m.y"
+#line 23 "sang_m.y"
 {
     Node    node;
     Asignation* r_asignation;
@@ -527,13 +527,13 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    49,    49,    49,    51,    52,    52,    53,    53,    56,
-      59,    61,    60,    63,    63,    68,    69,    70,    71,    72,
-      73,    74,    75,    76,    79,    79,    81,    81,    82,    85,
-      87,    88,    92,    92,    95,    96,    97,    97,   101,   101,
-     101,   103,   104,   107,   108,   111,   112,   113,   114,   115,
-     116,   117,   118,   119,   120,   121,   122,   123,   126,   132,
-     134,   138,   143,   149,   154,   158,   163,   168
+       0,    51,    51,    51,    53,    54,    54,    55,    55,    58,
+      61,    63,    62,    65,    65,    70,    71,    72,    73,    74,
+      75,    76,    77,    78,    81,    81,    83,    83,    84,    87,
+      89,    90,    94,    94,    97,    98,    99,    99,   103,   103,
+     103,   105,   106,   109,   110,   113,   114,   115,   116,   117,
+     118,   119,   120,   121,   122,   123,   124,   125,   128,   134,
+     136,   140,   145,   151,   156,   160,   165,   170
 };
 #endif
 
@@ -1521,246 +1521,246 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 49 "sang_m.y"
-    { spaces_vector = new vector<Node>(); ;}
+#line 51 "sang_m.y"
+    { spaces_vector = *new vector<Node>(); ;}
     break;
 
   case 5:
-#line 52 "sang_m.y"
-    {spaces_vector->push_back((yyvsp[(1) - (1)].node));;}
+#line 54 "sang_m.y"
+    {spaces_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 7:
-#line 53 "sang_m.y"
-    {spaces_vector->push_back((yyvsp[(1) - (1)].node));;}
+#line 55 "sang_m.y"
+    {spaces_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 9:
-#line 56 "sang_m.y"
+#line 58 "sang_m.y"
     {printf("GLOBAL VAR\n");(yyval.node) = GlobalVar(&(yyvsp[(2) - (3)].node));;}
     break;
 
   case 10:
-#line 59 "sang_m.y"
+#line 61 "sang_m.y"
     {printf("FIN FUNCIÓN INICIO\n"); (yyval.node) = FunctionDefinition((yyvsp[(2) - (5)].str_val),lines_vector);;}
     break;
 
   case 11:
-#line 61 "sang_m.y"
-    {param_vector = new vector<Node>();;}
+#line 63 "sang_m.y"
+    {param_vector = *new vector<Node>();;}
     break;
 
   case 12:
-#line 62 "sang_m.y"
+#line 64 "sang_m.y"
     {printf("FIN FUNCIÓN \n"); (yyval.node) = FunctionDefinition((yyvsp[(2) - (7)].str_val),param_vector,lines_vector);;}
     break;
 
   case 13:
-#line 63 "sang_m.y"
-    {param_vector = new vector<Node>();;}
+#line 65 "sang_m.y"
+    {param_vector = *new vector<Node>();;}
     break;
 
   case 14:
-#line 63 "sang_m.y"
+#line 65 "sang_m.y"
     { printf("FUNCIÓN CON DEVOLUCIÓN"); (yyval.node) = FunctionDefinition((yyvsp[(3) - (11)].str_val),param_vector,lines_vector,true,&(yyvsp[(9) - (11)].node));;}
     break;
 
   case 15:
-#line 68 "sang_m.y"
+#line 70 "sang_m.y"
     {printf("DECLARACION \n"); (yyval.node) = (yyvsp[(1) - (2)].node);;}
     break;
 
   case 16:
-#line 69 "sang_m.y"
-    {printf("ASIGNA\n"); (yyval.node) = *(yyvsp[(1) - (2)].r_asignation);;}
+#line 71 "sang_m.y"
+    {printf("ASIGNA\n"); (yyval.node) = (yyvsp[(1) - (2)].node);;}
     break;
 
   case 17:
-#line 70 "sang_m.y"
+#line 72 "sang_m.y"
     { printf("IF"); (yyval.node) = *new FlowControl(false,(yyvsp[(3) - (5)].expression),lines_vector);;}
     break;
 
   case 18:
-#line 71 "sang_m.y"
+#line 73 "sang_m.y"
     { printf("WHILE");  (yyval.node) = *new FlowControl(true,(yyvsp[(3) - (5)].expression),lines_vector);;}
     break;
 
   case 19:
-#line 72 "sang_m.y"
+#line 74 "sang_m.y"
     {printf("Lee"); (yyval.node) = *new AsignationInput();;}
     break;
 
   case 20:
-#line 73 "sang_m.y"
+#line 75 "sang_m.y"
     {printf("llamada funcion \n");(yyval.node) = *new AsignationFunctionCall((yyvsp[(1) - (4)].str_val),&(yyvsp[(3) - (4)].node));;}
     break;
 
   case 21:
-#line 74 "sang_m.y"
+#line 76 "sang_m.y"
     {printf("escribe"); (yyval.node) = *new Output_Expression(true, (yyvsp[(2) - (3)].str_val));;}
     break;
 
   case 22:
-#line 75 "sang_m.y"
+#line 77 "sang_m.y"
     {printf("escribe string");  (yyval.node) = *new Output_Expression(false, (yyvsp[(2) - (3)].str_val));;}
     break;
 
   case 23:
-#line 76 "sang_m.y"
+#line 78 "sang_m.y"
     {(yyval.node) = *new BreakNode();;}
     break;
 
   case 24:
-#line 79 "sang_m.y"
-    {lines_vector = new std::vector<Node>();;}
+#line 81 "sang_m.y"
+    {lines_vector = *new std::vector<Node>();;}
     break;
 
   case 26:
-#line 81 "sang_m.y"
-    {lines_vector->push_back((yyvsp[(1) - (1)].node));;}
+#line 83 "sang_m.y"
+    {lines_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 28:
-#line 82 "sang_m.y"
-    {lines_vector->push_back((yyvsp[(1) - (1)].node));;}
+#line 84 "sang_m.y"
+    {lines_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 29:
-#line 85 "sang_m.y"
+#line 87 "sang_m.y"
     { (yyval.node) = *new ReturnNode(&(yyvsp[(2) - (3)].node));;}
     break;
 
   case 30:
-#line 87 "sang_m.y"
+#line 89 "sang_m.y"
     {(yyval.node) = *new Math_Term<double>((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 31:
-#line 88 "sang_m.y"
+#line 90 "sang_m.y"
     {(yyval.node) = *new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
   case 32:
-#line 92 "sang_m.y"
-    {param_vector = new std::vector<Node>();;}
+#line 94 "sang_m.y"
+    {param_vector = *new std::vector<Node>();;}
     break;
 
   case 33:
-#line 92 "sang_m.y"
+#line 94 "sang_m.y"
     { (yyval.node) = *new FunctionCall((yyvsp[(1) - (5)].str_val),param_vector);;}
     break;
 
   case 35:
-#line 96 "sang_m.y"
-    { param_vector->push_back((yyvsp[(1) - (1)].node));;}
+#line 98 "sang_m.y"
+    { param_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 36:
-#line 97 "sang_m.y"
-    { param_vector->push_back((yyvsp[(1) - (1)].node));;}
+#line 99 "sang_m.y"
+    { param_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 38:
-#line 101 "sang_m.y"
-    {current_vector = new vector<double>();;}
+#line 103 "sang_m.y"
+    {current_vector = *new vector<double>();;}
     break;
 
   case 39:
-#line 101 "sang_m.y"
-    { for(int i = 0; i < current_vector->size();i++){printf("%F\n",(*current_vector)[i]);} ;}
+#line 103 "sang_m.y"
+    { for(int i = 0; i < current_vector.size();i++){printf("%F\n",current_vector[i]);} ;}
     break;
 
   case 41:
-#line 103 "sang_m.y"
-    {current_vector->push_back((yyvsp[(1) - (1)].double_val ));printf("PUSH_BACK\n");;}
+#line 105 "sang_m.y"
+    {current_vector.push_back((yyvsp[(1) - (1)].double_val ));printf("PUSH_BACK\n");;}
     break;
 
   case 42:
-#line 104 "sang_m.y"
-    {current_vector->push_back((yyvsp[(1) - (3)].double_val ));printf("PUSH_BACK\n");;}
+#line 106 "sang_m.y"
+    {current_vector.push_back((yyvsp[(1) - (3)].double_val ));printf("PUSH_BACK\n");;}
     break;
 
   case 43:
-#line 107 "sang_m.y"
+#line 109 "sang_m.y"
     {(yyval.node) = *new Math_Term<double>((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 44:
-#line 108 "sang_m.y"
+#line 110 "sang_m.y"
     {(yyval.node) = *new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
   case 58:
-#line 127 "sang_m.y"
+#line 129 "sang_m.y"
     {
     (yyval.expression) = new  Math_Expression((yyvsp[(1) - (3)].node),(yyvsp[(2) - (3)].int_val),(yyvsp[(3) - (3)].node));
 ;}
     break;
 
   case 59:
-#line 133 "sang_m.y"
+#line 135 "sang_m.y"
     { (yyval.node) = *new Declaration((yyvsp[(2) - (2)].str_val),true);;}
     break;
 
   case 60:
-#line 135 "sang_m.y"
+#line 137 "sang_m.y"
     { (yyval.node) = *new Declaration((yyvsp[(2) - (2)].str_val),false);;}
     break;
 
   case 61:
-#line 139 "sang_m.y"
+#line 141 "sang_m.y"
     {
     printf("Asigna valor real\n");
-    (yyval.r_asignation) = new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
+    (yyval.node) = *new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
 ;}
     break;
 
   case 62:
-#line 144 "sang_m.y"
+#line 146 "sang_m.y"
     {
     printf("Asigna valor vector\n");
-    (yyval.r_asignation) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val), current_vector,current_vector->size());
-    current_vector->clear();
+    (yyval.node) = *new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val), current_vector,current_vector.size());
+    current_vector.clear();
 ;}
     break;
 
   case 63:
-#line 150 "sang_m.y"
+#line 152 "sang_m.y"
     {
     printf("Asigna espacio vector\n");
-    (yyval.r_asignation) = new VECTOR_Asignation(true, (yyvsp[(2) - (7)].str_val), new std::vector<double>,(int)(yyvsp[(6) - (7)].double_val ));
+    (yyval.node) = *new VECTOR_Asignation(true, (yyvsp[(2) - (7)].str_val), *new std::vector<double>,(int)(yyvsp[(6) - (7)].double_val ));
 ;}
     break;
 
   case 64:
-#line 154 "sang_m.y"
+#line 156 "sang_m.y"
     {
     printf("Asigna expression a variable\n");
-    (yyval.r_asignation) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].expression));
+    (yyval.node) = *new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].expression));
 ;}
     break;
 
   case 65:
-#line 159 "sang_m.y"
+#line 161 "sang_m.y"
     {
     printf("Asigna valor a elemento de vector\n");
-    (yyval.r_asignation) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
+    (yyval.node) = *new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
 ;}
     break;
 
   case 66:
-#line 164 "sang_m.y"
+#line 166 "sang_m.y"
     {
     printf("Asigna expression a variable\n");
-    (yyval.r_asignation) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].expression));
+    (yyval.node) = *new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].expression));
 ;}
     break;
 
   case 67:
-#line 169 "sang_m.y"
+#line 171 "sang_m.y"
     {
     printf("Asigna variable a variable\n");
-    (yyval.r_asignation) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
+    (yyval.node) = *new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
 ;}
     break;
 
@@ -1980,7 +1980,7 @@ yyreturn:
 }
 
 
-#line 177 "sang_m.y"
+#line 179 "sang_m.y"
 
 void  Div0Error(void) {printf("Error: division  by zero\n"); exit (0);}
 void  UnknownVarError(string s) {printf("Error: %s does  not  exist !\n", s.c_str ());  exit (0);}
