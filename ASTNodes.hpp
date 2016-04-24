@@ -203,12 +203,12 @@ public:
 class FunctionDefinition: public Node{
     std::string* id;
     bool returnSthg;
-    Node* params;
-    Node* lines;
+    std::vector<Node>* params;
+    std::vector<Node>* lines;
     Node* returnNode;
     
 public:
-    FunctionDefinition(std::string* i,Node* p,Node* l,bool ret,Node* thing){
+    FunctionDefinition(std::string* i,std::vector<Node>* p,std::vector<Node>* l,bool ret,Node* thing){
         this->id = i;
         this->returnSthg = ret;
         this->params = p;
@@ -216,7 +216,7 @@ public:
         this->returnNode = thing;
     }
     
-    FunctionDefinition(std::string* i,Node* p,Node* l){
+    FunctionDefinition(std::string* i,std::vector<Node>* p,std::vector<Node>* l){
         this->id = i;
         this->returnSthg = false;
         this->params = p;
@@ -224,7 +224,7 @@ public:
         this->returnNode = nullptr;
     }
     
-    FunctionDefinition(std::string* i,Node* l){
+    FunctionDefinition(std::string* i,std::vector<Node>* l){
         this->id = i;
         this->returnSthg = false;
         this->params = nullptr;

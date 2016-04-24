@@ -56,11 +56,11 @@ espacios:
 variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR\n");$$ = GlobalVar(&$2);}
     ;
 
-funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n"); $$ = FunctionDefinition($2,&$4);}
+funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n"); $$ = FunctionDefinition($2,lines_vector);}
     |FUNC VARIABLE ABREPARENTESIS
         {param_vector = new vector<Node>();}
-    parametros CIERRAPARENTESIS bloque {printf("FIN FUNCIÓN \n"); $$ = FunctionDefinition($2,&$4,&$6);}
-    |FUNC REAL VARIABLE ABREPARENTESIS {param_vector = new vector<Node>();} parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES { printf("FUNCIÓN CON DEVOLUCIÓN"); $$ = FunctionDefinition($3,&$5,&$8,true,&$9);}
+    parametros CIERRAPARENTESIS bloque {printf("FIN FUNCIÓN \n"); $$ = FunctionDefinition($2,param_vector,lines_vector);}
+    |FUNC REAL VARIABLE ABREPARENTESIS {param_vector = new vector<Node>();} parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES { printf("FUNCIÓN CON DEVOLUCIÓN"); $$ = FunctionDefinition($3,param_vector,lines_vector,true,&$9);}
     ;
 
 
