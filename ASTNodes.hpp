@@ -8,10 +8,19 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <stdio.h>
 
-class Node{};
+class Node{
+public:
+    Node(){};
+    virtual void roam() = 0;
 
-class Asignation:public Node{};
+};
+
+class Asignation:public Node{
+public:
+    void roam(){};
+};
 
 class REAL_Asignation: public Asignation{
     bool declaration;
@@ -24,6 +33,14 @@ public:
         this->identification = id;
         this->value = v;
     };
+    
+    void roam(){
+        printf("This is a declaration: %d ; This is the identification: %s ; This is the value %F\n",
+               this->declaration,
+               this->identification->c_str(),
+               this->value
+               );
+    }
 };
 
 
@@ -41,6 +58,7 @@ public:
         this->value = &v;
         this->limit = lim;
     };
+    void roam(){};
 };
 
 
@@ -55,6 +73,7 @@ public:
         this->position = pos;
         this->value = v;
     }
+    void roam(){};
 };
 
 class VAR2VAR_Asignation: public Asignation{
@@ -66,7 +85,7 @@ public:
         this->var1 = id;
         this->var2 = id2;
     }
-    
+    void roam(){};
 };
 
 
@@ -88,6 +107,8 @@ public:
         this->var_pos = pos;
         this->value = v;
     }
+    
+    void roam(){};
 };
 
 
@@ -101,21 +122,26 @@ public:
     Math_Term(Data d){
         this->value = d;
     }
+    void roam(){};
 };
-class Expression : public Node{};
+
+class Expression : public Node{
+public:
+    void roam(){};
+};
 
 class Math_Expression: public Expression{
-    Node term1;
-    Node term2;
+    Node* term1;
+    Node* term2;
     int op;
 
 public:
-    Math_Expression(Node t1, int o, Node t2){
+    Math_Expression(Node* t1, int o, Node* t2){
         this->term1 = t1;
         this->term2 = t2;
         this->op = o;
     }
-
+    void roam(){};
 };
 
 class Output_Expression: public Expression{
@@ -126,11 +152,13 @@ public:
         this->searchForVariable = var;
         this->str = string;
     }
+    void roam(){};
 };
 
 class BreakNode : public Node{
 public:
     BreakNode(){};
+    void roam(){};
 };
 
 
@@ -152,6 +180,7 @@ public:
         this->expression = n;
         this->position = p;
     }
+    void roam(){};
 };
 
 
@@ -164,19 +193,20 @@ public:
         this->identification = id;
         this->real = r;
     }
-    
+    void roam(){};
 };
 
 
 /////////////////////////FUNCTION CALL
 class FunctionCall: public Node{
     std::string* identification;
-    std::vector<Node>*  params;
+    std::vector<Node*>*  params;
 public:
-    FunctionCall(std::string* id, std::vector<Node> parm){
+    FunctionCall(std::string* id, std::vector<Node*> parm){
         this->identification = id;
         this->params = &parm;
     }
+    void roam(){};
 };
 
 
@@ -187,6 +217,7 @@ public:
     ReturnNode(Node* r){
         this->return_value = r;
     }
+    void roam(){};
 };
 
 
@@ -201,35 +232,39 @@ public:
         this->identification = id;
         this->expression = n;
     }
+    void roam(){};
 };
 
 
 class AsignationInput : public Node{
+public:
+    void roam(){};
 };
 
 
 class FlowControl : public Node {
     bool loop;
     Node* expression;
-    std::vector<Node> block;
+    std::vector<Node*> block;
     
 public:
-    FlowControl(bool l, Node* exp, std::vector<Node> bl){
+    FlowControl(bool l, Node* exp, std::vector<Node*> bl){
         this->loop = l;
         this->expression = exp;
         this->block = bl;
     }
+    void roam(){};
 };
 
 class FunctionDefinition: public Node{
     std::string* id;
     bool returnSthg;
-    std::vector<Node>* params;
-    std::vector<Node>* lines;
+    std::vector<Node*>* params;
+    std::vector<Node*>* lines;
     Node* returnNode;
     
 public:
-    FunctionDefinition(std::string* i,std::vector<Node> p,std::vector<Node> l,bool ret,Node* thing){
+    FunctionDefinition(std::string* i,std::vector<Node*> p,std::vector<Node*> l,bool ret,Node* thing){
         this->id = i;
         this->returnSthg = ret;
         this->params = &p;
@@ -237,7 +272,7 @@ public:
         this->returnNode = thing;
     }
     
-    FunctionDefinition(std::string* i,std::vector<Node> p,std::vector<Node> l){
+    FunctionDefinition(std::string* i,std::vector<Node*> p,std::vector<Node*> l){
         this->id = i;
         this->returnSthg = false;
         this->params = &p;
@@ -245,13 +280,14 @@ public:
         this->returnNode = nullptr;
     }
     
-    FunctionDefinition(std::string* i,std::vector<Node> l){
+    FunctionDefinition(std::string* i,std::vector<Node*> l){
         this->id = i;
         this->returnSthg = false;
         this->params = nullptr;
         this->lines = &l;
         this->returnNode = nullptr;
     }
+    void roam(){};
 };
 
 class GlobalVar: public Node{
@@ -260,7 +296,14 @@ public:
     GlobalVar(Node* declar){
         this->declaration = declar;
     }
+    void roam(){};
 };
 
-class NewBlock : public Node{};
-class ResumeBlock: public Node{};
+class NewBlock : public Node{
+public:
+    void roam(){};
+};
+class ResumeBlock: public Node{
+public:
+    void roam(){};
+};

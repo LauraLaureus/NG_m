@@ -9,6 +9,10 @@
     #include "sang_m.tab.h"   //  output  of  bison
     void  yyerror(char *);
     int  yyparse(void);
+    extern vector<Node> param_vector;
+    extern vector<Node> lines_vector;
+    extern vector<Node> spaces_vector;
+    extern vector<double> current_vector;
 %}
 %option noyywrap
 %option yylineno
@@ -56,18 +60,10 @@ L?\"(\\.|[^\\"])*\"	{yylval.str_val = new  string(yytext ); return STRING; }
 {digitos}+("."{digitos})* {yylval.double_val=atof(yytext);return VALORREAL;}
 {letras}({letras}|{digitos})*    {yylval.str_val = new  string(yytext ); return  VARIABLE;}
 {ignora}+ {;}
-<<EOF>>             {printf("\nEND\n");exit(0);}
 .   {yyerror("Unknown character\n"); exit(-1);}
 
 %%
+
+
 void  yyerror(char* str) {printf("Parse  Error: \n%s\n",str );}
 
-
-int  main(int  num_args , char** args) {
-    if(num_args  != 2) {printf("usage: ./ parser1  filename\n"); exit (0);}
-    FILE* file = fopen(args[1],"r");
-    if(file == NULL) {printf("couldn 't open %s\n", args [1]);  exit (0);}
-    yyin = file;   // now  flex  reads  from  file
-    yyparse ();
-    fclose(file);
-}
