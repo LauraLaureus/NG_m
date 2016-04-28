@@ -333,8 +333,10 @@ public:
     }
     void roam(){
         printf("Not terminal node. Function definition. Next nodes are the Params \n");
-        for (int i = 0; i < params->size(); i++) {
-           (*params)[i]->roam();
+        if(params != nullptr){
+            for (int i = 0; i < params->size(); i++) {
+                (*params)[i]->roam();
+            }
         }
         printf("End of params.Starting content\n");
         for (int i = 0; i < lines->size(); i++) {
