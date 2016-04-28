@@ -58,7 +58,9 @@ public:
         this->value = &v;
         this->limit = lim;
     };
-    void roam(){};
+    void roam(){
+        printf("Terminal node. Asignation Tipe VECTOR. Identifier: %s\n", identification->c_str());
+    };
 };
 
 
@@ -73,7 +75,9 @@ public:
         this->position = pos;
         this->value = v;
     }
-    void roam(){};
+    void roam(){
+        printf("Terminal node. Asignation Tipe VECTOR element. Identifier: %s\n", identification->c_str());
+    };
 };
 
 class VAR2VAR_Asignation: public Asignation{
@@ -85,7 +89,9 @@ public:
         this->var1 = id;
         this->var2 = id2;
     }
-    void roam(){};
+    void roam(){
+         printf("Terminal node. Asignation Tipe variable to variable. Identifiers: %s and %s\n", var1->c_str(),var2->c_str());
+    };
 };
 
 
@@ -108,7 +114,9 @@ public:
         this->value = v;
     }
     
-    void roam(){};
+    void roam(){
+        printf("Terminal node. Asignation Tipe VECTOR ELEMENT to variable. Identifiers: %s and %s.\n", identification->c_str(), value->c_str());
+    };
 };
 
 
@@ -122,7 +130,9 @@ public:
     Math_Term(Data d){
         this->value = d;
     }
-    void roam(){};
+    void roam(){
+         printf("Terminal node. Mathematical Terminal. \n");
+    };
 };
 
 class Expression : public Node{
@@ -141,7 +151,12 @@ public:
         this->term2 = t2;
         this->op = o;
     }
-    void roam(){};
+    void roam(){
+        printf("Start of mathematical expression....\n");
+        term1->roam();
+        term2->roam();
+        printf("End of mathematical expression....\n");
+    };
 };
 
 class Output_Expression: public Expression{
@@ -152,13 +167,17 @@ public:
         this->searchForVariable = var;
         this->str = string;
     }
-    void roam(){};
+    void roam(){
+        printf("Terminal node. Output Terminal. \n");
+    };
 };
 
 class BreakNode : public Node{
 public:
     BreakNode(){};
-    void roam(){};
+    void roam(){
+        printf("Terminal node. Break Terminal. \n");
+    };
 };
 
 
@@ -180,7 +199,10 @@ public:
         this->expression = n;
         this->position = p;
     }
-    void roam(){};
+    void roam(){
+        printf("Asignation of an expression. Identifier: %s ", identification->c_str());
+        expression->roam();
+    };
 };
 
 
@@ -193,7 +215,9 @@ public:
         this->identification = id;
         this->real = r;
     }
-    void roam(){};
+    void roam(){
+        printf("Terminal node. Declaration. Is it a REAL? %d. Identification: %s\n",real,identification->c_str());
+    };
 };
 
 
@@ -206,7 +230,14 @@ public:
         this->identification = id;
         this->params = &parm;
     }
-    void roam(){};
+    void roam(){
+        printf("Non terminal node. Function call node. Calling params nodes: \n");
+        for (int i = 0; i < params->size(); i++) {
+            (*params)[i]->roam();
+        }
+        printf("End of Params nodes.... Start of content nodes: \n");
+        
+    };
 };
 
 
@@ -217,7 +248,10 @@ public:
     ReturnNode(Node* r){
         this->return_value = r;
     }
-    void roam(){};
+    void roam(){
+        printf("Non Terminal node. Return statement.\n ");
+        return_value->roam();
+    };
 };
 
 
@@ -232,13 +266,18 @@ public:
         this->identification = id;
         this->expression = n;
     }
-    void roam(){};
+    void roam(){
+        printf("Non Terminal node. Storing a function return into a variable. Variable: %s \n", identification->c_str());
+        expression->roam();
+    };
 };
 
 
 class AsignationInput : public Node{
 public:
-    void roam(){};
+    void roam(){
+        printf("Terminal node asign input to variable");
+    };
 };
 
 
@@ -253,7 +292,12 @@ public:
         this->expression = exp;
         this->block = bl;
     }
-    void roam(){};
+    void roam(){
+        printf("Not terminal node. FlowControl structure. Is it a loop? %d\n", loop);
+        for (int i = 0; i < block.size(); i++) {
+            block[i]->roam();
+        }
+    };
 };
 
 class FunctionDefinition: public Node{
@@ -287,7 +331,16 @@ public:
         this->lines = &l;
         this->returnNode = nullptr;
     }
-    void roam(){};
+    void roam(){
+        printf("Not terminal node. Function definition. Next nodes are the Params \n");
+        for (int i = 0; i < params->size(); i++) {
+           (*params)[i]->roam();
+        }
+        printf("End of params.Starting content\n");
+        for (int i = 0; i < lines->size(); i++) {
+            (*lines)[i]->roam();
+        }
+    };
 };
 
 class GlobalVar: public Node{
@@ -296,14 +349,21 @@ public:
     GlobalVar(Node* declar){
         this->declaration = declar;
     }
-    void roam(){};
+    void roam(){
+        printf("Global var declaration\n");
+        declaration->roam();
+    };
 };
 
 class NewBlock : public Node{
 public:
-    void roam(){};
+    void roam(){
+        printf("Separator node. New block\n");
+    };
 };
 class ResumeBlock: public Node{
 public:
-    void roam(){};
+    void roam(){
+        printf("Separator node. Resume Previous block\n");
+    };
 };

@@ -205,7 +205,10 @@ int  main(int  num_args , char** args) {
     }else{
         yyin = file;   // now  flex  reads  from  file
     }
-    yyparse ();printf("Hellow");
+    yyparse ();
+    for(int i = 0; i < spaces_vector.size();i++){
+        spaces_vector[i]->roam();
+    }
     fclose(file);
     return 0;
 }
