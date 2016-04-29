@@ -127,15 +127,13 @@ typedef union YYSTYPE
 #line 25 "sang_m.y"
 {
     Node*    node;
-    Asignation* r_asignation;
-    Expression* expression;
     int      int_val;
     double   double_val;
     string*  str_val;
     vector<double> *vector;
 }
 /* Line 1529 of yacc.c.  */
-#line 139 "sang_m.tab.h"
+#line 137 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

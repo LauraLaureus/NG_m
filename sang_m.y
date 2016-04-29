@@ -24,8 +24,6 @@
 
 %union {
     Node*    node;
-    Asignation* r_asignation;
-    Expression* expression;
     int      int_val;
     double   double_val;
     string*  str_val;
@@ -37,8 +35,8 @@
 %token <vector_val> VALORVECTOR
 
 %type<int_val> operacion
-%type<node> termino line declaracion llamadaFuncion devolucion devuelve funcion lineas variablesGlobales asignacion
-%type<expression> expresion
+%type<node> termino line declaracion llamadaFuncion devolucion devuelve funcion lineas variablesGlobales asignacion expresion
+
 
 
 %start  parsetree
@@ -58,10 +56,10 @@ espacios:
     |variablesGlobales {spaces_vector.push_back($1);} espacios
     |funcion {spaces_vector.push_back($1);} espacios
 ;
-variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {printf("GLOBAL VAR\n");$$ = new GlobalVar($2);}
+variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {$$ = new GlobalVar($2);}
     ;
 
-funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO\n"); $$ = new FunctionDefinition($2,lines_vector);}
+funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES { $$ = new FunctionDefinition($2,lines_vector);}
     |FUNC VARIABLE ABREPARENTESIS
         {param_vector = *new vector<Node*>();}
     parametros CIERRAPARENTESIS bloque {$$ = new FunctionDefinition($2,param_vector,lines_vector);}
@@ -70,16 +68,16 @@ funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES {printf("FIN FUNCIÓN INICIO
 
 
 
-line:declaracion PUNTOYCOMA {printf("DECLARACION \n"); $$ = $1;}
-    |asignacion PUNTOYCOMA {printf("ASIGNA\n"); $$ = $1;}
-    |IF{ lines_vector.push_back(new NewBlock() );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("IF"); $$ = new FlowControl(false,$4,lines_vector); lines_vector.push_back(new ResumeBlock() );}
-    |WHILE { lines_vector.push_back(new NewBlock() );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { printf("WHILE");  $$ = new FlowControl(true,$4,lines_vector);lines_vector.push_back(new ResumeBlock() );}
-    |VARIABLE ASIGNA INPUT PUNTOYCOMA {printf("Lee"); $$ = new AsignationInput();}
-    |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");$$ = new AsignationFunctionCall($1,$3);}
-    |llamadaFuncion PUNTOYCOMA {printf("llamada funcion \n");$$ = new AsignationFunctionCall(nullptr,$1);}
+line:declaracion PUNTOYCOMA { $$ = $1;}
+    |asignacion PUNTOYCOMA { $$ = $1;}
+    |IF{ lines_vector.push_back(new NewBlock(0) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { $$ = new FlowControl(false,$4,lines_vector); lines_vector.push_back(new ResumeBlock(0) );}
+    |WHILE { lines_vector.push_back(new NewBlock(0) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque {  $$ = new FlowControl(true,$4,lines_vector);lines_vector.push_back(new ResumeBlock(0) );}
+    |VARIABLE ASIGNA INPUT PUNTOYCOMA { $$ = new AsignationInput();}
+    |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {$$ = new AsignationFunctionCall($1,$3);}
+    |llamadaFuncion PUNTOYCOMA {$$ = new AsignationFunctionCall(nullptr,$1);}
 
-    |OUTPUT VARIABLE PUNTOYCOMA {printf("escribe"); $$ = new Output_Expression(true, $2);}
-    |OUTPUT STRING PUNTOYCOMA {printf("escribe string");  $$ = new Output_Expression(false, $2);}
+    |OUTPUT VARIABLE PUNTOYCOMA {$$ = new Output_Expression(true, $2);}
+    |OUTPUT STRING PUNTOYCOMA { $$ = new Output_Expression(false, $2);}
     |BREAK PUNTOYCOMA {$$ = new BreakNode();}
     ;
 
@@ -105,7 +103,7 @@ parametros:
 ;
 
 
-vectorNT: ABRECORCHETES {current_vector = *new vector<double>();} elementos { for(int i = 0; i < current_vector.size();i++){printf("%F\n",current_vector[i]);} }CIERRACORCHETES;
+vectorNT: ABRECORCHETES {current_vector = *new vector<double>();} elementos CIERRACORCHETES;
 
 elementos: VALORREAL {current_vector.push_back($1);}
         | VALORREAL COMA elementos {current_vector.push_back($1);}
@@ -144,37 +142,30 @@ declaracion: REAL VARIABLE
 
 asignacion: REAL VARIABLE ASIGNA VALORREAL
 {
-    printf("Asigna valor real\n");
     $$ = new REAL_Asignation(true, $2, $4);
 }
 |VECTOR VARIABLE ASIGNA vectorNT
 {
-    printf("Asigna valor vector\n");
     $$ = new VECTOR_Asignation(true, $2, current_vector,current_vector.size());
     current_vector.clear();
 }
 |VECTOR VARIABLE ASIGNA RESERVAESPACIO ABRECORCHETES VALORREAL CIERRACORCHETES
 {
-    printf("Asigna espacio vector\n");
     $$ = new VECTOR_Asignation(true, $2, *new std::vector<double>,(int)$6);
 }
 |VARIABLE ASIGNA expresion{
-    printf("Asigna expression a variable\n");
     $$ = new Expression2Var($1,$3);
 }
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
 {
-    printf("Asigna valor a elemento de vector\n");
     $$ = new ELEM_VECTOR_Asignation($1,(int)$3,$6);
 }
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA expresion
 {
-    printf("Asigna expression a variable\n");
     $$ = new Expression2Var($1,$3,$6);
 }
 |VARIABLE ASIGNA VARIABLE
 {
-    printf("Asigna variable a variable\n");
     $$ = new VAR2VAR_Asignation($1,$3);
 }
 |VARIABLE ASIGNA VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES

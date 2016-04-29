@@ -15,10 +15,3 @@ func inicio {
     }
 
 }
-
-func esCoincidencia(REAL e1, REAL e2){
-    si (e1 == e2){
-        coincidencias = coincidencias + 1;
-    }
-
-}
