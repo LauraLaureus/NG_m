@@ -6,14 +6,15 @@
     #include  <map>
     #include  <vector>
     #include "ASTNodes.hpp"
+    #include "SymbolTable.hpp"
     #include <fstream>
     using  namespace  std;
     vector<Node*> param_vector;
     vector<Node*> lines_vector;
     vector<Node*> spaces_vector;
     vector<double> current_vector;
-    int current_vector_dimensions;
-    int current_vector_width;
+    SymbolTable ts;
+    int current_depth;
     extern FILE *yyin;
     extern  int  yylex ();
     extern  void  yyerror(char *);
@@ -48,18 +49,43 @@
 %%
 
 
-parsetree: { spaces_vector = *new vector<Node*>(); }espacios {}
-        |error {spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear();} // colocamos el error en la raíz del árbol para limpiar facilmente el árbol de nodos.
+parsetree: { spaces_vector = *new vector<Node*>(); current_depth = 0; ts = *new SymbolTable();} espacios {}
+        |error { spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear(); current_depth = 0;} // colocamos el error en la raíz del árbol para limpiar facilmente el árbol de nodos.
         ;
 
-espacios:
-    |variablesGlobales {spaces_vector.push_back($1);} espacios
-    |funcion {spaces_vector.push_back($1);} espacios
-;
-variablesGlobales: GLOBAL declaracion PUNTOYCOMA  {$$ = new GlobalVar($2);}
+espacios: {current_depth -= 1;}
+    |{ current_depth += 1;} variablesGlobales {spaces_vector.push_back($2); current_depth -= 1;}espacios
+    |{ current_depth += 1;} funcion {spaces_vector.push_back($2);current_depth -= 1;}espacios
     ;
 
-funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES { $$ = new FunctionDefinition($2,lines_vector);}
+variablesGlobales:  GLOBAL declaracion PUNTOYCOMA
+    {
+        $$ = new GlobalVar($2);
+        if(Declaration* n = dynamic_cast<Declaration*>($2)){
+            DataType type;
+            if(n->isReal()){
+                type = real;
+            }else{
+                type = DataTypeVector;
+            }
+            SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,$2);
+            ts.insertRecord(*(n->getIdentification()), record );
+        }
+    };
+
+
+
+funcion: FUNC INICIO
+    {
+        DataType type = initFunction;
+        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord("inicio", record);
+    }//Sigue por aquí :D
+    bloque
+    {
+        current_depth -= 1;
+        $$ = new FunctionDefinition($2,ts.getNodeVector("inicio"));
+    }
     |FUNC VARIABLE ABREPARENTESIS
         {param_vector = *new vector<Node*>();}
     parametros CIERRAPARENTESIS bloque {$$ = new FunctionDefinition($2,param_vector,lines_vector);}
@@ -71,7 +97,30 @@ funcion: FUNC INICIO ABRELLAVES lineas CIERRALLAVES { $$ = new FunctionDefinitio
 line:declaracion PUNTOYCOMA { $$ = $1;}
     |asignacion PUNTOYCOMA { $$ = $1;}
     |IF{ lines_vector.push_back(new NewBlock(0) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { $$ = new FlowControl(false,$4,lines_vector); lines_vector.push_back(new ResumeBlock(0) );}
-    |WHILE { lines_vector.push_back(new NewBlock(0) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque {  $$ = new FlowControl(true,$4,lines_vector);lines_vector.push_back(new ResumeBlock(0) );}
+    |WHILE { lines_vector.push_back(new NewBlock(current_depth) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque {
+        lines_vector.push_back(new ResumeBlock(current_depth) );
+        std::vector<Node*> whileNodes = *new std::vector<Node*>();
+        int i = lines_vector.size()-1;
+        int obtained_depth = 0;
+        for(; i > 0; i--){
+            if(ResumeBlock* b = dynamic_cast<ResumeBlock*>(lines_vector[i])){
+               
+                obtained_depth = b->getDepth();
+                break;
+            }
+        }
+        
+        for(; i > 0;i--){
+            whileNodes.insert(whileNodes.begin(),lines_vector[i]);
+            lines_vector.erase(lines_vector.begin()+i);
+            if(NewBlock* n = dynamic_cast<NewBlock*>(whileNodes[0])){
+                printf("Stays in vegas");
+                break;
+            }
+        }
+        
+        $$ = new FlowControl(true,$4,whileNodes);}
+
     |VARIABLE ASIGNA INPUT PUNTOYCOMA { $$ = new AsignationInput();}
     |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {$$ = new AsignationFunctionCall($1,$3);}
     |llamadaFuncion PUNTOYCOMA {$$ = new AsignationFunctionCall(nullptr,$1);}
@@ -81,7 +130,7 @@ line:declaracion PUNTOYCOMA { $$ = $1;}
     |BREAK PUNTOYCOMA {$$ = new BreakNode();}
     ;
 
-bloque: ABRELLAVES {lines_vector = *new std::vector<Node*>();} lineas CIERRALLAVES ;
+bloque: ABRELLAVES {current_depth += 1;lines_vector = *new std::vector<Node*>();} lineas { current_depth -= 1;}CIERRALLAVES ;
 
 lineas:  line {lines_vector.push_back($1);} lineas
 | line {lines_vector.push_back($1);}
@@ -135,7 +184,9 @@ expresion: termino operacion termino
 
 
 declaracion: REAL VARIABLE
-{ $$ = new Declaration($2,true);}
+{
+    $$ = new Declaration($2,true);
+}
             |VECTOR VARIABLE
 { $$ = new Declaration($2,false);}
             ;
@@ -200,6 +251,7 @@ int  main(int  num_args , char** args) {
     for(int i = 0; i < spaces_vector.size();i++){
         spaces_vector[i]->roam();
     }
+    ts.printState();
     fclose(file);
     return 0;
 }

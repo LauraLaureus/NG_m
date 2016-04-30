@@ -1,8 +1,6 @@
 global REAL externa;
+global VECTOR shushushu;
 
 func inicio{
 	REAL a = 0;
-	mientras (a == 0){
-		REAL b = 0;
-	}
 }

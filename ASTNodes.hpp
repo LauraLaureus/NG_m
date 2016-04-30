@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <iostream>
 
+
 class Node{
 public:
     Node(){};
@@ -208,6 +209,16 @@ public:
         this->identification = id;
         this->real = r;
     }
+    
+    bool isReal(){
+        return this->real;
+    }
+    
+    std::string* getIdentification(){
+        return this->identification;
+    }
+
+    
     void roam(){
         printf("Terminal node. Declaration. Is it a REAL? %d. Identification: %s\n",real,identification->c_str());
     };
@@ -301,7 +312,7 @@ public:
         this->depth = d;
     };
     void roam(){
-        printf("Separator node. New block\n");
+        printf("Separator node. New block Current depth %d\n", this->depth);
     };
 };
 
@@ -314,7 +325,7 @@ public:
     };
     int getDepth(){ return this->depth;};
     void roam(){
-        printf("Separator node. Resume Previous block\n");
+        printf("Separator node. Resume Previous block. Current depth %d\n",this->depth);
     };
 };
 
@@ -370,6 +381,11 @@ public:
     GlobalVar(Node* declar){
         this->declaration = declar;
     }
+    
+    bool isReal(){
+        return true;
+    }
+    
     void roam(){
         printf("------Global var declaration----\n");
         declaration->roam();
