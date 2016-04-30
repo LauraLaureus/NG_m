@@ -13,8 +13,8 @@ void SymbolTable::insertRecord( string id, SymbolTableRecord r){
     this->lastIdentifierAccessed = id;
 }
 
-void SymbolTable::saveNode( Node* n){
-    this->table[lastIdentifierAccessed].addNode(n);
+void SymbolTable::saveNode(string id, Node* n){
+    this->table[id].addNode(n);
 }
 
 bool SymbolTable::sameType( string id, string id2){
@@ -34,4 +34,9 @@ void SymbolTable::printState(){
 
 std::vector<Node*> SymbolTable::getNodeVector(string identifier){
     return this->table[identifier].getNodeStack();
+}
+
+
+void SymbolTable::removeRecord(string id){
+    this->table.erase(id);
 }

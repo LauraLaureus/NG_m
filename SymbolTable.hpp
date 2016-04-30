@@ -16,7 +16,7 @@
 
 using namespace std;
 
-enum DataType { real, DataTypeVector, initFunction, realFunction, voidFunction};
+enum DataType { real, DataTypeVector, initFunction, realFunction, voidFunction,flowControlIf,flowControlWhile};
 
 class SymbolTableRecord {
     bool global;
@@ -91,7 +91,9 @@ public:
     
     void insertRecord( string id, SymbolTableRecord r);
     
-    void saveNode( Node* n);
+    void removeRecord(string id);
+    
+    void saveNode(string id, Node* n);
     
     bool sameType( string id, string id2);
     

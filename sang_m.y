@@ -3,22 +3,30 @@
     #include  <stdio.h>
     #include  <stdlib.h>
     #include  <string>
-    #include  <map>
     #include  <vector>
+
     #include "ASTNodes.hpp"
     #include "SymbolTable.hpp"
-    #include <fstream>
+    
     using  namespace  std;
+    
     vector<Node*> param_vector;
     vector<Node*> lines_vector;
     vector<Node*> spaces_vector;
     vector<double> current_vector;
+    
+    vector<string> nameStack;
+    
     SymbolTable ts;
+    
     int current_depth;
+    
     extern FILE *yyin;
     extern  int  yylex ();
     extern  void  yyerror(char *);
+    
     void buildCheckForErrors();
+    void stringStack(string* dst );
 %}
 
 %locations
@@ -49,7 +57,7 @@
 %%
 
 
-parsetree: { spaces_vector = *new vector<Node*>(); current_depth = 0; ts = *new SymbolTable();} espacios {}
+parsetree: { spaces_vector = *new vector<Node*>(); current_depth = 0; ts = *new SymbolTable(); nameStack = *new std::vector<string>();} espacios {}
         |error { spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear(); current_depth = 0;} // colocamos el error en la raíz del árbol para limpiar facilmente el árbol de nodos.
         ;
 
@@ -77,16 +85,18 @@ variablesGlobales:  GLOBAL declaracion PUNTOYCOMA
 
 funcion: FUNC INICIO
     {
+        nameStack.push_back("inicio");
         DataType type = initFunction;
         SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord("inicio", record);
-    }//Sigue por aquí :D
+        
+    }
     bloque
     {
-        current_depth -= 1;
         $$ = new FunctionDefinition($2,ts.getNodeVector("inicio"));
+        nameStack.pop_back();
     }
-    |FUNC VARIABLE ABREPARENTESIS
+    |FUNC VARIABLE ABREPARENTESIS //Hey yu //Sigue por aquí :D
         {param_vector = *new vector<Node*>();}
     parametros CIERRAPARENTESIS bloque {$$ = new FunctionDefinition($2,param_vector,lines_vector);}
     |FUNC REAL VARIABLE ABREPARENTESIS {param_vector = *new vector<Node*>();} parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES { printf("FUNCIÓN CON DEVOLUCIÓN"); $$ = new FunctionDefinition($3,param_vector,lines_vector,true,$9);}
@@ -94,9 +104,37 @@ funcion: FUNC INICIO
 
 
 
-line:declaracion PUNTOYCOMA { $$ = $1;}
-    |asignacion PUNTOYCOMA { $$ = $1;}
-    |IF{ lines_vector.push_back(new NewBlock(0) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque { $$ = new FlowControl(false,$4,lines_vector); lines_vector.push_back(new ResumeBlock(0) );}
+line:declaracion PUNTOYCOMA
+    {
+        $$ = $1;
+        ts.saveNode(nameStack.back(),$1);
+    }
+
+    |asignacion PUNTOYCOMA
+    {
+        $$ = $1;
+        ts.saveNode(nameStack.back(),$1);
+    }
+    //
+    |IF
+    {
+        nameStack.push_back("If");
+        string blockName;
+        stringStack(&blockName);
+        DataType type = flowControlIf;
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(blockName, record);
+        
+    }
+    ABREPARENTESIS expresion CIERRAPARENTESIS bloque
+    {
+        string blockName;
+        stringStack(&blockName);
+        $$ = new FlowControl(false,$4,ts.getNodeVector(blockName));
+        ts.removeRecord(blockName);
+        nameStack.pop_back();
+    }
+
     |WHILE { lines_vector.push_back(new NewBlock(current_depth) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque {
         lines_vector.push_back(new ResumeBlock(current_depth) );
         std::vector<Node*> whileNodes = *new std::vector<Node*>();
@@ -132,8 +170,22 @@ line:declaracion PUNTOYCOMA { $$ = $1;}
 
 bloque: ABRELLAVES {current_depth += 1;lines_vector = *new std::vector<Node*>();} lineas { current_depth -= 1;}CIERRALLAVES ;
 
-lineas:  line {lines_vector.push_back($1);} lineas
-| line {lines_vector.push_back($1);}
+lineas:  line
+    {
+        string blockName;
+        stringStack(&blockName);
+        //lines_vector.push_back($1);
+        ts.saveNode(blockName,$1);
+    } lineas
+| line
+{
+    string blockName;
+    stringStack(&blockName);
+    //lines_vector.push_back($1);
+    ts.saveNode(blockName,$1);
+
+    //lines_vector.push_back($1);
+}
 ;
 
 devuelve: DEVUELVE devolucion PUNTOYCOMA { $$ = new ReturnNode($2);};
@@ -234,6 +286,11 @@ void buildCheckForErrors(){
     printf("Jeronimo");
 }
 
+void stringStack(string* dst ){
+    for(int i = 0; i < nameStack.size(); i++){
+        (*dst) += nameStack[i];
+    }
+}
 
 int  main(int  num_args , char** args) {
     if(num_args  != 2) {

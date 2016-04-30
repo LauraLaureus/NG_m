@@ -2,5 +2,9 @@ global REAL externa;
 global VECTOR shushushu;
 
 func inicio{
-	REAL a = 0;
+	REAL a;
+	a = b + c;
+	si ( a < c ){
+		REAL b;
+	}
 }

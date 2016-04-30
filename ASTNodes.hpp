@@ -217,7 +217,6 @@ public:
     std::string* getIdentification(){
         return this->identification;
     }
-
     
     void roam(){
         printf("Terminal node. Declaration. Is it a REAL? %d. Identification: %s\n",real,identification->c_str());
