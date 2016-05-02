@@ -3,8 +3,5 @@ global VECTOR shushushu;
 
 func inicio{
 	REAL a;
-	a = b + c;
-	si ( a < c ){
-		REAL b;
-	}
 }
+

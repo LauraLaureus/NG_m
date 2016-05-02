@@ -107,15 +107,19 @@ funcion: FUNC INICIO
 line:declaracion PUNTOYCOMA
     {
         $$ = $1;
-        ts.saveNode(nameStack.back(),$1);
+        string blockName;
+        stringStack(&blockName);
+        ts.saveNode(blockName,$1);
     }
 
     |asignacion PUNTOYCOMA
     {
         $$ = $1;
-        ts.saveNode(nameStack.back(),$1);
+        string blockName;
+        stringStack(&blockName);
+        ts.saveNode(blockName,$1);
     }
-    //
+
     |IF
     {
         nameStack.push_back("If");
@@ -134,30 +138,25 @@ line:declaracion PUNTOYCOMA
         ts.removeRecord(blockName);
         nameStack.pop_back();
     }
+//////////////////////_________________________________________________________
+    |WHILE
+    {
+        nameStack.push_back("While");
+        string blockName;
+        stringStack(&blockName);
+        DataType type = flowControlIf;
+        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(blockName, record);
 
-    |WHILE { lines_vector.push_back(new NewBlock(current_depth) );} ABREPARENTESIS expresion CIERRAPARENTESIS bloque {
-        lines_vector.push_back(new ResumeBlock(current_depth) );
-        std::vector<Node*> whileNodes = *new std::vector<Node*>();
-        int i = lines_vector.size()-1;
-        int obtained_depth = 0;
-        for(; i > 0; i--){
-            if(ResumeBlock* b = dynamic_cast<ResumeBlock*>(lines_vector[i])){
-               
-                obtained_depth = b->getDepth();
-                break;
-            }
-        }
-        
-        for(; i > 0;i--){
-            whileNodes.insert(whileNodes.begin(),lines_vector[i]);
-            lines_vector.erase(lines_vector.begin()+i);
-            if(NewBlock* n = dynamic_cast<NewBlock*>(whileNodes[0])){
-                printf("Stays in vegas");
-                break;
-            }
-        }
-        
-        $$ = new FlowControl(true,$4,whileNodes);}
+    }
+    ABREPARENTESIS expresion CIERRAPARENTESIS bloque
+    {
+        string blockName;
+        stringStack(&blockName);
+        $$ = new FlowControl(true,$4,ts.getNodeVector(blockName));
+        ts.removeRecord(blockName);
+        nameStack.pop_back();
+    }
 
     |VARIABLE ASIGNA INPUT PUNTOYCOMA { $$ = new AsignationInput();}
     |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA {$$ = new AsignationFunctionCall($1,$3);}
@@ -168,25 +167,23 @@ line:declaracion PUNTOYCOMA
     |BREAK PUNTOYCOMA {$$ = new BreakNode();}
     ;
 
-bloque: ABRELLAVES {current_depth += 1;lines_vector = *new std::vector<Node*>();} lineas { current_depth -= 1;}CIERRALLAVES ;
+bloque: ABRELLAVES {current_depth += 1;} lineas { current_depth -= 1;}CIERRALLAVES ;
 
-lineas:  line
+lineas:  line lineas
+    //{
+    //    string blockName;
+    //    stringStack(&blockName);
+    //    ts.saveNode(blockName,$1);
+    //}
+
+    //|
+    |line
     {
         string blockName;
         stringStack(&blockName);
-        //lines_vector.push_back($1);
         ts.saveNode(blockName,$1);
-    } lineas
-| line
-{
-    string blockName;
-    stringStack(&blockName);
-    //lines_vector.push_back($1);
-    ts.saveNode(blockName,$1);
-
-    //lines_vector.push_back($1);
-}
-;
+    }
+    ;
 
 devuelve: DEVUELVE devolucion PUNTOYCOMA { $$ = new ReturnNode($2);};
 
