@@ -11,11 +11,13 @@
 #include <stdio.h>
 #include <iostream>
 
+using namespace std;
 
 class Node{
 public:
     Node(){};
     virtual void roam() = 0;
+    virtual bool searchByHeight( string* id, int currentDepth, int maxDepth) = 0;
 
 };
 
@@ -38,6 +40,12 @@ public:
                this->value
                );
     }
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0) return false;
+        else return true;
+    }
 };
 
 
@@ -58,6 +66,12 @@ public:
     void roam(){
         printf("Terminal node. Asignation Type VECTOR. Identifier: %s\n", identification->c_str());
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0) return false;
+        else return true;
+    }
 };
 
 
@@ -75,6 +89,12 @@ public:
     void roam(){
         printf("Terminal node. Asignation Tipe VECTOR element. Identifier: %s\n", identification->c_str());
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0) return false;
+        else return true;
+    }
 };
 
 class VAR2VAR_Asignation: public Node{
@@ -89,6 +109,12 @@ public:
     void roam(){
          printf("Terminal node. Asignation Tipe variable to variable. Identifiers: %s and %s\n", var1->c_str(),var2->c_str());
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->var1->compare(*id) != 0  ) return false;
+        else return true;
+    }
 };
 
 
@@ -114,6 +140,13 @@ public:
     void roam(){
         printf("Terminal node. Asignation Tipe VECTOR ELEMENT to variable. Identifiers: %s and %s.\n", identification->c_str(), value->c_str());
     };
+    
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0  ) return false;
+        else return true;
+    }
 };
 
 
@@ -130,6 +163,10 @@ public:
     void roam(){
          printf("Terminal node. Mathematical Terminal. \n");
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 
@@ -151,6 +188,10 @@ public:
         term2->roam();
         printf("End of mathematical expression....\n");
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 class Output_Expression: public Node{
@@ -164,6 +205,10 @@ public:
     void roam(){
         printf("Terminal node. Output Terminal. \n");
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 class BreakNode : public Node{
@@ -172,6 +217,10 @@ public:
     void roam(){
         printf("Terminal node. Break Terminal. \n");
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 
@@ -197,6 +246,12 @@ public:
         printf("Asignation of an expression. Identifier: %s ", identification->c_str());
         expression->roam();
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0  ) return false;
+        else return true;
+    }
 };
 
 
@@ -221,6 +276,12 @@ public:
     void roam(){
         printf("Terminal node. Declaration. Is it a REAL? %d. Identification: %s\n",real,identification->c_str());
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0  ) return false;
+        else return true;
+    }
 };
 
 
@@ -241,6 +302,10 @@ public:
         printf("End of Params nodes.... Start of content nodes: \n");
         
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 
@@ -255,6 +320,10 @@ public:
         printf("Non Terminal node. Return statement.\n ");
         return_value->roam();
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 
@@ -273,6 +342,12 @@ public:
         printf("Non Terminal node. Storing a function return into a variable. Variable: %s \n", identification->c_str());
         expression->roam();
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        if(this->identification->compare(*id) != 0  ) return false;
+        else return true;
+    }
 };
 
 
@@ -281,6 +356,10 @@ public:
     void roam(){
         printf("Terminal node asign input to variable");
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        return false;
+    }
 };
 
 
@@ -302,9 +381,18 @@ public:
             block[i]->roam();
         }
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        bool returnable = false;
+        for (int i = 0; i< block.size(); i++) {
+            if(block[i]->searchByHeight(id, currentDepth+1, maxDepth)) return true;
+        }
+        return returnable;
+    }
 };
 
-class NewBlock : public Node{
+/*class NewBlock : public Node{
     int depth;
 public:
     NewBlock(int d){
@@ -326,7 +414,7 @@ public:
     void roam(){
         printf("Separator node. Resume Previous block. Current depth %d\n",this->depth);
     };
-};
+};*/
 
 
 class FunctionDefinition: public Node{
@@ -372,6 +460,15 @@ public:
             lines[i]->roam();
         }
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        bool returnable = false;
+        for (int i = 0; i< lines.size(); i++) {
+            returnable = returnable || lines[i]->searchByHeight(id, currentDepth+1, maxDepth);
+        }
+        return returnable;
+    }
 };
 
 class GlobalVar: public Node{
@@ -389,5 +486,10 @@ public:
         printf("------Global var declaration----\n");
         declaration->roam();
     };
+    
+    bool searchByHeight( string* id, int currentDepth, int maxDepth) {
+        if(currentDepth > maxDepth) return false;
+        return this->declaration->searchByHeight(id, currentDepth,maxDepth);
+    }
 };
 

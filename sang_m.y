@@ -27,6 +27,7 @@
     
     void buildCheckForErrors();
     void stringStack(string* dst );
+    bool heightSearch(string* target, int max);
 %}
 
 %locations
@@ -241,23 +242,36 @@ expresion: termino operacion termino
 
 declaracion: REAL VARIABLE
 {
+    
+    if(!heightSearch($2, current_depth)){
+        
+        DataType type = real ;
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*$2, record);
+    }
     $$ = new Declaration($2,true);
-    DataType type = real ;
-    SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
-    ts.insertRecord(*$2, record);
 
 }
             |VECTOR VARIABLE
 {
+    if(!heightSearch($2, current_depth)){
+        DataType type = DataTypeVector;
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*$2, record);
+    }
+    
     $$ = new Declaration($2,false);
-    DataType type = DataTypeVector;
-    SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
-    ts.insertRecord(*$2, record);
-}
-            ;
+};
+
 
 asignacion: REAL VARIABLE ASIGNA VALORREAL
 {
+    if(heightSearch($2,1)){
+        printf("I'm overriting a global var");
+    }
+    else if(!heightSearch($2, current_depth)){
+        printf("I'm not overriting a global var");
+    }
     $$ = new REAL_Asignation(true, $2, $4);
 }
 |VECTOR VARIABLE ASIGNA vectorNT
@@ -303,6 +317,14 @@ void stringStack(string* dst ){
     for(int i = 0; i < nameStack.size(); i++){
         (*dst) += nameStack[i];
     }
+}
+
+
+bool heightSearch(string* target, int max){
+    for(int i = 0; i < spaces_vector.size();i++){
+        if(spaces_vector[i]->searchByHeight( target,0,max)) return true;
+    }
+    return false;
 }
 
 int  main(int  num_args , char** args) {
