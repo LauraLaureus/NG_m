@@ -3,5 +3,9 @@ global VECTOR shushushu;
 
 func inicio{
 	REAL a;
+	REAL b = 3;
+	si (a == b){
+		a =  a + 1;
+	}
 }
 

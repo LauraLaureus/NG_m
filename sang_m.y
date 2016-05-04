@@ -109,7 +109,9 @@ line:declaracion PUNTOYCOMA
         $$ = $1;
         string blockName;
         stringStack(&blockName);
-        ts.saveNode(blockName,$1);
+        //ts.saveNode(blockName,$1);
+        //TODO hacer un chequeo de que la variable no existe o es nombre de variable global.
+        //TODO añadir un registro a la tabla de símbolos.
     }
 
     |asignacion PUNTOYCOMA
@@ -117,7 +119,9 @@ line:declaracion PUNTOYCOMA
         $$ = $1;
         string blockName;
         stringStack(&blockName);
-        ts.saveNode(blockName,$1);
+        //ts.saveNode(blockName,$1);
+        //TODO hacer un chequeo de que las variables existen o es nombre de variable global.
+        //TODO añadir un registro a la tabla de símbolos.
     }
 
     |IF
@@ -169,14 +173,13 @@ line:declaracion PUNTOYCOMA
 
 bloque: ABRELLAVES {current_depth += 1;} lineas { current_depth -= 1;}CIERRALLAVES ;
 
-lineas:  line lineas
-    //{
-    //    string blockName;
-    //    stringStack(&blockName);
-    //    ts.saveNode(blockName,$1);
-    //}
+lineas:  line
+    {
+        string blockName;
+        stringStack(&blockName);
+        ts.saveNode(blockName,$1);
+    }lineas
 
-    //|
     |line
     {
         string blockName;
@@ -196,7 +199,11 @@ llamadaFuncion: VARIABLE ABREPARENTESIS {param_vector = *new std::vector<Node*>(
 ;
 
 parametros:
-| declaracion { param_vector.push_back($1);}
+| declaracion
+{
+    param_vector.push_back($1);
+}
+
 | declaracion { param_vector.push_back($1);} COMA parametros
 ;
 
@@ -235,9 +242,18 @@ expresion: termino operacion termino
 declaracion: REAL VARIABLE
 {
     $$ = new Declaration($2,true);
+    DataType type = real ;
+    SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord(*$2, record);
+
 }
             |VECTOR VARIABLE
-{ $$ = new Declaration($2,false);}
+{
+    $$ = new Declaration($2,false);
+    DataType type = DataTypeVector;
+    SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord(*$2, record);
+}
             ;
 
 asignacion: REAL VARIABLE ASIGNA VALORREAL
