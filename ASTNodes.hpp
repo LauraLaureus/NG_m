@@ -306,6 +306,10 @@ public:
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
     }
+    
+    std::string getIdentification(){
+        return *(this->identification);
+    }
 };
 
 
@@ -338,6 +342,8 @@ public:
         this->identification = id;
         this->expression = n;
     }
+    
+    
     void roam(){
         printf("Non Terminal node. Storing a function return into a variable. Variable: %s \n", identification->c_str());
         expression->roam();
@@ -347,6 +353,14 @@ public:
         if(currentDepth > maxDepth) return false;
         if(this->identification->compare(*id) != 0  ) return false;
         else return true;
+    }
+    
+    std::string getFunctionIdentification(){
+        
+        if(FunctionCall* n = dynamic_cast<FunctionCall*>(this->expression)){
+            return n->getIdentification();
+        }
+        return *new std::string;
     }
 };
 
@@ -386,6 +400,7 @@ public:
         if(currentDepth > maxDepth) return false;
         bool returnable = false;
         for (int i = 0; i< block.size(); i++) {
+            printf("SearchByHeight: flow control %d th son\n",i);
             if(block[i]->searchByHeight(id, currentDepth+1, maxDepth)) return true;
         }
         return returnable;

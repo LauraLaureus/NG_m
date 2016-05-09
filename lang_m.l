@@ -7,12 +7,13 @@
     #include "ASTNodes.hpp"
     using  namespace  std;
     #include "sang_m.tab.h"   //  output  of  bison
-    void  yyerror(char *);
+    
     int  yyparse(void);
     extern vector<Node> param_vector;
     extern vector<Node> lines_vector;
     extern vector<Node> spaces_vector;
     extern vector<double> current_vector;
+    extern void  yyerror(char *);
 %}
 %option noyywrap
 %option yylineno
@@ -65,5 +66,4 @@ L?\"(\\.|[^\\"])*\"	{yylval.str_val = new  string(yytext ); return STRING; }
 %%
 
 
-void  yyerror(char* str) {printf("Parse  Error: \n%s\n",str );}
 

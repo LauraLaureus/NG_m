@@ -24,6 +24,9 @@ class SymbolTableRecord {
     int depth;
     vector<Node*> vector;
     
+    std::vector<Node*> params;
+
+    
 public:
     
     SymbolTableRecord(){
@@ -68,14 +71,29 @@ public:
         cout <<  "|" << global << "|" << "\t";
         cout << type << "|" << "\t";
         cout << depth << "|" << "\t";
-        cout << vector.size() << "|" << "\n";
+        cout << vector.size() << "|" ;
+        
+        if(this->type >2 && this->type < 5){
+            cout << "\t" << params.size() <<"|";
+        }
+        
+        cout <<std::endl;
     }
     
     std::vector<Node*> getNodeStack(){
         return this->vector;
     }
+    
+    int giveDepth(){ return this->depth;}
+    
+    
+    void setParams(std::vector<Node*> p){
+        this->params = p;
+    };
+
 
 };
+
 
 
 
@@ -99,5 +117,9 @@ public:
     
     std::vector<Node*> getNodeVector(string identifier);
     
+    int exists(string identifier);
+    
     void printState();
+    
+    void setParams(std::vector<Node*> p, std::string identifier);
 };

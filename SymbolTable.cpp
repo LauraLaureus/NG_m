@@ -40,3 +40,14 @@ std::vector<Node*> SymbolTable::getNodeVector(string identifier){
 void SymbolTable::removeRecord(string id){
     this->table.erase(id);
 }
+
+int SymbolTable::exists(string identifier){
+    if(this->table.find(identifier) != table.end()){
+        return this->table[identifier].giveDepth();
+    }
+    return -1;
+}
+
+void SymbolTable::setParams(std::vector<Node*> p, std::string identifier){
+    this->table[identifier].setParams(p);
+};

@@ -156,6 +156,7 @@
     #include  <stdlib.h>
     #include  <string>
     #include  <vector>
+    
 
     #include "ASTNodes.hpp"
     #include "SymbolTable.hpp"
@@ -177,6 +178,7 @@
     extern  int  yylex ();
     extern  void  yyerror(char *);
     
+    void  yyerror(char *);
     void buildCheckForErrors();
     void stringStack(string* dst );
     bool heightSearch(string* target, int max);
@@ -202,7 +204,7 @@
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 35 "sang_m.y"
+#line 37 "sang_m.y"
 {
     Node*    node;
     int      int_val;
@@ -211,7 +213,7 @@ typedef union YYSTYPE
     vector<double> *vector;
 }
 /* Line 193 of yacc.c.  */
-#line 215 "sang_m.tab.c"
+#line 217 "sang_m.tab.c"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1
@@ -236,7 +238,7 @@ typedef struct YYLTYPE
 
 
 /* Line 216 of yacc.c.  */
-#line 240 "sang_m.tab.c"
+#line 242 "sang_m.tab.c"
 
 #ifdef short
 # undef short
@@ -554,14 +556,14 @@ static const yytype_int8 yyrhs[] =
 /* YYRLINE[YYN] -- source line where rule number YYN was defined.  */
 static const yytype_uint16 yyrline[] =
 {
-       0,    61,    61,    61,    62,    65,    66,    66,    66,    67,
-      67,    67,    70,    88,    87,   101,   100,   103,   103,   108,
-     118,   129,   128,   148,   147,   166,   167,   168,   170,   171,
-     172,   175,   175,   175,   178,   177,   184,   192,   194,   195,
-     199,   199,   202,   203,   208,   208,   212,   212,   214,   215,
-     218,   219,   222,   223,   224,   225,   226,   227,   228,   229,
-     230,   231,   232,   233,   234,   237,   243,   255,   267,   277,
-     282,   286,   289,   293,   297,   301,   305
+       0,    63,    63,    63,    64,    67,    68,    68,    68,    69,
+      69,    69,    72,    90,    89,   104,   102,   118,   117,   136,
+     143,   151,   150,   170,   169,   188,   197,   204,   209,   217,
+     221,   232,   232,   232,   235,   234,   241,   249,   251,   252,
+     256,   256,   259,   260,   265,   265,   269,   269,   271,   272,
+     275,   276,   279,   280,   281,   282,   283,   284,   285,   286,
+     287,   288,   289,   290,   291,   294,   300,   312,   324,   337,
+     350,   363,   369,   376,   383,   390,   397
 };
 #endif
 
@@ -1581,47 +1583,47 @@ yyreduce:
   switch (yyn)
     {
         case 2:
-#line 61 "sang_m.y"
+#line 63 "sang_m.y"
     { spaces_vector = *new vector<Node*>(); current_depth = 0; ts = *new SymbolTable(); nameStack = *new std::vector<string>();;}
     break;
 
   case 3:
-#line 61 "sang_m.y"
+#line 63 "sang_m.y"
     {;}
     break;
 
   case 4:
-#line 62 "sang_m.y"
+#line 64 "sang_m.y"
     { spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear(); current_depth = 0;;}
     break;
 
   case 5:
-#line 65 "sang_m.y"
+#line 67 "sang_m.y"
     {current_depth -= 1;;}
     break;
 
   case 6:
-#line 66 "sang_m.y"
+#line 68 "sang_m.y"
     { current_depth += 1;;}
     break;
 
   case 7:
-#line 66 "sang_m.y"
+#line 68 "sang_m.y"
     {spaces_vector.push_back((yyvsp[(2) - (2)].node)); current_depth -= 1;;}
     break;
 
   case 9:
-#line 67 "sang_m.y"
+#line 69 "sang_m.y"
     { current_depth += 1;;}
     break;
 
   case 10:
-#line 67 "sang_m.y"
+#line 69 "sang_m.y"
     {spaces_vector.push_back((yyvsp[(2) - (2)].node));current_depth -= 1;;}
     break;
 
   case 12:
-#line 71 "sang_m.y"
+#line 73 "sang_m.y"
     {
         (yyval.node) = new GlobalVar((yyvsp[(2) - (3)].node));
         if(Declaration* n = dynamic_cast<Declaration*>((yyvsp[(2) - (3)].node))){
@@ -1638,7 +1640,7 @@ yyreduce:
     break;
 
   case 13:
-#line 88 "sang_m.y"
+#line 90 "sang_m.y"
     {
         nameStack.push_back("inicio");
         DataType type = initFunction;
@@ -1649,7 +1651,7 @@ yyreduce:
     break;
 
   case 14:
-#line 96 "sang_m.y"
+#line 98 "sang_m.y"
     {
         (yyval.node) = new FunctionDefinition((yyvsp[(2) - (4)].str_val),ts.getNodeVector("inicio"));
         nameStack.pop_back();
@@ -1657,51 +1659,65 @@ yyreduce:
     break;
 
   case 15:
-#line 101 "sang_m.y"
-    {param_vector = *new vector<Node*>();;}
+#line 104 "sang_m.y"
+    {
+        nameStack.push_back(*(yyvsp[(2) - (3)].str_val));
+        DataType type = voidFunction;
+        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*(yyvsp[(2) - (3)].str_val), record);
+        param_vector = *new vector<Node*>();
+    ;}
     break;
 
   case 16:
-#line 102 "sang_m.y"
-    {(yyval.node) = new FunctionDefinition((yyvsp[(2) - (7)].str_val),param_vector,lines_vector);;}
+#line 112 "sang_m.y"
+    {
+        (yyval.node) = new FunctionDefinition((yyvsp[(2) - (7)].str_val),param_vector,ts.getNodeVector(*(yyvsp[(2) - (7)].str_val)));
+        nameStack.pop_back();
+    ;}
     break;
 
   case 17:
-#line 103 "sang_m.y"
-    {param_vector = *new vector<Node*>();;}
+#line 118 "sang_m.y"
+    {
+        nameStack.push_back(*(yyvsp[(3) - (4)].str_val));
+        DataType type = realFunction;
+        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*(yyvsp[(3) - (4)].str_val), record);
+        param_vector = *new vector<Node*>();
+
+    ;}
     break;
 
   case 18:
-#line 103 "sang_m.y"
-    { printf("FUNCIÓN CON DEVOLUCIÓN"); (yyval.node) = new FunctionDefinition((yyvsp[(3) - (11)].str_val),param_vector,lines_vector,true,(yyvsp[(9) - (11)].node));;}
+#line 127 "sang_m.y"
+    {
+        ts.setParams(param_vector,*(yyvsp[(3) - (11)].str_val));
+        (yyval.node) = new FunctionDefinition((yyvsp[(3) - (11)].str_val),param_vector,ts.getNodeVector(*(yyvsp[(3) - (11)].str_val)),true,(yyvsp[(9) - (11)].node));
+        nameStack.pop_back();
+    ;}
     break;
 
   case 19:
-#line 109 "sang_m.y"
+#line 137 "sang_m.y"
     {
         (yyval.node) = (yyvsp[(1) - (2)].node);
         string blockName;
         stringStack(&blockName);
-        //ts.saveNode(blockName,$1);
-        //TODO hacer un chequeo de que la variable no existe o es nombre de variable global.
-        //TODO añadir un registro a la tabla de símbolos.
     ;}
     break;
 
   case 20:
-#line 119 "sang_m.y"
+#line 144 "sang_m.y"
     {
         (yyval.node) = (yyvsp[(1) - (2)].node);
         string blockName;
         stringStack(&blockName);
-        //ts.saveNode(blockName,$1);
-        //TODO hacer un chequeo de que las variables existen o es nombre de variable global.
-        //TODO añadir un registro a la tabla de símbolos.
     ;}
     break;
 
   case 21:
-#line 129 "sang_m.y"
+#line 151 "sang_m.y"
     {
         nameStack.push_back("If");
         string blockName;
@@ -1714,7 +1730,7 @@ yyreduce:
     break;
 
   case 22:
-#line 139 "sang_m.y"
+#line 161 "sang_m.y"
     {
         string blockName;
         stringStack(&blockName);
@@ -1725,7 +1741,7 @@ yyreduce:
     break;
 
   case 23:
-#line 148 "sang_m.y"
+#line 170 "sang_m.y"
     {
         nameStack.push_back("While");
         string blockName;
@@ -1738,7 +1754,7 @@ yyreduce:
     break;
 
   case 24:
-#line 158 "sang_m.y"
+#line 180 "sang_m.y"
     {
         string blockName;
         stringStack(&blockName);
@@ -1749,47 +1765,75 @@ yyreduce:
     break;
 
   case 25:
-#line 166 "sang_m.y"
-    { (yyval.node) = new AsignationInput();;}
+#line 189 "sang_m.y"
+    {
+        (yyval.node) = new AsignationInput();
+        if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
+            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+        }
+       
+    ;}
     break;
 
   case 26:
-#line 167 "sang_m.y"
-    {(yyval.node) = new AsignationFunctionCall((yyvsp[(1) - (4)].str_val),(yyvsp[(3) - (4)].node));;}
+#line 198 "sang_m.y"
+    {
+        (yyval.node) = new AsignationFunctionCall((yyvsp[(1) - (4)].str_val),(yyvsp[(3) - (4)].node));
+        if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
+            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+        } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
+    ;}
     break;
 
   case 27:
-#line 168 "sang_m.y"
-    {(yyval.node) = new AsignationFunctionCall(nullptr,(yyvsp[(1) - (2)].node));;}
+#line 205 "sang_m.y"
+    {
+        (yyval.node) = new AsignationFunctionCall(nullptr,(yyvsp[(1) - (2)].node));
+    ;}
     break;
 
   case 28:
-#line 170 "sang_m.y"
-    {(yyval.node) = new Output_Expression(true, (yyvsp[(2) - (3)].str_val));;}
+#line 210 "sang_m.y"
+    {
+        (yyval.node) = new Output_Expression(true, (yyvsp[(2) - (3)].str_val));
+        int n = ts.exists(*(yyvsp[(2) - (3)].str_val));
+        if(n == -1 || n > current_depth){
+            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+        }
+    ;}
     break;
 
   case 29:
-#line 171 "sang_m.y"
-    { (yyval.node) = new Output_Expression(false, (yyvsp[(2) - (3)].str_val));;}
+#line 218 "sang_m.y"
+    {
+        (yyval.node) = new Output_Expression(false, (yyvsp[(2) - (3)].str_val));
+    ;}
     break;
 
   case 30:
-#line 172 "sang_m.y"
-    {(yyval.node) = new BreakNode();;}
+#line 222 "sang_m.y"
+    {
+        (yyval.node) = new BreakNode();
+        string blockName;
+        stringStack(&blockName);
+        if(blockName.find("While") == std::string::npos){
+            yyerror("TU TAS TO LOCO PEPE JUAN para que haces un break fuera de un while tas tonto ¬¬\n");
+        }
+    ;}
     break;
 
   case 31:
-#line 175 "sang_m.y"
+#line 232 "sang_m.y"
     {current_depth += 1;;}
     break;
 
   case 32:
-#line 175 "sang_m.y"
+#line 232 "sang_m.y"
     { current_depth -= 1;;}
     break;
 
   case 34:
-#line 178 "sang_m.y"
+#line 235 "sang_m.y"
     {
         string blockName;
         stringStack(&blockName);
@@ -1798,7 +1842,7 @@ yyreduce:
     break;
 
   case 36:
-#line 185 "sang_m.y"
+#line 242 "sang_m.y"
     {
         string blockName;
         stringStack(&blockName);
@@ -1807,76 +1851,76 @@ yyreduce:
     break;
 
   case 37:
-#line 192 "sang_m.y"
+#line 249 "sang_m.y"
     { (yyval.node) = new ReturnNode((yyvsp[(2) - (3)].node));;}
     break;
 
   case 38:
-#line 194 "sang_m.y"
+#line 251 "sang_m.y"
     {(yyval.node) = new Math_Term<double>((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 39:
-#line 195 "sang_m.y"
+#line 252 "sang_m.y"
     {(yyval.node) = new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
   case 40:
-#line 199 "sang_m.y"
+#line 256 "sang_m.y"
     {param_vector = *new std::vector<Node*>();;}
     break;
 
   case 41:
-#line 199 "sang_m.y"
+#line 256 "sang_m.y"
     { (yyval.node) = new FunctionCall((yyvsp[(1) - (5)].str_val),param_vector);;}
     break;
 
   case 43:
-#line 204 "sang_m.y"
+#line 261 "sang_m.y"
     {
     param_vector.push_back((yyvsp[(1) - (1)].node));
 ;}
     break;
 
   case 44:
-#line 208 "sang_m.y"
+#line 265 "sang_m.y"
     { param_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 46:
-#line 212 "sang_m.y"
+#line 269 "sang_m.y"
     {current_vector = *new vector<double>();;}
     break;
 
   case 48:
-#line 214 "sang_m.y"
+#line 271 "sang_m.y"
     {current_vector.push_back((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 49:
-#line 215 "sang_m.y"
+#line 272 "sang_m.y"
     {current_vector.push_back((yyvsp[(1) - (3)].double_val ));;}
     break;
 
   case 50:
-#line 218 "sang_m.y"
+#line 275 "sang_m.y"
     {(yyval.node) = new Math_Term<double>((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 51:
-#line 219 "sang_m.y"
+#line 276 "sang_m.y"
     {(yyval.node) = new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
   case 65:
-#line 238 "sang_m.y"
+#line 295 "sang_m.y"
     {
     (yyval.node) = new  Math_Expression((yyvsp[(1) - (3)].node),(yyvsp[(2) - (3)].int_val),(yyvsp[(3) - (3)].node));
 ;}
     break;
 
   case 66:
-#line 244 "sang_m.y"
+#line 301 "sang_m.y"
     {
     
     if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
@@ -1891,7 +1935,7 @@ yyreduce:
     break;
 
   case 67:
-#line 256 "sang_m.y"
+#line 313 "sang_m.y"
     {
     if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
         DataType type = DataTypeVector;
@@ -1904,78 +1948,115 @@ yyreduce:
     break;
 
   case 68:
-#line 268 "sang_m.y"
+#line 325 "sang_m.y"
     {
+    (yyval.node) = new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
     if(heightSearch((yyvsp[(2) - (4)].str_val),1)){
-        printf("I'm overriting a global var");
+        ts.saveNode(*(yyvsp[(2) - (4)].str_val),(yyval.node));
     }
     else if(!heightSearch((yyvsp[(2) - (4)].str_val), current_depth)){
-        printf("I'm not overriting a global var");
+        DataType type = real ;
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*(yyvsp[(2) - (4)].str_val), record);
     }
-    (yyval.node) = new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
+    
 ;}
     break;
 
   case 69:
-#line 278 "sang_m.y"
+#line 338 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val), current_vector,current_vector.size());
     current_vector.clear();
+    if(heightSearch((yyvsp[(2) - (4)].str_val),1)){
+        ts.saveNode(*(yyvsp[(2) - (4)].str_val),(yyval.node));
+    }
+    else if(!heightSearch((yyvsp[(2) - (4)].str_val), current_depth)){
+        DataType type = DataTypeVector;
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*(yyvsp[(2) - (4)].str_val), record);
+    }
 ;}
     break;
 
   case 70:
-#line 283 "sang_m.y"
+#line 351 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (7)].str_val), *new std::vector<double>,(int)(yyvsp[(6) - (7)].double_val ));
+    if(heightSearch((yyvsp[(2) - (7)].str_val),1)){
+        ts.saveNode(*(yyvsp[(2) - (7)].str_val),(yyval.node));
+    }
+    else if(!heightSearch((yyvsp[(2) - (7)].str_val), current_depth)){
+        DataType type = DataTypeVector;
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        ts.insertRecord(*(yyvsp[(2) - (7)].str_val), record);
+    }
 ;}
     break;
 
   case 71:
-#line 286 "sang_m.y"
+#line 363 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].node));
+    if(!heightSearch((yyvsp[(1) - (3)].str_val), current_depth)){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
   case 72:
-#line 290 "sang_m.y"
+#line 370 "sang_m.y"
     {
     (yyval.node) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
+    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth)){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
   case 73:
-#line 294 "sang_m.y"
+#line 377 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].node));
+    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth)){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
   case 74:
-#line 298 "sang_m.y"
+#line 384 "sang_m.y"
     {
     (yyval.node) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
+    if(!heightSearch((yyvsp[(1) - (3)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (3)].str_val), current_depth) ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
   case 75:
-#line 302 "sang_m.y"
+#line 391 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].double_val ), (yyvsp[(1) - (6)].str_val));
+    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (6)].str_val), current_depth) ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
   case 76:
-#line 306 "sang_m.y"
+#line 398 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].str_val), (yyvsp[(1) - (6)].str_val));
+    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(5) - (6)].str_val), current_depth)  ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
 
 /* Line 1267 of yacc.c.  */
-#line 1979 "sang_m.tab.c"
+#line 2060 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2195,7 +2276,7 @@ yyreturn:
 }
 
 
-#line 311 "sang_m.y"
+#line 406 "sang_m.y"
 
 void buildCheckForErrors(){
     printf("Jeronimo");
@@ -2215,6 +2296,14 @@ bool heightSearch(string* target, int max){
     return false;
 }
 
+
+void  yyerror(char* str) {
+    extern int yylineno;
+    printf("Parse  Error near line %d \n %s\n",yylineno,str );
+    exit(-1);
+    
+}
+
 int  main(int  num_args , char** args) {
     if(num_args  != 2) {
         printf("usage: ./ parser1  filename\n");
@@ -2228,9 +2317,7 @@ int  main(int  num_args , char** args) {
         yyin = file;   // now  flex  reads  from  file
     }
     yyparse ();
-    for(int i = 0; i < spaces_vector.size();i++){
-        spaces_vector[i]->roam();
-    }
+    
     ts.printState();
     fclose(file);
     return 0;
