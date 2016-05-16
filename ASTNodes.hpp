@@ -18,6 +18,7 @@ public:
     Node(){};
     virtual void roam() = 0;
     virtual bool searchByHeight( string* id, int currentDepth, int maxDepth) = 0;
+    virtual string generateCode(string head) = 0;
 
 };
 
@@ -46,6 +47,10 @@ public:
         if(this->identification->compare(*id) != 0) return false;
         else return true;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -72,6 +77,10 @@ public:
         if(this->identification->compare(*id) != 0) return false;
         else return true;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -95,6 +104,10 @@ public:
         if(this->identification->compare(*id) != 0) return false;
         else return true;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 class VAR2VAR_Asignation: public Node{
@@ -114,6 +127,10 @@ public:
         if(currentDepth > maxDepth) return false;
         if(this->var1->compare(*id) != 0  ) return false;
         else return true;
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 
@@ -147,6 +164,10 @@ public:
         if(this->identification->compare(*id) != 0  ) return false;
         else return true;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -166,6 +187,10 @@ public:
     
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 
@@ -192,6 +217,10 @@ public:
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 class Output_Expression: public Node{
@@ -209,6 +238,10 @@ public:
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 class BreakNode : public Node{
@@ -220,6 +253,10 @@ public:
     
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 
@@ -252,6 +289,10 @@ public:
         if(this->identification->compare(*id) != 0  ) return false;
         else return true;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -282,6 +323,10 @@ public:
         if(this->identification->compare(*id) != 0  ) return false;
         else return true;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -310,6 +355,10 @@ public:
     std::string getIdentification(){
         return *(this->identification);
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -327,6 +376,10 @@ public:
     
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 
@@ -362,6 +415,10 @@ public:
         }
         return *new std::string;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 
@@ -373,6 +430,10 @@ public:
     
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         return false;
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 
@@ -404,6 +465,10 @@ public:
             if(block[i]->searchByHeight(id, currentDepth+1, maxDepth)) return true;
         }
         return returnable;
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 
@@ -484,6 +549,10 @@ public:
         }
         return returnable;
     }
+    
+    string generateCode(string head){
+        return head;
+    }
 };
 
 class GlobalVar: public Node{
@@ -505,6 +574,10 @@ public:
     bool searchByHeight( string* id, int currentDepth, int maxDepth) {
         if(currentDepth > maxDepth) return false;
         return this->declaration->searchByHeight(id, currentDepth,maxDepth);
+    }
+    
+    string generateCode(string head){
+        return head;
     }
 };
 

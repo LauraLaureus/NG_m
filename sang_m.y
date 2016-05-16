@@ -4,6 +4,8 @@
     #include  <stdlib.h>
     #include  <string>
     #include  <vector>
+    #include  <fstream>
+    #include  <iostream>
     
 
     #include "ASTNodes.hpp"
@@ -30,6 +32,9 @@
     void buildCheckForErrors();
     void stringStack(string* dst );
     bool heightSearch(string* target, int max);
+    
+    void generateCodeFromAST();
+    
 %}
 
 %locations
@@ -430,6 +435,27 @@ void  yyerror(char* str) {
     
 }
 
+void generateCodeFromAST(){
+    
+    string header = "\
+    #inlcude \"Q.h\"\n\
+    BEGIN\n\
+    STAT(0)\n\
+    \tSTR(0x11ffc,\"%%i\\n);\n\
+    CODE(0)\n";
+    
+    ofstream objFile;
+    objFile.open("ejecutable.ng");
+    
+    objFile << header ;
+   
+    objFile.close();
+    for (int i = 0; i < spaces_vector.size(); i++ )
+    {
+        spaces_vector[i]->generateCode( header);
+    }
+}
+
 int  main(int  num_args , char** args) {
     if(num_args  != 2) {
         printf("usage: ./ parser1  filename\n");
@@ -445,6 +471,7 @@ int  main(int  num_args , char** args) {
     yyparse ();
     
     ts.printState();
+    generateCodeFromAST();
     fclose(file);
     return 0;
 }

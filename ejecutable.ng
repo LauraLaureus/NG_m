@@ -1,0 +1,5 @@
+    #inlcude "Q.h"
+    BEGIN
+    STAT(0)
+    	STR(0x11ffc,"%%i\n);
+    CODE(0)
