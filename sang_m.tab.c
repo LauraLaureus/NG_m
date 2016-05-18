@@ -2316,10 +2316,11 @@ void generateCodeFromAST(){
     BEGIN\n\
     STAT(0)\n\
     \tSTR(0x11ffc,\"%%i\\n);\n\
-    CODE(0)\n";
+    CODE(0)\n\
+    END";
     
     ofstream objFile;
-    objFile.open("ejecutable.ng");
+    objFile.open("ejecutable.ng.q.c");
     
     objFile << header ;
    
