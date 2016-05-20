@@ -23,9 +23,8 @@ class SymbolTableRecord {
     DataType type;
     int depth;
     vector<Node*> vector;
-    
     std::vector<Node*> params;
-
+    int address;
     
 public:
     
@@ -34,6 +33,7 @@ public:
         this->type = real;
         this->depth = 0;
         this->vector = *new std::vector<Node*>();
+        this->address = 0;
     }
     
     SymbolTableRecord(bool g, DataType dt, int d,Node* v){
@@ -42,6 +42,7 @@ public:
         this->depth = d;
         this->vector = *new std::vector<Node*>();
         this->vector.push_back(v);
+        this->address = 0;
     }
     
     SymbolTableRecord(bool g, DataType dt, int d,std::vector<Node*> v){
@@ -49,9 +50,12 @@ public:
         this->type = dt;
         this->depth = d;
         this->vector = v;
-        
+        this->address = 0;
     }
     
+    bool isGlobal(){
+        return this->global;
+    }
     
     void addNode(Node* n){
         this->vector.push_back(n);
@@ -91,7 +95,9 @@ public:
         this->params = p;
     };
 
-
+    void setAddress(int a){
+        this->address = a;
+    }
 };
 
 
@@ -122,4 +128,16 @@ public:
     void printState();
     
     void setParams(std::vector<Node*> p, std::string identifier);
+    
+    std::vector<std::string> getGlobalVars();
+    
+    SymbolTableRecord operator[](std::string id){
+        return table[id];
+    }
+    
+    bool hasOnlyInit();
+    
+    void setAddress(std::string, int adrss);
+    
+    SymbolTableRecord getInit();
 };

@@ -1,0 +1,6 @@
+global REAL suggar;
+global VECTOR crash;
+
+func inicio{
+	escribe "furula";
+}
