@@ -38,7 +38,7 @@ public:
     Node(){};
     virtual void roam() = 0;
     virtual bool searchByHeight( string* id, int currentDepth, int maxDepth) = 0;
-    virtual string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts) = 0;
+    virtual string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts) = 0;
 
 };
 
@@ -68,7 +68,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -98,7 +98,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -125,7 +125,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -149,7 +149,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -185,7 +185,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -209,7 +209,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -238,7 +238,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -261,7 +261,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         std::string result;
         
         *staticLabel += 1; //calculate label position.
@@ -284,9 +284,13 @@ public:
         
         
         result += "\t\tSTR(0x" + str_memPos + "," + str->c_str() + ");\n";
-        result += "\t\tSTR(0x" + fstr_memPos + "," + "%s\\n" + ");\n";
+        result += "\t\tSTR(0x" + fstr_memPos + "," + "\"%s\\n\"" + ");\n";
         
-        result += "\tCODE(" + label_str_conversor.str() + ")\n";
+        stringstream code_label_conv;
+        code_label_conv << (*codeLabel);
+        result += "\tCODE(" + code_label_conv.str() + ")\n";
+        (*codeLabel) +=1;
+        
         stringstream label_converter;
         label_converter << (*label);
         result += "L " + label_converter.str() + ":";
@@ -298,13 +302,14 @@ public:
         str_size << (*str).size()+1;
         //result += "\tR1=" + str_size.str() + ";\n";
         
-        result += "\tR0=0x"+ mem_str_conversor.str() + "\n";
+        result += "\tR0=0x"+ mem_str_conversor.str() + ";\n";
         result += "\tI(R7+4)=R0;\n";
-        result += "\tI(R7)=" + std::to_string((*staticLabel) +1) + ";\n";
+        (*label) += 1;
+        result += "\tI(R7)=" + std::to_string((*label)) + ";\n";
         
         result+= "\tGT(-12);\n";
         
-        //printf("GenerateCode was call");
+        result+= "L " + std::to_string((*label)) + ": R7=R7+12;\n";
         return result;
     }
 };
@@ -320,7 +325,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -355,7 +360,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -389,7 +394,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -421,7 +426,7 @@ public:
         return *(this->identification);
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -443,7 +448,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -481,7 +486,7 @@ public:
         return *new std::string;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -497,7 +502,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -532,7 +537,7 @@ public:
         return returnable;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -615,7 +620,7 @@ public:
         return returnable;
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };
@@ -641,7 +646,7 @@ public:
         return this->declaration->searchByHeight(id, currentDepth,maxDepth);
     }
     
-    string generateCode(int* label, int* staticLabel,int* staticMem,SymbolTable* ts){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         return "";
     }
 };

@@ -39,6 +39,7 @@
     
     int codeLabel = 0;
     int statLabel = 0;
+    int label = 0;
     int staticMem = 73728; // 0x12000 hex
     
 %}
@@ -475,9 +476,11 @@ void generateCodeFromAST(char* filename){
    SymbolTableRecord initFunc = ts.getInit();
    
    //objFile << "L 0:";
+   objFile << "\tCODE(0)\n";
+   codeLabel +=1;
    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
    for(int i = 0; i < mainFuncNodes.size(); i++){
-       objFile << (mainFuncNodes[i])->generateCode(&codeLabel, &statLabel,&staticMem,&ts);
+       objFile << (mainFuncNodes[i])->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts);
    }
    
    objFile << "END" ;
