@@ -13,14 +13,12 @@
  MEM(0x11ff8,4);
  CODE(0)
  STAT(1)
-  STR(0x11ff0,"furula");
-  STR(0x11fed,"%s\n");
+  STR(0x11fef, "furula\n");
+  STR(0x11fec,"%s\n");
  CODE(1)
-L 0: R7=R7-12;
- P(R7+8)=0x11fed;
- R0=0x11ff0;
- I(R7+4)=R0;
- I(R7)=1;
+L 0: R1=0x11fef;
+ R2=0;
+ R0=-2;
  GT(-12);
 L 1: R7=R7+12;
 END

@@ -270,7 +270,7 @@ public:
         
         result += "\tSTAT("+label_str_conversor.str()+")\n";
         
-        *staticMem -= (*str).size(); //calculate mem position.
+        *staticMem -= ((*str).size()+1); //calculate mem position.
         stringstream mem_str_conversor;
         mem_str_conversor << std::hex << *staticMem;
         string str_memPos = mem_str_conversor.str();
@@ -280,10 +280,10 @@ public:
         stringstream mem_fstr_conversor;
         mem_fstr_conversor << std::hex << *staticMem;
         string fstr_memPos = mem_fstr_conversor.str();
-
+        (*str) += '\n';
         
         
-        result += "\t\tSTR(0x" + str_memPos + "," + str->c_str() + ");\n";
+        result += "\t\tSTR(0x" + str_memPos + ", \"furula\\n\");\n";
         result += "\t\tSTR(0x" + fstr_memPos + "," + "\"%s\\n\"" + ");\n";
         
         stringstream code_label_conv;
@@ -294,20 +294,23 @@ public:
         stringstream label_converter;
         label_converter << (*label);
         result += "L " + label_converter.str() + ":";
-        result += "\tR7=R7-12;\n";
-        result += "\tP(R7+8)=0x" + mem_fstr_conversor.str() + ";\n";
+        //result += "\tR7=R7-12;\n";
+        //result += "\tP(R7+8)=0x" + mem_fstr_conversor.str() + ";\n";
         //result += "\tR0 = I(0x" + mem_str_conversor.str() + ");\n";
+        result += "\tR1=0x"+ str_memPos + ";\n";
+        result += "\tR2=0;\n";
+        result += "\tR0=-2;\n";
         
-        stringstream str_size;
-        str_size << (*str).size()+1;
+        //stringstream str_size;
+        //str_size << (*str).size()+1;
         //result += "\tR1=" + str_size.str() + ";\n";
         
-        result += "\tR0=0x"+ mem_str_conversor.str() + ";\n";
-        result += "\tI(R7+4)=R0;\n";
+        //result += "\tR0=0x"+ mem_str_conversor.str() + ";\n";
+        //result += "\tI(R7+4)=R0;\n";
         (*label) += 1;
-        result += "\tI(R7)=" + std::to_string((*label)) + ";\n";
+        //result += "\tI(R7)=" + std::to_string((*label)) + ";\n";
         
-        result+= "\tGT(-12);\n";
+        result+= "\tGT(putf_);\n";
         
         result+= "L " + std::to_string((*label)) + ": R7=R7+12;\n";
         return result;
