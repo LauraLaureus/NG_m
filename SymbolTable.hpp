@@ -115,6 +115,10 @@ public:
     int getAddress(){
         return this->address;
     }
+    
+    int vectorSize(){
+        return this->array_value.size();
+    }
 };
 
 

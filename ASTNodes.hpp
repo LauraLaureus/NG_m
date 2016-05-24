@@ -131,6 +131,7 @@ public:
         }
         
         ts->getRecord(*identification)->setAddress(*staticMem);
+        ts->getRecord(*identification)->setArrayOfDoublesValue(value);
         
         *codeLabel += 1;
         result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
@@ -375,7 +376,7 @@ private:
         stringstream mem_str_conversor;
         mem_str_conversor << std::hex << *staticMem;
         string fstr_memPos = "0x" + mem_str_conversor.str();
-        result += "\tSTR("+fstr_memPos+", \"%d\\n\");\n";
+        result += "\tSTR("+fstr_memPos+", \"%f\\n\");\n";
         
         
         *codeLabel +=1;
@@ -405,6 +406,42 @@ private:
     
     string genCodeForVector(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         std::string result;
+        *staticLabel += 1; //calculate label position.
+        stringstream label_str_conversor;
+        label_str_conversor << *staticLabel;
+        
+        result += "\tSTAT("+label_str_conversor.str()+")\n";
+        
+        string formatStr = "%f\n";
+        
+        *staticMem -= ((formatStr).size()+1); //calculate mem position.
+        stringstream mem_str_conversor;
+        mem_str_conversor << std::hex << *staticMem;
+        string fstr_memPos = "0x" + mem_str_conversor.str();
+        result += "\tSTR("+fstr_memPos+", \"%d\\n\");\n";
+        
+        *codeLabel +=1;
+        stringstream code_label_conv;
+        code_label_conv << (*codeLabel);
+        result += "\tCODE(" + code_label_conv.str() + ")\n";
+        
+        result += "\tR1="+ fstr_memPos + ";\n";
+        
+       
+        stringstream double_memPos;
+        
+        for(int i= 0; i < ts->getRecord(*str)->vectorSize(); i++){
+        
+            (*label) += 1;
+            
+            double_memPos << std::hex << ts->getRecord((*str))->getAddress() + i*sizeof(double);
+            result += "\tR2=D(0x"+double_memPos.str()+");\n";
+            result += "\tR0=" + std::to_string((*label)) + ";\n";
+            result += "\tGT(putf_);\n";
+            result += "L " + std::to_string((*label)) + ":";
+            
+            double_memPos.str("");
+        }
         return result;
     }
 };
