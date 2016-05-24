@@ -16,13 +16,8 @@
 //
 
 #pragma once
-//#include <string>
-//#include <vector>
 #include <stdio.h>
-//#include <iostream>
 #include <sstream>
-//#include <map>
-//#include "ASTNodes.hpp"
 #include "data_type.h"
 #include "global.h"
 
@@ -30,9 +25,6 @@
 
 using namespace std;
 
-
-//class SymbolTable;
-//class SymbolTableRecord;
 
 /////////////////NODESS
 

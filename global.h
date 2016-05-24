@@ -6,8 +6,6 @@
 //
 //
 
-//#ifndef global_h
-//#define global_h
 
 #include <map>
 #include <vector>
@@ -18,4 +16,4 @@
 
 using namespace std;
 
-//#endif /* global_h */
+
