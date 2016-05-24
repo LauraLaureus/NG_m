@@ -111,6 +111,10 @@ public:
     void setAddress(int a){
         this->address = a;
     }
+    
+    int getAddress(){
+        return this->address;
+    }
 };
 
 
@@ -148,8 +152,8 @@ public:
         return table[id];
     }
     
-    SymbolTableRecord getRecord(std::string id){
-        return table[id];
+    SymbolTableRecord* getRecord(std::string id){
+        return &table[id];
     }
 
     

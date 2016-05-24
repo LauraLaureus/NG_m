@@ -64,7 +64,29 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        std::string result;
+        *staticLabel += 1; //calculate label position.
+        
+        result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
+        
+        
+        *staticMem -= sizeof(double);
+        ts->getRecord(*identification)->setAddress(*staticMem);
+        
+        stringstream mem_pos_conversor;
+        mem_pos_conversor << std::hex << (*staticMem);
+        result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value) +");\n";
+        
+        
+        *codeLabel += 1;
+        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
+        
+        *label +=1;
+        result+= "L " + std::to_string((*label)) + ":";
+   
+        
+        
+        return result;
     }
 };
 
@@ -263,7 +285,7 @@ public:
             result = genCodeForString(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
         }else{
             
-            if (ts->getRecord(*str).getType() == real) {
+            if (ts->getRecord(*str)->getType() == real) {
                 result = genCodeForReal(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
             }else{
                 result = genCodeForVector(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
@@ -330,8 +352,31 @@ private:
         stringstream mem_str_conversor;
         mem_str_conversor << std::hex << *staticMem;
         string fstr_memPos = "0x" + mem_str_conversor.str();
+        result += "\tSTR("+fstr_memPos+", \"%d\\n\");\n";
         
         
+        *codeLabel +=1;
+        stringstream code_label_conv;
+        code_label_conv << (*codeLabel);
+        result += "\tCODE(" + code_label_conv.str() + ")\n";
+        //(*codeLabel) +=1;
+
+        
+        *label +=1;
+        result += "L " + std::to_string((*label)) + ":";
+        
+        result += "\tR1="+ fstr_memPos + ";\n";
+        
+        stringstream double_memPos;
+        printf("%d\n", ts->getRecord((*str))->getAddress());
+        double_memPos << std::hex << ts->getRecord((*str))->getAddress();
+        result += "\tR2=D(0x"+double_memPos.str()+");";
+        result += "\tR0=-2;\n";
+        
+        (*label) += 1;        
+        result+= "\tGT(putf_);\n";
+        
+        result+= "L " + std::to_string((*label)) + ":";
         
         return result;
     }

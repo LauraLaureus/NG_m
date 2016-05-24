@@ -495,14 +495,15 @@ void generateCodeFromAST(char* filename){
    
    SymbolTableRecord initFunc = ts.getInit();
    
-   //objFile << "L 0:";
+   
    objFile << "\tCODE(0)\n";
-   codeLabel +=1;
+   //codeLabel +=1;
+   objFile << "L 0:";
    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
    for(int i = 0; i < mainFuncNodes.size(); i++){
        objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
    }
-   objFile << "GT(-2);" ;
+   objFile << "GT(-2);\n" ;
    objFile << "END" ;
 
     objFile.close();
