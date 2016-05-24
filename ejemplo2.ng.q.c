@@ -5,8 +5,7 @@
 	MEM(0x11ff8,4);
 	CODE(0)
 	STAT(1)
-		STR(0x11fef, "furula\n");
-		STR(0x11feb,"%s\n");
+		STR(0x11fef, "furula");
 	CODE(1)
 L 0:	R1=0x11fef;
 	R2=0;

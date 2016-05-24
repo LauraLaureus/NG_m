@@ -10,9 +10,10 @@
 
     #include "ASTNodes.hpp"
     #include "SymbolTable.hpp"
+    #include "data_type.h"
     
     using  namespace  std;
-    
+       
     vector<Node*> param_vector;
     vector<Node*> lines_vector;
     vector<Node*> spaces_vector;

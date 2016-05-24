@@ -16,20 +16,23 @@
 //
 
 #pragma once
-#include <string>
-#include <vector>
+//#include <string>
+//#include <vector>
 #include <stdio.h>
-#include <iostream>
+//#include <iostream>
 #include <sstream>
-#include <map>
-#include "ASTNodes.hpp"
+//#include <map>
+//#include "ASTNodes.hpp"
+#include "data_type.h"
+#include "global.h"
 
 
 
 using namespace std;
 
-class SymbolTable;
-class SymbolTableRecord;
+
+//class SymbolTable;
+//class SymbolTableRecord;
 
 /////////////////NODESS
 
@@ -262,33 +265,42 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        std::string result;
-        
         //TODO modificar los caminos de desarrollo  según haya que ir a buscar la variable y del tipo que sea.
+        std::string result;
+        if(!searchForVariable){
+            result = genCodeForString(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
+        }else{
+            
+            if (ts->getRecord(*str).getType() == real) {
+                result = genCodeForReal(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
+            }else{
+                result = genCodeForVector(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
+            }
+        }
+        
+        return result;
+    }
+    
+private:
+    string genCodeForString(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
+        
+        std::string result;
         *staticLabel += 1; //calculate label position.
         stringstream label_str_conversor;
         label_str_conversor << *staticLabel;
         
         result += "\tSTAT("+label_str_conversor.str()+")\n";
         
-        //TODO logic to determinate if is a string a real var or vector var.
-        
+
         //For string
         *staticMem -= ((*str).size()+1); //calculate mem position.
         stringstream mem_str_conversor;
         mem_str_conversor << std::hex << *staticMem;
         string str_memPos = mem_str_conversor.str();
         
-        string formatString = "%s\n";
-        *staticMem -= (formatString.size()+1); //calculate mem position.
-        stringstream mem_fstr_conversor;
-        mem_fstr_conversor << std::hex << *staticMem;
-        string fstr_memPos = mem_fstr_conversor.str();
-        (*str) += '\n';
         
+        result += "\t\tSTR(0x" + str_memPos + ", "+ *(this->str) +");\n";
         
-        result += "\t\tSTR(0x" + str_memPos + ", \"furula\\n\");\n";
-        result += "\t\tSTR(0x" + fstr_memPos + "," + "\"%s\\n\"" + ");\n";
         
         stringstream code_label_conv;
         code_label_conv << (*codeLabel);
@@ -298,16 +310,42 @@ public:
         stringstream label_converter;
         label_converter << (*label);
         result += "L " + label_converter.str() + ":";
-    
+        
         result += "\tR1=0x"+ str_memPos + ";\n";
         result += "\tR2=0;\n";
-        result += "\tR0=-2;\n";
+        result += "\tR0=-2;\n"; //TODO modify this with the return label.
         
         (*label) += 1;
         
         result+= "\tGT(putf_);\n";
         
         result+= "L " + std::to_string((*label)) + ":";
+        return result;
+    }
+    
+    string genCodeForReal(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
+
+        std::string result;
+        *staticLabel += 1; //calculate label position.
+        stringstream label_str_conversor;
+        label_str_conversor << *staticLabel;
+        
+        result += "\tSTAT("+label_str_conversor.str()+")\n";
+        
+        string formatStr = "%d\n";
+        
+        *staticMem -= ((formatStr).size()+1); //calculate mem position.
+        stringstream mem_str_conversor;
+        mem_str_conversor << std::hex << *staticMem;
+        string fstr_memPos = "0x" + mem_str_conversor.str();
+        
+        
+        
+        return result;
+    }
+    
+    string genCodeForVector(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
+        std::string result;
         return result;
     }
 };

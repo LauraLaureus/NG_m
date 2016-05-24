@@ -7,16 +7,17 @@
 //
 
 #pragma once
-
-#include <map>
-#include <vector>
-#include <string>
-#include "ASTNodes.hpp"
+//#include <map>
+//#include <vector>
+//#include <string>
+//#include "ASTNodes.hpp"
 #include <iostream>
+#include "data_type.h"
 
 using namespace std;
 
-enum DataType { real, DataTypeVector, initFunction, realFunction, voidFunction,flowControlIf,flowControlWhile};
+class Node;
+
 
 class SymbolTableRecord {
     bool global;
@@ -150,6 +151,11 @@ public:
     SymbolTableRecord operator[](std::string id){
         return table[id];
     }
+    
+    SymbolTableRecord getRecord(std::string id){
+        return table[id];
+    }
+
     
     bool hasOnlyInit();
     

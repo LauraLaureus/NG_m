@@ -6,8 +6,8 @@
 //
 //
 
-#include "SymbolTable.hpp"
-
+//#include "SymbolTable.hpp"
+#include "global.h"
 
 void SymbolTable::insertRecord( string id, SymbolTableRecord r){
     this->table[id]=r;
