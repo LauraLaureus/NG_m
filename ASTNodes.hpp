@@ -351,9 +351,9 @@ private:
         
         result += "\tR1=0x"+ str_memPos + ";\n";
         result += "\tR2=0;\n";
-        result += "\tR0=-2;\n"; //TODO modify this with the return label.
-        
         (*label) += 1;
+        result += "\tR0=" + std::to_string((*label))+";\n";//TODO modify this with the return label.
+        
         
         result+= "\tGT(putf_);\n";
         
@@ -383,7 +383,6 @@ private:
         stringstream code_label_conv;
         code_label_conv << (*codeLabel);
         result += "\tCODE(" + code_label_conv.str() + ")\n";
-        //(*codeLabel) +=1;
 
         
         *label +=1;
@@ -393,11 +392,12 @@ private:
         
         stringstream double_memPos;
         double_memPos << std::hex << ts->getRecord((*str))->getAddress();
-        result += "\tR2=D(0x"+double_memPos.str()+");";
-        result += "\tR0=-2;\n";
+        result += "\tRR2=D(0x"+double_memPos.str()+");\n";
+        (*label) += 1;
+        result += "\tR0=" + std::to_string((*label))+";\n";
         
-        (*label) += 1;        
-        result+= "\tGT(putf_);\n";
+        
+        result+= "\tGT(putd_);\n";
         
         result+= "L " + std::to_string((*label)) + ":";
         
@@ -418,7 +418,7 @@ private:
         stringstream mem_str_conversor;
         mem_str_conversor << std::hex << *staticMem;
         string fstr_memPos = "0x" + mem_str_conversor.str();
-        result += "\tSTR("+fstr_memPos+", \"%d\\n\");\n";
+        result += "\tSTR("+fstr_memPos+", \"%f\\n\");\n";
         
         *codeLabel +=1;
         stringstream code_label_conv;
@@ -435,9 +435,9 @@ private:
             (*label) += 1;
             
             double_memPos << std::hex << ts->getRecord((*str))->getAddress() + i*sizeof(double);
-            result += "\tR2=D(0x"+double_memPos.str()+");\n";
+            result += "\tRR2=D(0x"+double_memPos.str()+");\n";
             result += "\tR0=" + std::to_string((*label)) + ";\n";
-            result += "\tGT(putf_);\n";
+            result += "\tGT(putd_);\n";
             result += "L " + std::to_string((*label)) + ":";
             
             double_memPos.str("");
