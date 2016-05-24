@@ -355,7 +355,7 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 }
 |VECTOR VARIABLE ASIGNA vectorNT
 {
-    $$ = new VECTOR_Asignation(true, $2, current_vector,current_vector.size());
+    $$ = new VECTOR_Asignation(true, $2,current_vector,current_vector.size());
     current_vector.clear();
     if(heightSearch($2,1)){
         ts.saveNode(*$2,$$);

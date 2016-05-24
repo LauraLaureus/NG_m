@@ -94,7 +94,7 @@ public:
 class VECTOR_Asignation: public Node{
     bool declaration;
     std::string* identification;
-    std::vector<double>* value;
+    std::vector<double> value;
     int limit;
     
     
@@ -102,7 +102,7 @@ public:
     VECTOR_Asignation(bool d, std::string* id, std::vector<double> v,int lim){
         this->declaration = d;
         this->identification = id;
-        this->value = &v;
+        this->value = v;
         this->limit = lim;
     };
     void roam(){
@@ -116,7 +116,30 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        std::string result;
+        *staticLabel += 1; //calculate label position.
+        
+        result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
+        
+        stringstream mem_pos_conversor;
+        
+        for (int i = this->value.size()-1; i >-1 ; i--) {
+            *staticMem -= sizeof(double);
+            mem_pos_conversor << std::hex << (*staticMem);
+            result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value[i]) +");\n";
+            mem_pos_conversor.str("");
+        }
+        
+        ts->getRecord(*identification)->setAddress(*staticMem);
+        
+        *codeLabel += 1;
+        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
+        
+        *label +=1;
+        result+= "L " + std::to_string((*label)) + ":";
+
+        
+        return result;
     }
 };
 
@@ -346,7 +369,7 @@ private:
         
         result += "\tSTAT("+label_str_conversor.str()+")\n";
         
-        string formatStr = "%d\n";
+        string formatStr = "%f\n";
         
         *staticMem -= ((formatStr).size()+1); //calculate mem position.
         stringstream mem_str_conversor;
@@ -368,7 +391,6 @@ private:
         result += "\tR1="+ fstr_memPos + ";\n";
         
         stringstream double_memPos;
-        printf("%d\n", ts->getRecord((*str))->getAddress());
         double_memPos << std::hex << ts->getRecord((*str))->getAddress();
         result += "\tR2=D(0x"+double_memPos.str()+");";
         result += "\tR0=-2;\n";

@@ -1990,7 +1990,7 @@ yyreduce:
   case 69:
 #line 357 "sang_m.y"
     {
-    (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val), current_vector,current_vector.size());
+    (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val),current_vector,current_vector.size());
     current_vector.clear();
     if(heightSearch((yyvsp[(2) - (4)].str_val),1)){
         ts.saveNode(*(yyvsp[(2) - (4)].str_val),(yyval.node));

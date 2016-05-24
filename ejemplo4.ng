@@ -1,0 +1,4 @@
+func inicio{
+	VECTOR a = [2,3];
+	escribe a;
+}
