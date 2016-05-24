@@ -40,6 +40,7 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
+    int functionLabel = 1;
     int staticMem = 73728; // 0x12000 hex
     
 %}
@@ -53,7 +54,7 @@
     string*  str_val;
     vector<double> *vector;
 }
-%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC  ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE BREAK
+%token <int_val>    ASIGNA ABRECORCHETES CIERRACORCHETES COMA RESERVAESPACIO SUMA MENOS DIVIDE MULTIPLICA OR AND NOT IGUALVALOR DISTINTOVALOR MAYORQUE MENORQUE MAYORIGUAL MENORIGUAL INPUT OUTPUT FUNC  ABRELLAVES CIERRALLAVES GLOBAL ABREPARENTESIS CIERRAPARENTESIS DEVUELVE IF WHILE BREAK CALL
 %token <str_val>    VARIABLE REAL PUNTOYCOMA VECTOR STRING INICIO
 %token <double_val > VALORREAL
 %token <vector_val> VALORVECTOR
@@ -117,8 +118,11 @@ funcion: FUNC INICIO
         nameStack.push_back(*$2);
         DataType type = voidFunction;
         SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+        record.setAddress(functionLabel);
         ts.insertRecord(*$2, record);
         param_vector = *new vector<Node*>();
+        
+        functionLabel += 1;
     }
     parametros CIERRAPARENTESIS bloque
     {
@@ -131,8 +135,10 @@ funcion: FUNC INICIO
         nameStack.push_back(*$3);
         DataType type = realFunction;
         SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+        record.setAddress(functionLabel);
         ts.insertRecord(*$3, record);
         param_vector = *new vector<Node*>();
+        functionLabel += 1;
 
     }
     parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES
@@ -213,9 +219,9 @@ line:declaracion PUNTOYCOMA
             yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
         } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
     }
-    |llamadaFuncion PUNTOYCOMA
+    | CALL llamadaFuncion PUNTOYCOMA
     {
-        $$ = new AsignationFunctionCall(nullptr,$1);
+        $$ = new AsignationFunctionCall(nullptr,$2);
     }
 
     |OUTPUT VARIABLE PUNTOYCOMA
@@ -355,7 +361,7 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
     }
     else if(!heightSearch($2, current_depth)){
         DataType type = DataTypeVector;
-        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>(),current_vector);
         ts.insertRecord(*$2, record);
     }
 }
@@ -472,6 +478,19 @@ void generateCodeFromAST(char* filename){
         objFile << "\tMEM("+int_to_hexString(staticMem)+",4);\n" ;
        
    }
+   int returnLabel = -1;
+   
+   vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
+   
+   for(int i = 0; i < nonInitFunction.size(); i++){
+       
+       vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
+       for(int j = 0; j < functionNodes.size(); j++ ){
+           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+       }
+       
+   }
+   
    
    SymbolTableRecord initFunc = ts.getInit();
    
@@ -480,9 +499,9 @@ void generateCodeFromAST(char* filename){
    codeLabel +=1;
    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
    for(int i = 0; i < mainFuncNodes.size(); i++){
-       objFile << (mainFuncNodes[i])->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts);
+       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
    }
-   
+   objFile << "GT(-2);" ;
    objFile << "END" ;
 
     objFile.close();

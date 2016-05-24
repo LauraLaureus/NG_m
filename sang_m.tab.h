@@ -69,14 +69,15 @@
      IF = 285,
      WHILE = 286,
      BREAK = 287,
-     VARIABLE = 288,
-     REAL = 289,
-     PUNTOYCOMA = 290,
-     VECTOR = 291,
-     STRING = 292,
-     INICIO = 293,
-     VALORREAL = 294,
-     VALORVECTOR = 295
+     CALL = 288,
+     VARIABLE = 289,
+     REAL = 290,
+     PUNTOYCOMA = 291,
+     VECTOR = 292,
+     STRING = 293,
+     INICIO = 294,
+     VALORREAL = 295,
+     VALORVECTOR = 296
    };
 #endif
 /* Tokens.  */
@@ -110,21 +111,22 @@
 #define IF 285
 #define WHILE 286
 #define BREAK 287
-#define VARIABLE 288
-#define REAL 289
-#define PUNTOYCOMA 290
-#define VECTOR 291
-#define STRING 292
-#define INICIO 293
-#define VALORREAL 294
-#define VALORVECTOR 295
+#define CALL 288
+#define VARIABLE 289
+#define REAL 290
+#define PUNTOYCOMA 291
+#define VECTOR 292
+#define STRING 293
+#define INICIO 294
+#define VALORREAL 295
+#define VALORVECTOR 296
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 49 "sang_m.y"
+#line 50 "sang_m.y"
 {
     Node*    node;
     int      int_val;
@@ -133,7 +135,7 @@ typedef union YYSTYPE
     vector<double> *vector;
 }
 /* Line 1529 of yacc.c.  */
-#line 137 "sang_m.tab.h"
+#line 139 "sang_m.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

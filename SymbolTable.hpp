@@ -25,6 +25,7 @@ class SymbolTableRecord {
     vector<Node*> vector;
     std::vector<Node*> params;
     int address;
+    std::vector<double> array_value;
     
 public:
     
@@ -34,6 +35,7 @@ public:
         this->depth = 0;
         this->vector = *new std::vector<Node*>();
         this->address = 0;
+        this->array_value =  *new std::vector<double>();
     }
     
     SymbolTableRecord(bool g, DataType dt, int d,Node* v){
@@ -51,6 +53,20 @@ public:
         this->depth = d;
         this->vector = v;
         this->address = 0;
+        this->array_value =  *new std::vector<double>();
+    }
+    
+    SymbolTableRecord(bool g, DataType dt, int d,std::vector<Node*> v, std::vector<double> vect){
+        this->global = g;
+        this->type = dt;
+        this->depth = d;
+        this->vector = v;
+        this->address = 0;
+        this->array_value = vect;
+    }
+    
+    void setArrayOfDoublesValue(std::vector<double> v){
+        this->array_value = v;
     }
     
     bool isGlobal(){
@@ -140,4 +156,6 @@ public:
     void setAddress(std::string, int adrss);
     
     SymbolTableRecord getInit();
+    
+    std::vector<SymbolTableRecord*> getNonInitFunctions();
 };

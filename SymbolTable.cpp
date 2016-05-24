@@ -95,3 +95,21 @@ SymbolTableRecord SymbolTable::getInit(){
         }
     }
 }
+
+
+
+std::vector<SymbolTableRecord*> SymbolTable::getNonInitFunctions(){
+    
+    std:vector<SymbolTableRecord*> result;
+    for(map<string,SymbolTableRecord>::iterator it =this->table.begin(); it != this->table.end(); ++it)
+    {
+        if(it->second.isGlobal() ) {
+            if( it->second.getType() == realFunction || it->second.getType() == realFunction){
+                result.push_back(&(it->second));
+            }
+        }
+    }
+    
+    return result;
+    
+}
