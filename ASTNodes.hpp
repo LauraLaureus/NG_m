@@ -331,6 +331,27 @@ public:
             mem_pos_conversor << std::hex << (*ts)[*value].getAddress();
             result +="\tD(0x" + mem_pos_conversor.str() +")=RR0;";
         }
+        else{
+            int memPos = (*ts)[*var_pos].getAddress();
+            mem_pos_conversor << std::hex << memPos;
+            result += "\tRR0=D(0x" + mem_pos_conversor.str() + ");\n"; //se obtiene el valor de la variable
+            (*label) += 1;
+            result +="\tR0=" + std::to_string(*label) + ";\n"; //se indica a donde volver
+            result += "\tGT(cast_);\n";
+            result +="L " + std::to_string(*label) + ":" ;
+            //now R1 = (int) RR0
+            
+            
+            mem_pos_conversor.str("");
+            memPos = (*ts)[*identification].getAddress()+((*ts)[*identification].vectorSize()-1)*sizeof(double);
+            mem_pos_conversor << std::hex << memPos;
+            result += "\tR2=0x" + mem_pos_conversor.str() + ";\n";
+            result += "\tRR0=D(R2+R1);\n";
+            
+            mem_pos_conversor.str("");
+            mem_pos_conversor << std::hex << (*ts)[*value].getAddress();
+            result +="\tD(0x" + mem_pos_conversor.str() +")=RR0;";
+        }
         return result;
     }
 };

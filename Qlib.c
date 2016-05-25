@@ -80,4 +80,9 @@ L putd_: {unsigned char *p=inv_str(&U(R1));
         reinv_str(p,&U(R1));
         GT(R0); 
 }
+
+L cast_:{double double_value = RR0;
+        R1 = (int) double_value;
+        GT(R0);
+    }
 ENDLIB
