@@ -2354,9 +2354,15 @@ void generateCodeFromAST(char* filename){
    std::vector<std::string> globals = ts.getGlobalVars();
    objFile << "\tSTAT(0)\n";
    for(int i = 0; i < globals.size(); i++){
-        staticMem -=4;
-        objFile << "\tMEM("+int_to_hexString(staticMem)+",4);\n" ;
-       
+       if(ts[globals[i]].getType() == real){
+        staticMem -= sizeof(double);
+        objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
+       }
+       else{ //se guarda una dirección donde estará reservado el vector.
+           staticMem -= sizeof(int);
+           objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(int)) +");\n" ;
+       }
+        ts.setAddress(globals[i],staticMem);
    }
    int returnLabel = -1;
    
@@ -2386,6 +2392,7 @@ void generateCodeFromAST(char* filename){
    objFile << "END" ;
 
     objFile.close();
+
 }
 
 void checkErrors(){

@@ -70,11 +70,18 @@ public:
         result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
         
         
-        *staticMem -= sizeof(double);
-        ts->getRecord(*identification)->setAddress(*staticMem);
+        int mem_dir;
+        if (ts->getRecord(*identification)->isGlobal()) {
+            mem_dir = ts->getRecord(*identification)->getAddress();
+        }else{
+            *staticMem -= sizeof(double);
+            ts->getRecord(*identification)->setAddress(*staticMem);
+            mem_dir = *staticMem;
+        }
+        
         
         stringstream mem_pos_conversor;
-        mem_pos_conversor << std::hex << (*staticMem);
+        mem_pos_conversor << std::hex << mem_dir;
         result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value) +");\n";
         
         
@@ -123,14 +130,23 @@ public:
         
         stringstream mem_pos_conversor;
         
-        for (int i = this->value.size()-1; i >-1 ; i--) {
+        int mem_dir;
+        if (ts->getRecord(*identification)->isGlobal()) {
+            mem_dir = ts->getRecord(*identification)->getAddress();
+        }else{
             *staticMem -= sizeof(double);
-            mem_pos_conversor << std::hex << (*staticMem);
+            ts->getRecord(*identification)->setAddress(*staticMem);
+            mem_dir = *staticMem;
+        }
+        
+        for (int i = this->value.size()-1; i >-1 ; i--) {
+            mem_dir -= sizeof(double);
+            mem_pos_conversor << std::hex << (mem_dir);
             result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value[i]) +");\n";
             mem_pos_conversor.str("");
         }
         
-        ts->getRecord(*identification)->setAddress(*staticMem);
+        ts->getRecord(*identification)->setAddress(mem_dir);
         ts->getRecord(*identification)->setArrayOfDoublesValue(value);
         
         *codeLabel += 1;

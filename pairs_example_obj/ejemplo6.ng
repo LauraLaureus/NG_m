@@ -1,0 +1,4 @@
+global VECTOR a;
+func inicio{
+	VECTOR a = [2,3];
+}

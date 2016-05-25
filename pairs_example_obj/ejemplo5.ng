@@ -1,0 +1,4 @@
+global REAL a;
+func inicio{
+	REAL a = 3;
+}
