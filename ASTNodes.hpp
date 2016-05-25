@@ -510,22 +510,116 @@ public:
                 case '-':
                     result += "\tRR0=RR1-RR2;\n";
                     break;
-                
+                    
                 case '*':
                     result += "\tRR0=RR1*RR2;\n";
                     break;
-
+                    
                 case '/':
                     result += "\tRR0=RR1/RR2;\n";
                     break;
-            
+                case '=':
+                    result += "\tRR0=RR1==RR2;\n";
+                    break;
+                case '~':
+                    result += "\tRR0=RR1!=RR2;\n";
+                    break;
+                case '>':
+                    result += "\tRR0=RR1>RR2;\n";
+                    break;
+                case '<':
+                    result += "\tRR0=RR1<RR2;\n";
+                    break;
+                case 'Z':
+                    result += "\tRR0=RR1>=RR2;\n";
+                    break;
+                case 'z':
+                    result += "\tRR0=RR1<=RR2;\n";
+                    break;
+                    //Operaciones lógicas no admitidas para los reales.
             }
+        }else if(type_t1 == type_t2 && type_t1 == 'v'){
+            
+            /*
+             TODO
+             si (R6-R7)/8 no es divisible entre 2 entonces R0 = -2; GT(exit_);
+             en cualquier otro caso:
+                colocar R4 en R6+R7/2;
+                colocar R5 en R7;
+                mientras R6 - R4 != 0:
+                    RR1 = D(R4);
+                    RR2 = D(R5);
+                    RR0 = RR1 op RR2;
+                    D(R5) = RR0;
+                    R5 = R5+4;
+                    R4 = R4+4;
+                Fin mientras;
+             
+             */
+            
+            result += "\tR5=R6-R7;\n";
+            result += "\tR5=R5/8;\n";
+            result += "\tR5=R5%2;\n";
+            result += "\tR0=-2;\n";
+            result += "\tIF(!R5) GT(exit_);\n";
+            result += "\tR4=R6-R7;\n";
+            result += "\tR4=R4/2;\n";
+            result += "\tR5=R7;\n";
+            result += "\tR3=R6-R4;\n";
+            (*label) +=1;
+            int n_l = (*label);
+            result += "L " + std::to_string((*label)) + ":";
+            (*label) +=1;
+            result += "IF(!R3) GT(" + std::to_string((*label)) +");\n";
+            result += "\tRR1=D(R4);\n";
+            result += "\tRR2=D(R5);\n";
+            switch (op) {
+                case '+':
+                    result += "\tRR0=RR1+RR2;\n";
+                    break;
+                case '-':
+                    result += "\tRR0=RR1-RR2;\n";
+                    break;
+                    
+                case '*':
+                    result += "\tRR0=RR1*RR2;\n";
+                    break;
+                    
+                case '/':
+                    result += "\tRR0=RR1/RR2;\n";
+                    break;
+                case '=':
+                    result += "\tRR0=RR1==RR2;\n";
+                    break;
+                case '~':
+                    result += "\tRR0=RR1!=RR2;\n";
+                    break;
+                case '>':
+                    result += "\tRR0=RR1>RR2;\n";
+                    break;
+                case '<':
+                    result += "\tRR0=RR1<RR2;\n";
+                    break;
+                case 'Z':
+                    result += "\tRR0=RR1>=RR2;\n";
+                    break;
+                case 'z':
+                    result += "\tRR0=RR1<=RR2;\n";
+                    break;
+                    //Operaciones lógicas no admitidas para los reales.
+            }
+            result += "\tD(R5)=RR0;\n";
+            result += "\tR5=R5+8;\n";
+            result += "\tR4=R4+8;\n";
+            result += "\tR3=R6-R4;\n";
+            result += "\tGT("+std::to_string(n_l)+");\n";
+            
+            
         }else{
             
         
             if(type_t1 == 'n'){ // el real estará en el fondo de la pila
                 /*
-                 TODO 
                     R5=R6-8; //direccion del real
                     RR1 = R(R5);
                     R5 = R6-16;
@@ -536,13 +630,12 @@ public:
                     R5=R5-8;
                     GT(<etiqueta_nueva>);
                  */
-                result += "\tR5=R6-8;\n";
+                result += "\tR5=R6+" +std::to_string(sizeof(double)) +";\n";
                 result += "\tRR1=D(R5);\n";
-                result += "\tR5=R6-16;\n";
+                result += "\tR5=R5+"+ std::to_string(sizeof(double)) +";\n";
                 
             }else{ // el real estará en la cima de la pila
                 /*
-                 TODO
                  R5=R7-8;
                  RR1 = R(R5);
                  R5 = R6-8;
@@ -553,9 +646,9 @@ public:
                  R5=R5-8;
                  GT(<etiqueta_nueva>);
                  */
-                result +=  "\tR5=R7-8;\n";
+                result +=  "\tR5=R7+"+ std::to_string(sizeof(double)) +";\n";
                 result += "\tRR1=D(R5);\n";
-                result +=  "\tR5=R6-8;\n";
+                result +=  "\tR5=R6+"+ std::to_string(sizeof(double)) +";\n";
             }
             
             result +=  "\tR4=R7-R5;\n";
@@ -580,16 +673,36 @@ public:
                 case '/':
                     result += "\tRR0=RR1/RR2;\n";
                     break;
-                    
+                case '=':
+                    result += "\tRR0=RR1==RR2;\n";
+                    break;
+                case '~':
+                    result += "\tRR0=RR1!=RR2;\n";
+                    break;
+                case '>':
+                    result += "\tRR0=RR1>RR2;\n";
+                    break;
+                case '<':
+                    result += "\tRR0=RR1<RR2;\n";
+                    break;
+                case 'Z':
+                    result += "\tRR0=RR1>=RR2;\n";
+                    break;
+                case 'z':
+                    result += "\tRR0=RR1<=RR2;\n";
+                    break;
+                    //Operaciones lógicas no admitidas para los reales.
             }
-            result += "\tR5=R5-8;\n";
+            result += "\tR5=R5-"+ std::to_string(sizeof(double)) +";\n";
+            result +=  "\tR4=R7-R5;\n";
             result += "\tGT("+std::to_string(n_l)+");\n";
         
         }
-        //TODO: añadir una etiqueta
         result += "L " + std::to_string((*label)) + ":";
-        //Limpiar la pila.
-        result += "\tR7=R6;\n";
+        
+        //Limpiar la pila. NO SE LIMPIA LA PILA para mantener en la pila el vector resultado. R0 indica donde comienza el vector. R1 indica donde comienza
+        //result += "\tR7=R6;\n";
+        
         
         return result;
     }

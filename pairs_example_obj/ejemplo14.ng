@@ -1,0 +1,5 @@
+func inicio{
+	VECTOR a = [2,3,4];
+	VECTOR b = [2,3,4];
+	a = a*b;
+}
