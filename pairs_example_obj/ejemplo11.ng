@@ -1,0 +1,6 @@
+func inicio{
+	REAL a = 0;
+	VECTOR b = [1,2,3];
+	a = b[1];
+	escribe a;
+}

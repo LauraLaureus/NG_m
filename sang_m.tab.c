@@ -580,7 +580,7 @@ static const yytype_uint16 yyrline[] =
      275,   275,   278,   279,   284,   284,   288,   288,   290,   291,
      294,   295,   298,   299,   300,   301,   302,   303,   304,   305,
      306,   307,   308,   309,   310,   313,   319,   331,   343,   356,
-     369,   382,   389,   397,   405,   412,   419
+     369,   382,   390,   398,   406,   413,   420
 };
 #endif
 
@@ -2023,14 +2023,14 @@ yyreduce:
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].node));
 
-    if(!heightSearch((yyvsp[(1) - (3)].str_val), current_depth)){
+    if(!ts.exists(*(yyvsp[(1) - (3)].str_val))){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 ;}
     break;
 
   case 72:
-#line 390 "sang_m.y"
+#line 391 "sang_m.y"
     {
     (yyval.node) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
     
@@ -2041,18 +2041,18 @@ yyreduce:
     break;
 
   case 73:
-#line 398 "sang_m.y"
+#line 399 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].node));
    
-    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth)){
-        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-    }
+   if(!ts.exists(*(yyvsp[(1) - (6)].str_val))){
+       yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+   }
 ;}
     break;
 
   case 74:
-#line 406 "sang_m.y"
+#line 407 "sang_m.y"
     {
     (yyval.node) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (3)].str_val)) || !ts.exists(*(yyvsp[(3) - (3)].str_val)) ){
@@ -2062,20 +2062,20 @@ yyreduce:
     break;
 
   case 75:
-#line 413 "sang_m.y"
+#line 414 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].double_val ), (yyvsp[(1) - (6)].str_val));
-    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (6)].str_val), current_depth) ){
+    if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 ;}
     break;
 
   case 76:
-#line 420 "sang_m.y"
+#line 421 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].str_val), (yyvsp[(1) - (6)].str_val));
-    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(5) - (6)].str_val), current_depth)  ){
+    if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 ;}
@@ -2303,7 +2303,7 @@ yyreturn:
 }
 
 
-#line 428 "sang_m.y"
+#line 429 "sang_m.y"
 
 void buildCheckForErrors(){
     printf("Jeronimo");

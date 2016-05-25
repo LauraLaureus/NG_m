@@ -231,9 +231,10 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
+        stringstream mem_pos_conversor;
         
         if((*ts)[*var1].getType() == (*ts)[*var2].getType()){
-            stringstream mem_pos_conversor;
+            
             if((*ts)[*var1].getType() == real){
                 
                 mem_pos_conversor << std::hex << (*ts)[*var2].getAddress();
@@ -257,6 +258,28 @@ public:
                     result += "\tRR1=D(0x" + mem_pos_conversor.str() + ");\n";
                 }
             }
+        }else{
+            
+            if((*ts)[*var1].getType() == real){
+                mem_pos_conversor << std::hex << (*ts)[*var2].getAddress()+((*ts)[*var2].vectorSize()-1)*sizeof(double);
+                result += "\tRR1=D(0x"+mem_pos_conversor.str() + ");\n";
+                mem_pos_conversor.str("");
+                mem_pos_conversor << std::hex << (*ts)[*var1].getAddress();
+                result += "\tD(0x" +mem_pos_conversor.str() + ")=RR1;\n";
+            }
+            
+            else{
+                
+                mem_pos_conversor << std::hex << (*ts)[*var2].getAddress();
+                result += "\tRR1=D(0x" + mem_pos_conversor.str() + ");\n";
+                
+                for(int i = 0; i < (*ts)[*var1].vectorSize() ; i++){
+                    mem_pos_conversor.str("");
+                    mem_pos_conversor << std::hex << (*ts)[*var1].getAddress() + i*sizeof(double);
+                    result += "\tD(0x" + mem_pos_conversor.str() + ")=RR1;\n";
+                }
+            }
+        
         }
         
         return result;
@@ -281,6 +304,7 @@ public:
         this->identification = id;
         this->var_pos = pos;
         this->value = v;
+        this->position = -1;
     }
     
     void roam(){
@@ -295,7 +319,19 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        string result;
+        
+        stringstream mem_pos_conversor;
+        if(position >-1){
+            int memPos = (*ts)[*identification].getAddress()+((*ts)[*identification].vectorSize()-1-position)*sizeof(double);
+            mem_pos_conversor << std::hex << memPos;
+            result += "\tRR0=D(0x" + mem_pos_conversor.str() + ");\n";
+            
+            mem_pos_conversor.str("");
+            mem_pos_conversor << std::hex << (*ts)[*value].getAddress();
+            result +="\tD(0x" + mem_pos_conversor.str() +")=RR0;";
+        }
+        return result;
     }
 };
 
@@ -409,11 +445,13 @@ private:
         
         
         stringstream code_label_conv;
+        (*codeLabel) +=1;
         code_label_conv << (*codeLabel);
         result += "\tCODE(" + code_label_conv.str() + ")\n";
-        (*codeLabel) +=1;
+        
         
         stringstream label_converter;
+        (*label) += 1;
         label_converter << (*label);
         result += "L " + label_converter.str() + ":";
         

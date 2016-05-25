@@ -382,10 +382,11 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 |VARIABLE ASIGNA expresion{
     $$ = new Expression2Var($1,$3);
 
-    if(!heightSearch($1, current_depth)){
+    if(!ts.exists(*$1)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 }
+
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
 {
     $$ = new ELEM_VECTOR_Asignation($1,(int)$3,$6);
@@ -398,9 +399,9 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 {
     $$ = new Expression2Var($1,$3,$6);
    
-    if(!heightSearch($1, current_depth)){
-        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-    }
+   if(!ts.exists(*$1)){
+       yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+   }
 }
 |VARIABLE ASIGNA VARIABLE
 {
@@ -412,14 +413,14 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 |VARIABLE ASIGNA VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES
 {
     $$ = new  ELEM_VECTOR2VAR_Asignation ($3,$5, $1);
-    if(!heightSearch($1, current_depth) || !heightSearch( $3, current_depth) ){
+    if(!ts.exists(*$1) || !ts.exists(*$3) ){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 }
 |VARIABLE ASIGNA VARIABLE ABRECORCHETES  VARIABLE CIERRACORCHETES
 {
     $$ = new  ELEM_VECTOR2VAR_Asignation ($3,$5, $1);
-    if(!heightSearch($1, current_depth) || !heightSearch( $3, current_depth) || !heightSearch( $5, current_depth)  ){
+    if(!ts.exists(*$1) || !ts.exists(*$3) ){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 }
