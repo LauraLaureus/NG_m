@@ -15,31 +15,29 @@ L 0: STAT(1)
  DAT(0x11ff8,D,1.000000);
  CODE(1)
 L 1: STAT(2)
- DAT(0x11fe8,D,1.000000);
- DAT(0x11fe0,D,2.000000);
- DAT(0x11fd8,D,3.000000);
+ DAT(0x11fe8,D,2.000000);
+ DAT(0x11fe0,D,3.000000);
+ DAT(0x11fd8,D,4.000000);
  CODE(2)
-L 2: STAT(3)
- DAT(0x11fd0,D,2.000000);
- CODE(3)
-L 3: STAT(4)
- STR(0x11fcc, "%f\n");
- CODE(4)
-L 4: R1=0x11fcc;
- RR2=D(0x11fd0);
- R0=5;
- GT(-13);
-L 5: RR0=D(0x11ff8);
- R0=6;
- GT(-14);
-L 6: R2=0x11fe8;
- RR0=D(R2+R1);
- D(0x11fd0)=RR0; STAT(5)
- STR(0x11fc8, "%f\n");
- CODE(5)
-L 7: R1=0x11fc8;
- RR2=D(0x11fd0);
- R0=8;
- GT(-13);
-L 8:GT(-2);
+L 2: R6=R7;
+ R7=R7-24;
+ RR3=D(0x11fd8);
+ D(R7+16)=RR3;
+ RR3=D(0x11fd0);
+ D(R7+8)=RR3;
+ RR3=D(0x11fc8);
+ D(R7+0)=RR3;
+R7=R7-8;
+ D(R7)=1.000000;
+ R5=R7-8;
+ RR1=D(R5);
+ R5=R6-8;
+ R4=R7-R5;
+L 3:IF(!R4) GT(4);
+ RR2=D(R5);
+ RR0=RR1/RR2;
+ R5=R5-8;
+ GT(3);
+L 4: R7=R6;
+GT(-2);
 END

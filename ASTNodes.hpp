@@ -21,6 +21,7 @@
 #include "data_type.h"
 #include "global.h"
 #include <math.h>
+#include <typeinfo>
 
 
 
@@ -361,11 +362,11 @@ public:
 
 template <class Data>
 class Math_Term : public Node {
-    Data value;
+    Data value_d;
 public:
     
     Math_Term(Data d){
-        this->value = d;
+        this->value_d = d;
     }
     void roam(){
          printf("Terminal node. Mathematical Terminal. \n");
@@ -376,8 +377,83 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        string result;
+        
+        //if(std::is_same<Data, double>::value){
+            
+            result += toStack(value_d,label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        //}
+        //else if(std::is_same<Data, std::string>::value){
+        //    toStack(value_d);
+        //}
+        
+        return result;
     }
+    
+    string toStack(double d,int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
+        string result;
+
+        
+        result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
+        result += "\tD(R7)=" + std::to_string(d) +";\n";
+        
+        return result;
+    }
+    
+    string toStack(string d, int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
+        string result;
+        //TODO
+        //Cargar en el registro 6 lo que haya en la cima de la pila.
+        //Cargar en la pila todo el vector.
+        //Dejar en la cima de la pila el registro 6 +1
+        
+        /*
+         TODO  v2
+          buscar el nombre en la tabla de símbolos DONE
+          recuperar la direccion y el tipo. DONE
+          escribir como primer caracter v o n para decirle al nodo padre que es un vector o un numero real obtenido de la tabla de símbolos.DONE
+          escribir el vector o el entero en la pila.
+         */
+        
+        //result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
+        //result += "\tR7= D(" + d +");\n"; //TODO fix this.
+        
+        //result += "\tR6=P(R7);\n";
+        
+
+        int dir = (*ts)[d].getAddress();
+        stringstream mem_pos_conversor;
+        if((*ts)[d].getType() == real){
+                result +="n";
+                //result += d;
+                result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
+                mem_pos_conversor << std::hex << dir;
+                result += "\tR7=D(0x" + mem_pos_conversor.str() + ");\n";
+        }else{
+                result +="v";
+                //result += d;
+                int length = (*ts)[d].vectorSize();
+                int dir_endPoint = dir + length*sizeof(double); //primer elemento
+                result += "\tR7=R7-" + std::to_string(sizeof(double)*length) + ";\n";
+                //stringstream mem_pos_conversor_stack;
+            int stack_position;
+            for (int i = 0; i < length; i++) {
+                stack_position = (length-i-1)*sizeof(double);
+                
+                mem_pos_conversor <<std::hex << dir;
+                
+                result +="\tRR3=D(0x" +mem_pos_conversor.str()+");\n";
+                result += "\tD(R7+" +std::to_string(stack_position)+")=RR3;\n";
+                
+                mem_pos_conversor.str("");
+                dir -=sizeof(double);
+            }
+        }
+        
+        
+        return result;
+    }
+    
 };
 
 
@@ -405,7 +481,117 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        string result;
+        result += "\tR6=R7;\n";
+        //result += "\tP(R7)=0;\n";
+        string result1  = term1->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        string result2  = term2->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        
+        char type_t1, type_t2;
+        type_t1 = result1.at(0);
+        type_t2 = result2.at(0);
+        
+        result1 = result1.substr(1);
+        result2 = result2.substr(1);
+        
+        result += result1;
+        result += result2;
+        
+        //DO this when n & n
+        if(type_t1 == type_t2 && type_t1 == 'n'){
+            
+            result += "\tRR1=D(R7);\n";
+            result += "\tRR2=D(R7+" + std::to_string(sizeof(double)) + ");\n";
+            
+            switch (op) {
+                case '+':
+                    result += "\tRR0=RR1+RR2;\n";
+                    break;
+                case '-':
+                    result += "\tRR0=RR1-RR2;\n";
+                    break;
+                
+                case '*':
+                    result += "\tRR0=RR1*RR2;\n";
+                    break;
+
+                case '/':
+                    result += "\tRR0=RR1/RR2;\n";
+                    break;
+            
+            }
+        }else{
+            
+        
+            if(type_t1 == 'n'){ // el real estará en el fondo de la pila
+                /*
+                 TODO 
+                    R5=R6-8; //direccion del real
+                    RR1 = R(R5);
+                    R5 = R6-16;
+                    R4=R7-R5;
+                    L <etiqueta_nueva>: IF(!R4) GT(<siguiente etiqueta>);
+                    RR2=D(R5);
+                    RR0=RR1<op>RR2;
+                    R5=R5-8;
+                    GT(<etiqueta_nueva>);
+                 */
+                result += "\tR5=R6-8;\n";
+                result += "\tRR1=D(R5);\n";
+                result += "\tR5=R6-16;\n";
+                
+            }else{ // el real estará en la cima de la pila
+                /*
+                 TODO
+                 R5=R7-8;
+                 RR1 = R(R5);
+                 R5 = R6-8;
+                 R4 = R7-R5;
+                 L <etiqueta_nueva>: IF(!R4) GT(<siguiente etiqueta>);
+                 RR2=D(R5);
+                 RR0=RR1<op>RR2;
+                 R5=R5-8;
+                 GT(<etiqueta_nueva>);
+                 */
+                result +=  "\tR5=R7-8;\n";
+                result += "\tRR1=D(R5);\n";
+                result +=  "\tR5=R6-8;\n";
+            }
+            
+            result +=  "\tR4=R7-R5;\n";
+            (*label) +=1;
+            int n_l = (*label);
+            result += "L " + std::to_string((*label)) + ":";
+            (*label) +=1;
+            result += "IF(!R4) GT(" + std::to_string((*label)) +");\n";
+            result += "\tRR2=D(R5);\n";
+            switch (op) {
+                case '+':
+                    result += "\tRR0=RR1+RR2;\n";
+                    break;
+                case '-':
+                    result += "\tRR0=RR1-RR2;\n";
+                    break;
+                    
+                case '*':
+                    result += "\tRR0=RR1*RR2;\n";
+                    break;
+                    
+                case '/':
+                    result += "\tRR0=RR1/RR2;\n";
+                    break;
+                    
+            }
+            result += "\tR5=R5-8;\n";
+            result += "\tGT("+std::to_string(n_l)+");\n";
+        
+        }
+        //TODO: añadir una etiqueta
+        result += "L " + std::to_string((*label)) + ":";
+        //Limpiar la pila.
+        result += "\tR7=R6;\n";
+        
+        return result;
     }
 };
 
@@ -621,7 +807,9 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        string result;
+        result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        return result;
     }
 };
 

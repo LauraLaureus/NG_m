@@ -1,0 +1,5 @@
+func inicio{
+	REAL a = 1;
+	VECTOR b = [2,3,4];
+	a = b / 1;
+}

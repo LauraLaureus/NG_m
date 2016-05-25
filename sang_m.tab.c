@@ -1936,6 +1936,71 @@ yyreduce:
     {(yyval.node) = new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
+  case 52:
+#line 298 "sang_m.y"
+    {(yyval.int_val) = '+';;}
+    break;
+
+  case 53:
+#line 299 "sang_m.y"
+    {(yyval.int_val) = '-';;}
+    break;
+
+  case 54:
+#line 300 "sang_m.y"
+    {(yyval.int_val) = '/';;}
+    break;
+
+  case 55:
+#line 301 "sang_m.y"
+    {(yyval.int_val) = '*';;}
+    break;
+
+  case 56:
+#line 302 "sang_m.y"
+    {(yyval.int_val) = '|';;}
+    break;
+
+  case 57:
+#line 303 "sang_m.y"
+    {(yyval.int_val) = '&';;}
+    break;
+
+  case 58:
+#line 304 "sang_m.y"
+    {(yyval.int_val) = '!';;}
+    break;
+
+  case 59:
+#line 305 "sang_m.y"
+    {(yyval.int_val) = '=';;}
+    break;
+
+  case 60:
+#line 306 "sang_m.y"
+    {(yyval.int_val) = '~';;}
+    break;
+
+  case 61:
+#line 307 "sang_m.y"
+    {(yyval.int_val) = '>';;}
+    break;
+
+  case 62:
+#line 308 "sang_m.y"
+    {(yyval.int_val) = 'Z';;}
+    break;
+
+  case 63:
+#line 309 "sang_m.y"
+    {(yyval.int_val) = '<';;}
+    break;
+
+  case 64:
+#line 310 "sang_m.y"
+    {(yyval.int_val) = 'z';;}
+    break;
+
   case 65:
 #line 314 "sang_m.y"
     {
@@ -2083,7 +2148,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2087 "sang_m.tab.c"
+#line 2152 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);

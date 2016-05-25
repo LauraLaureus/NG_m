@@ -295,19 +295,19 @@ termino: VALORREAL {$$ = new Math_Term<double>($1);}
         |VARIABLE {$$ = new Math_Term<std::string>(*$1);}
         ;
 
-operacion: SUMA
-        | MENOS
-        |DIVIDE
-        |MULTIPLICA
-        |OR
-        |AND
-        |NOT
-        |IGUALVALOR
-        |DISTINTOVALOR
-        |MAYORQUE
-        |MAYORIGUAL
-        |MENORQUE
-        |MENORIGUAL
+operacion: SUMA {$$ = '+';}
+        | MENOS {$$ = '-';}
+        |DIVIDE {$$ = '/';}
+        |MULTIPLICA {$$ = '*';}
+        |OR {$$ = '|';}
+        |AND {$$ = '&';}
+        |NOT {$$ = '!';}
+        |IGUALVALOR {$$ = '=';}
+        |DISTINTOVALOR {$$ = '~';}
+        |MAYORQUE {$$ = '>';}
+        |MAYORIGUAL {$$ = 'Z';}
+        |MENORQUE {$$ = '<';}
+        |MENORIGUAL {$$ = 'z';}
         ;
 
 expresion: termino operacion termino
