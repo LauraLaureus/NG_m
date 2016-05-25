@@ -20,6 +20,7 @@
 #include <sstream>
 #include "data_type.h"
 #include "global.h"
+#include <math.h>
 
 
 
@@ -146,8 +147,11 @@ public:
             mem_pos_conversor.str("");
         }
         
+        
         ts->getRecord(*identification)->setAddress(mem_dir);
         ts->getRecord(*identification)->setArrayOfDoublesValue(value);
+        
+        *staticMem = mem_dir;
         
         *codeLabel += 1;
         result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
@@ -183,7 +187,26 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        string result;
+        
+        SymbolTableRecord* r = ts->getRecord(*identification);
+        
+        if(r->getType() != DataTypeVector){
+           printf("Intento de acceder a un subíndice en un tipo de dato que no es un vector\n");
+           exit(-2);
+        }
+        
+        if(this->position >= r->vectorSize() ){
+            printf("Intento de acceder a un subíndice fuera de los límites del vector\n");
+            exit(-2);
+        }
+        
+        int mem_pos = r->getAddress() + position*sizeof(double);
+        stringstream mem_pos_conversor;
+        mem_pos_conversor << std::hex << mem_pos;
+        result += "D(0x" + mem_pos_conversor.str() + ")=" + std::to_string(value) + ";\n";
+        
+        return result;
     }
 };
 
@@ -207,7 +230,36 @@ public:
     }
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
-        return "";
+        string result;
+        
+        if((*ts)[*var1].getType() == (*ts)[*var2].getType()){
+            stringstream mem_pos_conversor;
+            if((*ts)[*var1].getType() == real){
+                
+                mem_pos_conversor << std::hex << (*ts)[*var2].getAddress();
+                result += "\tRR1=D(0x"+mem_pos_conversor.str() + ");\n";
+                mem_pos_conversor.str("");
+                mem_pos_conversor << std::hex << (*ts)[*var1].getAddress();
+                result += "\tD(0x" +mem_pos_conversor.str() + ")=RR1;\n";
+            }
+            else{
+                float min = fmin((*ts)[*var1].vectorSize(),(*ts)[*var2].vectorSize());
+                mem_pos_conversor << std::hex << (*ts)[*var2].getAddress();
+                result += "\tRR1=D(0x" + mem_pos_conversor.str() + ");\n";
+                
+                for(int i = 0; i < min; i++){
+                    mem_pos_conversor.str("");
+                    mem_pos_conversor << std::hex << (*ts)[*var1].getAddress() + i*sizeof(double);
+                    result += "\tD(0x" + mem_pos_conversor.str() + ")=RR1;\n";
+                    
+                    mem_pos_conversor.str("");
+                    mem_pos_conversor << std::hex << (*ts)[*var2].getAddress() + i*sizeof(double);
+                    result += "\tRR1=D(0x" + mem_pos_conversor.str() + ");\n";
+                }
+            }
+        }
+        
+        return result;
     }
 };
 

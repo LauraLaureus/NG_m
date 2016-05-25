@@ -381,6 +381,7 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 
 |VARIABLE ASIGNA expresion{
     $$ = new Expression2Var($1,$3);
+
     if(!heightSearch($1, current_depth)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
@@ -388,13 +389,15 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA VALORREAL
 {
     $$ = new ELEM_VECTOR_Asignation($1,(int)$3,$6);
-    if(!heightSearch($1, current_depth)){
+    
+    if(!ts.exists(*$1)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 }
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA expresion
 {
     $$ = new Expression2Var($1,$3,$6);
+   
     if(!heightSearch($1, current_depth)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
@@ -402,7 +405,7 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 |VARIABLE ASIGNA VARIABLE
 {
     $$ = new VAR2VAR_Asignation($1,$3);
-    if(!heightSearch($1, current_depth) || !heightSearch( $3, current_depth) ){
+    if(!ts.exists(*$1) || !ts.exists(*$3) ){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 }
@@ -480,8 +483,8 @@ void generateCodeFromAST(char* filename){
         objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
        }
        else{ //se guarda una dirección donde estará reservado el vector.
-           staticMem -= sizeof(int);
-           objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(int)) +");\n" ;
+           staticMem -= sizeof(double)*10;
+           objFile << "\tFIL("+int_to_hexString(staticMem)+",10,0);\n" ;
        }
         ts.setAddress(globals[i],staticMem);
    }

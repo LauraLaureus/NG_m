@@ -1,0 +1,6 @@
+func inicio{
+	REAL a = 3;
+	REAL b = 4;
+	a=b;
+	escribe a;
+}

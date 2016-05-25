@@ -580,7 +580,7 @@ static const yytype_uint16 yyrline[] =
      275,   275,   278,   279,   284,   284,   288,   288,   290,   291,
      294,   295,   298,   299,   300,   301,   302,   303,   304,   305,
      306,   307,   308,   309,   310,   313,   319,   331,   343,   356,
-     369,   382,   388,   395,   402,   409,   416
+     369,   382,   389,   397,   405,   412,   419
 };
 #endif
 
@@ -2022,6 +2022,7 @@ yyreduce:
 #line 382 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].node));
+
     if(!heightSearch((yyvsp[(1) - (3)].str_val), current_depth)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
@@ -2029,19 +2030,21 @@ yyreduce:
     break;
 
   case 72:
-#line 389 "sang_m.y"
+#line 390 "sang_m.y"
     {
     (yyval.node) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
-    if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth)){
+    
+    if(!ts.exists(*(yyvsp[(1) - (6)].str_val))){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 ;}
     break;
 
   case 73:
-#line 396 "sang_m.y"
+#line 398 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].node));
+   
     if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
@@ -2049,17 +2052,17 @@ yyreduce:
     break;
 
   case 74:
-#line 403 "sang_m.y"
+#line 406 "sang_m.y"
     {
     (yyval.node) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
-    if(!heightSearch((yyvsp[(1) - (3)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (3)].str_val), current_depth) ){
+    if(!ts.exists(*(yyvsp[(1) - (3)].str_val)) || !ts.exists(*(yyvsp[(3) - (3)].str_val)) ){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
 ;}
     break;
 
   case 75:
-#line 410 "sang_m.y"
+#line 413 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].double_val ), (yyvsp[(1) - (6)].str_val));
     if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (6)].str_val), current_depth) ){
@@ -2069,7 +2072,7 @@ yyreduce:
     break;
 
   case 76:
-#line 417 "sang_m.y"
+#line 420 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].str_val), (yyvsp[(1) - (6)].str_val));
     if(!heightSearch((yyvsp[(1) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(3) - (6)].str_val), current_depth) || !heightSearch( (yyvsp[(5) - (6)].str_val), current_depth)  ){
@@ -2080,7 +2083,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2084 "sang_m.tab.c"
+#line 2087 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2300,7 +2303,7 @@ yyreturn:
 }
 
 
-#line 425 "sang_m.y"
+#line 428 "sang_m.y"
 
 void buildCheckForErrors(){
     printf("Jeronimo");
@@ -2359,8 +2362,8 @@ void generateCodeFromAST(char* filename){
         objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
        }
        else{ //se guarda una dirección donde estará reservado el vector.
-           staticMem -= sizeof(int);
-           objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(int)) +");\n" ;
+           staticMem -= sizeof(double)*10;
+           objFile << "\tFIL("+int_to_hexString(staticMem)+",10,0);\n" ;
        }
         ts.setAddress(globals[i],staticMem);
    }
