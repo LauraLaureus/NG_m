@@ -344,10 +344,13 @@ public:
             
             
             mem_pos_conversor.str("");
-            memPos = (*ts)[*identification].getAddress()+((*ts)[*identification].vectorSize()-1)*sizeof(double);
+            memPos = (*ts)[*identification].getAddress()+((*ts)[*identification].vectorSize()+1)*sizeof(double);
             mem_pos_conversor << std::hex << memPos;
             result += "\tR2=0x" + mem_pos_conversor.str() + ";\n";
-            result += "\tRR0=D(R2+R1);\n";
+            result += "\tR1=R1*"+ std::to_string(sizeof(double)) +";\n";
+            result += "\tR1=R1+"+ std::to_string(sizeof(double)) +";\n";
+            result += "\tRR0=D(R2-R1);\n";
+            //result += "\tRR0=RR0;\n";
             
             mem_pos_conversor.str("");
             mem_pos_conversor << std::hex << (*ts)[*value].getAddress();
@@ -576,7 +579,7 @@ public:
             (*label) +=1;
             result += "IF(!R3) GT(" + std::to_string((*label)) +");\n";
             result += "\tRR1=D(R4);\n";
-            result += "\tRR2=D(R5);\n";
+            result += "\tRR2=D(R5);\n"; //da 8.
             switch (op) {
                 case '+':
                     result += "\tRR0=RR1+RR2;\n";
@@ -959,7 +962,7 @@ public:
             result+="\tRR0=D(R0);\n";
             
             mem_pos_conversor <<std::hex << memPos;
-            result += "\tD(" +mem_pos_conversor.str()+")=RR0\n;";
+            result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
         }
         
         result += "\tR3=R2;\n";
@@ -967,14 +970,14 @@ public:
         int n_l = (*label);
         (*label) += 1;
         result += "\tL " + std::to_string(n_l) + ": IF(!R3) GT(" + std::to_string((*label)) +");\n"; //mientras R3 no llegue a 0.
-        result += "\tRR0=R(R1);\n";
+        result += "\tRR0=D(R1);\n";
         mem_pos_conversor <<std::hex << memPos;
-        result += "\tD(" +mem_pos_conversor.str()+")=RR0\n;";
+        result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
         result += "\tR3=R2;\n";
         memPos += 8;
         mem_pos_conversor.str("");
         result += "\tGT(" + std::to_string(n_l) + ");\n";
-        result += "\tL " + std::to_string(n_l) + ":";
+        result += "\tL " + std::to_string((*label)) + ":";
         
         return result;
     }
@@ -1197,11 +1200,12 @@ public:
          obtener la dirección de la variable.
          guardar en la dirección el valor de RR0;
          */
-        
+        stringstream mem_pos_conversor;
+        mem_pos_conversor << std::hex <<(*ts)[*identification].getAddress();
         expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         result += "\tR7=R7-4;\t";
         result += "\tP(R7)=R0;\t";
-        result += "\tR0=P(" + (*ts)[*identification].getAddress() + ");\n";
+        result += "\tR0=P(" +  mem_pos_conversor.str() + ");\n";
         result += "\tD(R0)=RR0;\n";
         
         return result;

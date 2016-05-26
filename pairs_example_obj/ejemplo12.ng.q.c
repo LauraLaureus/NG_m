@@ -23,8 +23,10 @@ L 4:	R1=0x11fcc;
 L 5:	RR0=D(0x11ff8);
 	R0=6;
 	GT(cast_);
-L 6:	R2=0x11fe8;
-	RR0=D(R2+R1);
+L 6:	R2=0x11ff8;
+	R1=R1*8;
+	R1=R1+8;
+	RR0=D(R2-R1);
 	D(0x11fd0)=RR0;	STAT(5)
 	STR(0x11fc8, "%f\n");
 	CODE(5)
