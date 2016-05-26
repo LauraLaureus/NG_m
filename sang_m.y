@@ -41,9 +41,9 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
-    int functionLabel = 1;
-    int staticMem = 73728; // 0x12000 hex
-    
+    int functionLabel = -20;
+    //int stackPointer = 73728; // 0x12000 hex
+    int stackPointer = 0x0012000;
 %}
 
 %locations
@@ -80,7 +80,7 @@ parsetree: { spaces_vector = *new vector<Node*>(); current_depth = 0; ts = *new 
 
 espacios: {current_depth -= 1;}
     |{ current_depth += 1;} variablesGlobales {spaces_vector.push_back($2); current_depth -= 1;}espacios
-    |{ current_depth += 1;} funcion {spaces_vector.push_back($2);current_depth -= 1;}espacios
+|{ current_depth += 1;} funcion {ts.setFunctionDefinition(*(((FunctionDefinition*) $2)->id), $2); spaces_vector.push_back($2);current_depth -= 1;}espacios
     ;
 
 variablesGlobales:  GLOBAL declaracion PUNTOYCOMA
@@ -123,7 +123,7 @@ funcion: FUNC INICIO
         ts.insertRecord(*$2, record);
         param_vector = *new vector<Node*>();
         
-        functionLabel += 1;
+        functionLabel -= 1;
     }
     parametros CIERRAPARENTESIS bloque
     {
@@ -139,7 +139,7 @@ funcion: FUNC INICIO
         record.setAddress(functionLabel);
         ts.insertRecord(*$3, record);
         param_vector = *new vector<Node*>();
-        functionLabel += 1;
+        functionLabel -= 1;
 
     }
     parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES
@@ -318,9 +318,7 @@ expresion: termino operacion termino
 
 declaracion: REAL VARIABLE
 {
-    
-    if(!heightSearch($2, current_depth)){
-        
+    if(!ts.exists(*$2)){
         DataType type = real ;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*$2, record);
@@ -328,9 +326,9 @@ declaracion: REAL VARIABLE
     $$ = new Declaration($2,true);
 
 }
-            |VECTOR VARIABLE
+|VECTOR VARIABLE
 {
-    if(!heightSearch($2, current_depth)){
+    if(!ts.exists(*$1)){
         DataType type = DataTypeVector;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*$2, record);
@@ -480,14 +478,14 @@ void generateCodeFromAST(char* filename){
    objFile << "\tSTAT(0)\n";
    for(int i = 0; i < globals.size(); i++){
        if(ts[globals[i]].getType() == real){
-        staticMem -= sizeof(double);
-        objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
+        stackPointer -= sizeof(double);
+        objFile << "\tMEM("+int_to_hexString(stackPointer)+"," + std::to_string(sizeof(double)) +");\n" ;
        }
        else{ //se guarda una dirección donde estará reservado el vector.
-           staticMem -= sizeof(double)*10;
-           objFile << "\tFIL("+int_to_hexString(staticMem)+",10,0);\n" ;
+           stackPointer -= sizeof(double)*10;
+           objFile << "\tFIL("+int_to_hexString(stackPointer)+",10,0);\n" ;
        }
-        ts.setAddress(globals[i],staticMem);
+        ts.setAddress(globals[i],stackPointer);
    }
    int returnLabel = -1;
    
@@ -497,7 +495,7 @@ void generateCodeFromAST(char* filename){
        
        vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
        for(int j = 0; j < functionNodes.size(); j++ ){
-           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
        }
        
    }
@@ -509,9 +507,10 @@ void generateCodeFromAST(char* filename){
    objFile << "\tCODE(0)\n";
    //codeLabel +=1;
    objFile << "L 0:";
+   objFile << "R6=R7;\n";
    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
    for(int i = 0; i < mainFuncNodes.size(); i++){
-       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
    }
    objFile << "GT(-2);\n" ;
    objFile << "END" ;

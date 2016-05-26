@@ -1,14 +1,16 @@
 #include "Q.h"
     BEGIN
 	STAT(0)
-	MEM(0x11ffc,4);
-	MEM(0x11ff8,4);
+	FIL(0x11fb0,10,0);
+	MEM(0x11fa8,8);
 	CODE(0)
+L 0:R6=R7;
 	STAT(1)
-		STR(0x11fef, "furula");
+		STR(0x11f9f, "furula");
 	CODE(1)
-L 0:	R1=0x11fef;
+L 1:	R1=0x11f9f;
 	R2=0;
-	R0=-2;
+	R0=2;
 	GT(putf_);
-L 1:GT(-2);END
+L 2:GT(-2);
+END

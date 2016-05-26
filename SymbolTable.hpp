@@ -23,6 +23,7 @@ class SymbolTableRecord {
     std::vector<Node*> params;
     int address;
     std::vector<double> array_value;
+    Node* functionDefinition;
     
 public:
     
@@ -64,6 +65,10 @@ public:
     
     void setArrayOfDoublesValue(std::vector<double> v){
         this->array_value = v;
+    }
+    
+    void setFunctionDefinition(Node* n){
+        this->functionDefinition = n;
     }
     
     bool isGlobal(){
@@ -168,4 +173,8 @@ public:
     SymbolTableRecord getInit();
     
     std::vector<SymbolTableRecord*> getNonInitFunctions();
+    
+    void setFunctionDefinition(std::string id, Node* def){
+        table[id].setFunctionDefinition(def);        
+    }
 };

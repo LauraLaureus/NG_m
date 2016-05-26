@@ -196,9 +196,9 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
-    int functionLabel = 1;
-    int staticMem = 73728; // 0x12000 hex
-    
+    int functionLabel = -20;
+    //int stackPointer = 73728; // 0x12000 hex
+    int stackPointer = 0x0012000;
 
 
 /* Enabling traces.  */
@@ -579,8 +579,8 @@ static const yytype_uint16 yyrline[] =
      240,   251,   251,   251,   254,   253,   260,   268,   270,   271,
      275,   275,   278,   279,   284,   284,   288,   288,   290,   291,
      294,   295,   298,   299,   300,   301,   302,   303,   304,   305,
-     306,   307,   308,   309,   310,   313,   319,   331,   343,   356,
-     369,   382,   390,   398,   406,   413,   420
+     306,   307,   308,   309,   310,   313,   319,   329,   341,   354,
+     367,   380,   388,   396,   404,   411,   418
 };
 #endif
 
@@ -1638,7 +1638,7 @@ yyreduce:
 
   case 10:
 #line 83 "sang_m.y"
-    {spaces_vector.push_back((yyvsp[(2) - (2)].node));current_depth -= 1;;}
+    {ts.setFunctionDefinition(*(((FunctionDefinition*) (yyvsp[(2) - (2)].node))->id), (yyvsp[(2) - (2)].node)); spaces_vector.push_back((yyvsp[(2) - (2)].node));current_depth -= 1;;}
     break;
 
   case 12:
@@ -1687,7 +1687,7 @@ yyreduce:
         ts.insertRecord(*(yyvsp[(2) - (3)].str_val), record);
         param_vector = *new vector<Node*>();
         
-        functionLabel += 1;
+        functionLabel -= 1;
     ;}
     break;
 
@@ -1708,7 +1708,7 @@ yyreduce:
         record.setAddress(functionLabel);
         ts.insertRecord(*(yyvsp[(3) - (4)].str_val), record);
         param_vector = *new vector<Node*>();
-        functionLabel += 1;
+        functionLabel -= 1;
 
     ;}
     break;
@@ -2011,9 +2011,7 @@ yyreduce:
   case 66:
 #line 320 "sang_m.y"
     {
-    
-    if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
-        
+    if(!ts.exists(*(yyvsp[(2) - (2)].str_val))){
         DataType type = real ;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*(yyvsp[(2) - (2)].str_val), record);
@@ -2024,9 +2022,9 @@ yyreduce:
     break;
 
   case 67:
-#line 332 "sang_m.y"
+#line 330 "sang_m.y"
     {
-    if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
+    if(!ts.exists(*(yyvsp[(1) - (2)].str_val))){
         DataType type = DataTypeVector;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*(yyvsp[(2) - (2)].str_val), record);
@@ -2037,7 +2035,7 @@ yyreduce:
     break;
 
   case 68:
-#line 344 "sang_m.y"
+#line 342 "sang_m.y"
     {
     (yyval.node) = new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
     if(heightSearch((yyvsp[(2) - (4)].str_val),1)){
@@ -2053,7 +2051,7 @@ yyreduce:
     break;
 
   case 69:
-#line 357 "sang_m.y"
+#line 355 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val),current_vector,current_vector.size());
     current_vector.clear();
@@ -2069,7 +2067,7 @@ yyreduce:
     break;
 
   case 70:
-#line 370 "sang_m.y"
+#line 368 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (7)].str_val), *new std::vector<double>,(int)(yyvsp[(6) - (7)].double_val ));
     if(heightSearch((yyvsp[(2) - (7)].str_val),1)){
@@ -2084,7 +2082,7 @@ yyreduce:
     break;
 
   case 71:
-#line 382 "sang_m.y"
+#line 380 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].node));
 
@@ -2095,7 +2093,7 @@ yyreduce:
     break;
 
   case 72:
-#line 391 "sang_m.y"
+#line 389 "sang_m.y"
     {
     (yyval.node) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
     
@@ -2106,7 +2104,7 @@ yyreduce:
     break;
 
   case 73:
-#line 399 "sang_m.y"
+#line 397 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].node));
    
@@ -2117,7 +2115,7 @@ yyreduce:
     break;
 
   case 74:
-#line 407 "sang_m.y"
+#line 405 "sang_m.y"
     {
     (yyval.node) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (3)].str_val)) || !ts.exists(*(yyvsp[(3) - (3)].str_val)) ){
@@ -2127,7 +2125,7 @@ yyreduce:
     break;
 
   case 75:
-#line 414 "sang_m.y"
+#line 412 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].double_val ), (yyvsp[(1) - (6)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
@@ -2137,7 +2135,7 @@ yyreduce:
     break;
 
   case 76:
-#line 421 "sang_m.y"
+#line 419 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].str_val), (yyvsp[(1) - (6)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
@@ -2148,7 +2146,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2152 "sang_m.tab.c"
+#line 2150 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2368,7 +2366,7 @@ yyreturn:
 }
 
 
-#line 429 "sang_m.y"
+#line 427 "sang_m.y"
 
 void buildCheckForErrors(){
     printf("Jeronimo");
@@ -2423,14 +2421,14 @@ void generateCodeFromAST(char* filename){
    objFile << "\tSTAT(0)\n";
    for(int i = 0; i < globals.size(); i++){
        if(ts[globals[i]].getType() == real){
-        staticMem -= sizeof(double);
-        objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
+        stackPointer -= sizeof(double);
+        objFile << "\tMEM("+int_to_hexString(stackPointer)+"," + std::to_string(sizeof(double)) +");\n" ;
        }
        else{ //se guarda una dirección donde estará reservado el vector.
-           staticMem -= sizeof(double)*10;
-           objFile << "\tFIL("+int_to_hexString(staticMem)+",10,0);\n" ;
+           stackPointer -= sizeof(double)*10;
+           objFile << "\tFIL("+int_to_hexString(stackPointer)+",10,0);\n" ;
        }
-        ts.setAddress(globals[i],staticMem);
+        ts.setAddress(globals[i],stackPointer);
    }
    int returnLabel = -1;
    
@@ -2440,7 +2438,7 @@ void generateCodeFromAST(char* filename){
        
        vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
        for(int j = 0; j < functionNodes.size(); j++ ){
-           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
        }
        
    }
@@ -2452,9 +2450,10 @@ void generateCodeFromAST(char* filename){
    objFile << "\tCODE(0)\n";
    //codeLabel +=1;
    objFile << "L 0:";
+   objFile << "R6=R7;\n";
    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
    for(int i = 0; i < mainFuncNodes.size(); i++){
-       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
    }
    objFile << "GT(-2);\n" ;
    objFile << "END" ;
