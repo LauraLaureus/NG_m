@@ -174,7 +174,7 @@ public:
     
     std::vector<SymbolTableRecord*> getNonInitFunctions();
     
-    void setFunctionDefinition(std::string id, Node* def){
-        table[id].setFunctionDefinition(def);        
+    void setFunctionDefinition(std::string* id, Node* def){
+        this->table[*id].setFunctionDefinition(def);
     }
 };

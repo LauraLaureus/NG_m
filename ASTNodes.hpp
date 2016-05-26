@@ -35,7 +35,7 @@ public:
     Node(){};
     virtual void roam() = 0;
     virtual bool searchByHeight( string* id, int currentDepth, int maxDepth) = 0;
-    virtual string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel) = 0;
+    virtual string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel) = 0;
 
 };
 
@@ -65,20 +65,20 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         std::string result;
-        //*staticLabel += 1; //calculate label position.
+        *staticLabel += 1; //calculate label position.
         
-        //result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
+        result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
         
         
         int mem_dir;
         if (ts->getRecord(*identification)->isGlobal()) {
             mem_dir = ts->getRecord(*identification)->getAddress();
         }else{
-            *stackPointer -= sizeof(double);
-            ts->getRecord(*identification)->setAddress(*stackPointer);
-            mem_dir = *stackPointer;
+            *staticMem -= sizeof(double);
+            ts->getRecord(*identification)->setAddress(*staticMem);
+            mem_dir = *staticMem;
         }
         
         
@@ -87,8 +87,8 @@ public:
         result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value) +");\n";
         
         
-        //*codeLabel += 1;
-        //result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
+        *codeLabel += 1;
+        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
         
         *label +=1;
         result+= "L " + std::to_string((*label)) + ":";
@@ -124,11 +124,11 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         std::string result;
-        //*staticLabel += 1; //calculate label position.
+        *staticLabel += 1; //calculate label position.
         
-        //result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
+        result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
         
         stringstream mem_pos_conversor;
         
@@ -136,9 +136,9 @@ public:
         if (ts->getRecord(*identification)->isGlobal()) {
             mem_dir = ts->getRecord(*identification)->getAddress();
         }else{
-            *stackPointer -= sizeof(double);
-            ts->getRecord(*identification)->setAddress(*stackPointer);
-            mem_dir = *stackPointer;
+            *staticMem -= sizeof(double);
+            ts->getRecord(*identification)->setAddress(*staticMem);
+            mem_dir = *staticMem;
         }
         
         for (int i = this->value.size()-1; i >-1 ; i--) {
@@ -152,10 +152,10 @@ public:
         ts->getRecord(*identification)->setAddress(mem_dir);
         ts->getRecord(*identification)->setArrayOfDoublesValue(value);
         
-        *stackPointer = mem_dir;
+        *staticMem = mem_dir;
         
-        //*codeLabel += 1;
-        //result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
+        *codeLabel += 1;
+        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
         
         *label +=1;
         result+= "L " + std::to_string((*label)) + ":";
@@ -187,7 +187,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
         SymbolTableRecord* r = ts->getRecord(*identification);
@@ -230,7 +230,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         stringstream mem_pos_conversor;
         
@@ -319,7 +319,7 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
         stringstream mem_pos_conversor;
@@ -376,12 +376,12 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
         //if(std::is_same<Data, double>::value){
             
-            result += toStack(value_d,label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
+            result += toStack(value_d,label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         //}
         //else if(std::is_same<Data, std::string>::value){
         //    toStack(value_d);
@@ -390,7 +390,7 @@ public:
         return result;
     }
     
-    string toStack(double d,int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel ){
+    string toStack(double d,int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
         string result;
 
         
@@ -400,7 +400,7 @@ public:
         return result;
     }
     
-    string toStack(string d, int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel ){
+    string toStack(string d, int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
         string result;
         //TODO
         //Cargar en el registro 6 lo que haya en la cima de la pila.
@@ -480,12 +480,12 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         //result += "\tR6=R7;\n";
         //result += "\tP(R7)=0;\n";
-        string result1  = term1->generateCode(label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
-        string result2  = term2->generateCode(label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
+        string result1  = term1->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        string result2  = term2->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         
         char type_t1, type_t2;
         type_t1 = result1.at(0);
@@ -741,17 +741,17 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         //TODO modificar los caminos de desarrollo  según haya que ir a buscar la variable y del tipo que sea.
         std::string result;
         if(!searchForVariable){
-            result = genCodeForString(label,codeLabel, staticLabel,stackPointer,ts,returnLabel);
+            result = genCodeForString(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
         }else{
             
             if (ts->getRecord(*str)->getType() == real) {
-                result = genCodeForReal(label,codeLabel, staticLabel,stackPointer,ts,returnLabel);
+                result = genCodeForReal(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
             }else{
-                result = genCodeForVector(label,codeLabel, staticLabel,stackPointer,ts,returnLabel);
+                result = genCodeForVector(label,codeLabel, staticLabel,staticMem,ts,returnLabel);
             }
         }
         
@@ -759,7 +759,7 @@ public:
     }
     
 private:
-    string genCodeForString(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string genCodeForString(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         
         std::string result;
         *staticLabel += 1; //calculate label position.
@@ -770,9 +770,9 @@ private:
         
 
         //For string
-        *stackPointer -= ((*str).size()+1); //calculate mem position.
+        *staticMem -= ((*str).size()+1); //calculate mem position.
         stringstream mem_str_conversor;
-        mem_str_conversor << std::hex << *stackPointer;
+        mem_str_conversor << std::hex << *staticMem;
         string str_memPos = mem_str_conversor.str();
         
         
@@ -802,7 +802,7 @@ private:
         return result;
     }
     
-    string genCodeForReal(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string genCodeForReal(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
 
         std::string result;
         *staticLabel += 1; //calculate label position.
@@ -813,9 +813,9 @@ private:
         
         string formatStr = "%f\n";
         
-        *stackPointer -= ((formatStr).size()+1); //calculate mem position.
+        *staticMem -= ((formatStr).size()+1); //calculate mem position.
         stringstream mem_str_conversor;
-        mem_str_conversor << std::hex << *stackPointer;
+        mem_str_conversor << std::hex << *staticMem;
         string fstr_memPos = "0x" + mem_str_conversor.str();
         result += "\tSTR("+fstr_memPos+", \"%f\\n\");\n";
         
@@ -845,7 +845,7 @@ private:
         return result;
     }
     
-    string genCodeForVector(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string genCodeForVector(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         std::string result;
         *staticLabel += 1; //calculate label position.
         stringstream label_str_conversor;
@@ -855,9 +855,9 @@ private:
         
         string formatStr = "%f\n";
         
-        *stackPointer -= ((formatStr).size()+1); //calculate mem position.
+        *staticMem -= ((formatStr).size()+1); //calculate mem position.
         stringstream mem_str_conversor;
-        mem_str_conversor << std::hex << *stackPointer;
+        mem_str_conversor << std::hex << *staticMem;
         string fstr_memPos = "0x" + mem_str_conversor.str();
         result += "\tSTR("+fstr_memPos+", \"%f\\n\");\n";
         
@@ -898,7 +898,7 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         /*
          TODO GT returnLabel;
          */
@@ -937,9 +937,9 @@ public:
         else return true;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
-        result += expression->generateCode(label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
+        result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         //R0 tiene la dirección del real
         //R1 tiene la direccion del vector
         //R2 tiene el número de elementos
@@ -1010,7 +1010,7 @@ public:
     }
     
     //Las declaraciones dejan su valor en la cima de la pila, si lo tienen.
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
         //tienen dirección
@@ -1068,7 +1068,7 @@ public:
         return *(this->identification);
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         /*
          TODO
@@ -1102,7 +1102,7 @@ public:
         
         //declarations se añadiran a la pila
         for (int i = 0; i < params.size(); i++) {
-            params[i]->generateCode(label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
+            params[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         }
         
         result += "\tR5=" + std::to_string((*label)) + ";\n";
@@ -1141,7 +1141,7 @@ public:
     }
     
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
         /*
@@ -1190,8 +1190,20 @@ public:
         return *new std::string;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
+        /*TODO
+         generar el código de la llamada.
+         obtener la dirección de la variable.
+         guardar en la dirección el valor de RR0;
+         */
+        
+        expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        result += "\tR7=R7-4;\t";
+        result += "\tP(R7)=R0;\t";
+        result += "\tR0=P(" + (*ts)[*identification].getAddress() + ");\n";
+        result += "\tD(R0)=RR0;\n";
+        
         return result;
     }
 };
@@ -1207,7 +1219,8 @@ public:
         return false;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
+        //NO implementado.
         return "";
     }
 };
@@ -1242,7 +1255,7 @@ public:
         return returnable;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         /*
             TODO
@@ -1251,7 +1264,7 @@ public:
             Cargar el entero cuya direccion está en el R0. en R4.
          
          */
-        result += expression->generateCode(label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
+        result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         
         int n_l = (*label)+1;
         (*label) +=2;
@@ -1261,9 +1274,9 @@ public:
         result += "L " + std::to_string(n_l) + ":";
         result += "IF(!RR0) GT(" + std::to_string((*label)) + ");\n";
         for (int i = 0; i < block.size(); i++) {
-            block[i]->generateCode(label,codeLabel,staticLabel,stackPointer,ts,label);
+            block[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,label);
         }
-        result += expression->generateCode(label,codeLabel,staticLabel,stackPointer,ts,returnLabel);
+        result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         result += "\tGT(" + std::to_string(n_l) + ");\n";
         result += "L " + std::to_string(e_l) + ":";
         return result;
@@ -1327,7 +1340,7 @@ public:
         return returnable;
     }
     
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
         /*
@@ -1335,6 +1348,8 @@ public:
          
             recuperar los parámetros en el orden inverso.
                 para ello desarrollar una funcion en el nodo declaración al que se le pasa el
+         --->Esto no sirve de nada  Aja! No hay facil acceso desde la tabla de símbolos a este tipo de nodo AÚN.
+         Y las instrucciones cargan los datos directamente de la zona estática.
          */
         
         return result;
@@ -1363,7 +1378,7 @@ public:
     }
     
     //No genera código
-    string generateCode(int* label, int* codeLabel, int* staticLabel,int*stackPointer,SymbolTable* ts, int* returnLabel){
+    string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         return "";
     }
 };

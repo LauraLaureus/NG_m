@@ -162,13 +162,13 @@
     #include  <iostream>
     #include  <sstream>
     
-
+    
     #include "ASTNodes.hpp"
     #include "SymbolTable.hpp"
     #include "data_type.h"
     
     using  namespace  std;
-       
+    
     vector<Node*> param_vector;
     vector<Node*> lines_vector;
     vector<Node*> spaces_vector;
@@ -196,10 +196,10 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
-    int functionLabel = -20;
-    //int stackPointer = 73728; // 0x12000 hex
-    int stackPointer = 0x0012000;
-
+    int functionLabel = 1;
+    int staticMem = 73728; // 0x12000 hex
+    
+    
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
@@ -579,8 +579,8 @@ static const yytype_uint16 yyrline[] =
      240,   251,   251,   251,   254,   253,   260,   268,   270,   271,
      275,   275,   278,   279,   284,   284,   288,   288,   290,   291,
      294,   295,   298,   299,   300,   301,   302,   303,   304,   305,
-     306,   307,   308,   309,   310,   313,   319,   329,   341,   354,
-     367,   380,   388,   396,   404,   411,   418
+     306,   307,   308,   309,   310,   313,   319,   331,   343,   356,
+     369,   382,   390,   398,   406,   413,   420
 };
 #endif
 
@@ -1638,212 +1638,212 @@ yyreduce:
 
   case 10:
 #line 83 "sang_m.y"
-    {ts.setFunctionDefinition(*(((FunctionDefinition*) (yyvsp[(2) - (2)].node))->id), (yyvsp[(2) - (2)].node)); spaces_vector.push_back((yyvsp[(2) - (2)].node));current_depth -= 1;;}
+    {spaces_vector.push_back((yyvsp[(2) - (2)].node));current_depth -= 1;;}
     break;
 
   case 12:
 #line 87 "sang_m.y"
     {
-        (yyval.node) = new GlobalVar((yyvsp[(2) - (3)].node));
-        if(Declaration* n = dynamic_cast<Declaration*>((yyvsp[(2) - (3)].node))){
-            DataType type;
-            if(n->isReal()){
-                type = real;
-            }else{
-                type = DataTypeVector;
-            }
-            SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,(yyvsp[(2) - (3)].node));
-            ts.insertRecord(*(n->getIdentification()), record );
+    (yyval.node) = new GlobalVar((yyvsp[(2) - (3)].node));
+    if(Declaration* n = dynamic_cast<Declaration*>((yyvsp[(2) - (3)].node))){
+        DataType type;
+        if(n->isReal()){
+            type = real;
+        }else{
+            type = DataTypeVector;
         }
-    ;}
+        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,(yyvsp[(2) - (3)].node));
+        ts.insertRecord(*(n->getIdentification()), record );
+    }
+;}
     break;
 
   case 13:
 #line 104 "sang_m.y"
     {
-        nameStack.push_back("inicio");
-        DataType type = initFunction;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        ts.insertRecord("inicio", record);
-        
-    ;}
+    nameStack.push_back("inicio");
+    DataType type = initFunction;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord("inicio", record);
+    
+;}
     break;
 
   case 14:
 #line 112 "sang_m.y"
     {
-        (yyval.node) = new FunctionDefinition((yyvsp[(2) - (4)].str_val),ts.getNodeVector("inicio"));
-        nameStack.pop_back();
-    ;}
+    (yyval.node) = new FunctionDefinition((yyvsp[(2) - (4)].str_val),ts.getNodeVector("inicio"));
+    nameStack.pop_back();
+;}
     break;
 
   case 15:
 #line 118 "sang_m.y"
     {
-        nameStack.push_back(*(yyvsp[(2) - (3)].str_val));
-        DataType type = voidFunction;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        record.setAddress(functionLabel);
-        ts.insertRecord(*(yyvsp[(2) - (3)].str_val), record);
-        param_vector = *new vector<Node*>();
-        
-        functionLabel -= 1;
-    ;}
+    nameStack.push_back(*(yyvsp[(2) - (3)].str_val));
+    DataType type = voidFunction;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    record.setAddress(functionLabel);
+    ts.insertRecord(*(yyvsp[(2) - (3)].str_val), record);
+    param_vector = *new vector<Node*>();
+    
+    functionLabel += 1;
+;}
     break;
 
   case 16:
 #line 129 "sang_m.y"
     {
-        (yyval.node) = new FunctionDefinition((yyvsp[(2) - (7)].str_val),param_vector,ts.getNodeVector(*(yyvsp[(2) - (7)].str_val)));
-        nameStack.pop_back();
-    ;}
+    (yyval.node) = new FunctionDefinition((yyvsp[(2) - (7)].str_val),param_vector,ts.getNodeVector(*(yyvsp[(2) - (7)].str_val)));
+    nameStack.pop_back();
+;}
     break;
 
   case 17:
 #line 135 "sang_m.y"
     {
-        nameStack.push_back(*(yyvsp[(3) - (4)].str_val));
-        DataType type = realFunction;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        record.setAddress(functionLabel);
-        ts.insertRecord(*(yyvsp[(3) - (4)].str_val), record);
-        param_vector = *new vector<Node*>();
-        functionLabel -= 1;
-
-    ;}
+    nameStack.push_back(*(yyvsp[(3) - (4)].str_val));
+    DataType type = realFunction;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    record.setAddress(functionLabel);
+    ts.insertRecord(*(yyvsp[(3) - (4)].str_val), record);
+    param_vector = *new vector<Node*>();
+    functionLabel += 1;
+    
+;}
     break;
 
   case 18:
 #line 146 "sang_m.y"
     {
-        ts.setParams(param_vector,*(yyvsp[(3) - (11)].str_val));
-        (yyval.node) = new FunctionDefinition((yyvsp[(3) - (11)].str_val),param_vector,ts.getNodeVector(*(yyvsp[(3) - (11)].str_val)),true,(yyvsp[(9) - (11)].node));
-        nameStack.pop_back();
-    ;}
+    ts.setParams(param_vector,*(yyvsp[(3) - (11)].str_val));
+    (yyval.node) = new FunctionDefinition((yyvsp[(3) - (11)].str_val),param_vector,ts.getNodeVector(*(yyvsp[(3) - (11)].str_val)),true,(yyvsp[(9) - (11)].node));
+    nameStack.pop_back();
+;}
     break;
 
   case 19:
 #line 156 "sang_m.y"
     {
-        (yyval.node) = (yyvsp[(1) - (2)].node);
-        string blockName;
-        stringStack(&blockName);
-    ;}
+    (yyval.node) = (yyvsp[(1) - (2)].node);
+    string blockName;
+    stringStack(&blockName);
+;}
     break;
 
   case 20:
 #line 163 "sang_m.y"
     {
-        (yyval.node) = (yyvsp[(1) - (2)].node);
-        string blockName;
-        stringStack(&blockName);
-    ;}
+    (yyval.node) = (yyvsp[(1) - (2)].node);
+    string blockName;
+    stringStack(&blockName);
+;}
     break;
 
   case 21:
 #line 170 "sang_m.y"
     {
-        nameStack.push_back("If");
-        string blockName;
-        stringStack(&blockName);
-        DataType type = flowControlIf;
-        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
-        ts.insertRecord(blockName, record);
-        
-    ;}
+    nameStack.push_back("If");
+    string blockName;
+    stringStack(&blockName);
+    DataType type = flowControlIf;
+    SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord(blockName, record);
+    
+;}
     break;
 
   case 22:
 #line 180 "sang_m.y"
     {
-        string blockName;
-        stringStack(&blockName);
-        (yyval.node) = new FlowControl(false,(yyvsp[(4) - (6)].node),ts.getNodeVector(blockName));
-        ts.removeRecord(blockName);
-        nameStack.pop_back();
-    ;}
+    string blockName;
+    stringStack(&blockName);
+    (yyval.node) = new FlowControl(false,(yyvsp[(4) - (6)].node),ts.getNodeVector(blockName));
+    ts.removeRecord(blockName);
+    nameStack.pop_back();
+;}
     break;
 
   case 23:
 #line 189 "sang_m.y"
     {
-        nameStack.push_back("While");
-        string blockName;
-        stringStack(&blockName);
-        DataType type = flowControlIf;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        ts.insertRecord(blockName, record);
-
-    ;}
+    nameStack.push_back("While");
+    string blockName;
+    stringStack(&blockName);
+    DataType type = flowControlIf;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord(blockName, record);
+    
+;}
     break;
 
   case 24:
 #line 199 "sang_m.y"
     {
-        string blockName;
-        stringStack(&blockName);
-        (yyval.node) = new FlowControl(true,(yyvsp[(4) - (6)].node),ts.getNodeVector(blockName));
-        ts.removeRecord(blockName);
-        nameStack.pop_back();
-    ;}
+    string blockName;
+    stringStack(&blockName);
+    (yyval.node) = new FlowControl(true,(yyvsp[(4) - (6)].node),ts.getNodeVector(blockName));
+    ts.removeRecord(blockName);
+    nameStack.pop_back();
+;}
     break;
 
   case 25:
 #line 208 "sang_m.y"
     {
-        (yyval.node) = new AsignationInput();
-        if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
-            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-        }
-       
-    ;}
+    (yyval.node) = new AsignationInput();
+    if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
+    
+;}
     break;
 
   case 26:
 #line 217 "sang_m.y"
     {
-        (yyval.node) = new AsignationFunctionCall((yyvsp[(1) - (4)].str_val),(yyvsp[(3) - (4)].node));
-        if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
-            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-        } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
-    ;}
+    (yyval.node) = new AsignationFunctionCall((yyvsp[(1) - (4)].str_val),(yyvsp[(3) - (4)].node));
+    if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
+;}
     break;
 
   case 27:
 #line 224 "sang_m.y"
     {
-        (yyval.node) = new AsignationFunctionCall(nullptr,(yyvsp[(2) - (3)].node));
-    ;}
+    (yyval.node) = new AsignationFunctionCall(nullptr,(yyvsp[(2) - (3)].node));
+;}
     break;
 
   case 28:
 #line 229 "sang_m.y"
     {
-        (yyval.node) = new Output_Expression(true, (yyvsp[(2) - (3)].str_val));
-        int n = ts.exists(*(yyvsp[(2) - (3)].str_val));
-        if(n == -1 || n > current_depth){
-            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-        }
-    ;}
+    (yyval.node) = new Output_Expression(true, (yyvsp[(2) - (3)].str_val));
+    int n = ts.exists(*(yyvsp[(2) - (3)].str_val));
+    if(n == -1 || n > current_depth){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
+;}
     break;
 
   case 29:
 #line 237 "sang_m.y"
     {
-        (yyval.node) = new Output_Expression(false, (yyvsp[(2) - (3)].str_val));
-    ;}
+    (yyval.node) = new Output_Expression(false, (yyvsp[(2) - (3)].str_val));
+;}
     break;
 
   case 30:
 #line 241 "sang_m.y"
     {
-        (yyval.node) = new BreakNode();
-        string blockName;
-        stringStack(&blockName);
-        if(blockName.find("While") == std::string::npos){
-            yyerror("TU TAS TO LOCO PEPE JUAN para que haces un break fuera de un while tas tonto ¬¬\n");
-        }
-    ;}
+    (yyval.node) = new BreakNode();
+    string blockName;
+    stringStack(&blockName);
+    if(blockName.find("While") == std::string::npos){
+        yyerror("TU TAS TO LOCO PEPE JUAN para que haces un break fuera de un while tas tonto ¬¬\n");
+    }
+;}
     break;
 
   case 31:
@@ -1859,19 +1859,19 @@ yyreduce:
   case 34:
 #line 254 "sang_m.y"
     {
-        string blockName;
-        stringStack(&blockName);
-        ts.saveNode(blockName,(yyvsp[(1) - (1)].node));
-    ;}
+    string blockName;
+    stringStack(&blockName);
+    ts.saveNode(blockName,(yyvsp[(1) - (1)].node));
+;}
     break;
 
   case 36:
 #line 261 "sang_m.y"
     {
-        string blockName;
-        stringStack(&blockName);
-        ts.saveNode(blockName,(yyvsp[(1) - (1)].node));
-    ;}
+    string blockName;
+    stringStack(&blockName);
+    ts.saveNode(blockName,(yyvsp[(1) - (1)].node));
+;}
     break;
 
   case 37:
@@ -2011,20 +2011,22 @@ yyreduce:
   case 66:
 #line 320 "sang_m.y"
     {
-    if(!ts.exists(*(yyvsp[(2) - (2)].str_val))){
+    
+    if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
+        
         DataType type = real ;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*(yyvsp[(2) - (2)].str_val), record);
     }
     (yyval.node) = new Declaration((yyvsp[(2) - (2)].str_val),true);
-
+    
 ;}
     break;
 
   case 67:
-#line 330 "sang_m.y"
+#line 332 "sang_m.y"
     {
-    if(!ts.exists(*(yyvsp[(1) - (2)].str_val))){
+    if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
         DataType type = DataTypeVector;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*(yyvsp[(2) - (2)].str_val), record);
@@ -2035,7 +2037,7 @@ yyreduce:
     break;
 
   case 68:
-#line 342 "sang_m.y"
+#line 344 "sang_m.y"
     {
     (yyval.node) = new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
     if(heightSearch((yyvsp[(2) - (4)].str_val),1)){
@@ -2051,7 +2053,7 @@ yyreduce:
     break;
 
   case 69:
-#line 355 "sang_m.y"
+#line 357 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val),current_vector,current_vector.size());
     current_vector.clear();
@@ -2067,7 +2069,7 @@ yyreduce:
     break;
 
   case 70:
-#line 368 "sang_m.y"
+#line 370 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (7)].str_val), *new std::vector<double>,(int)(yyvsp[(6) - (7)].double_val ));
     if(heightSearch((yyvsp[(2) - (7)].str_val),1)){
@@ -2082,10 +2084,10 @@ yyreduce:
     break;
 
   case 71:
-#line 380 "sang_m.y"
+#line 382 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].node));
-
+    
     if(!ts.exists(*(yyvsp[(1) - (3)].str_val))){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
@@ -2093,7 +2095,7 @@ yyreduce:
     break;
 
   case 72:
-#line 389 "sang_m.y"
+#line 391 "sang_m.y"
     {
     (yyval.node) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
     
@@ -2104,18 +2106,18 @@ yyreduce:
     break;
 
   case 73:
-#line 397 "sang_m.y"
+#line 399 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].node));
-   
-   if(!ts.exists(*(yyvsp[(1) - (6)].str_val))){
-       yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-   }
+    
+    if(!ts.exists(*(yyvsp[(1) - (6)].str_val))){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 ;}
     break;
 
   case 74:
-#line 405 "sang_m.y"
+#line 407 "sang_m.y"
     {
     (yyval.node) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (3)].str_val)) || !ts.exists(*(yyvsp[(3) - (3)].str_val)) ){
@@ -2125,7 +2127,7 @@ yyreduce:
     break;
 
   case 75:
-#line 412 "sang_m.y"
+#line 414 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].double_val ), (yyvsp[(1) - (6)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
@@ -2135,7 +2137,7 @@ yyreduce:
     break;
 
   case 76:
-#line 419 "sang_m.y"
+#line 421 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].str_val), (yyvsp[(1) - (6)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
@@ -2146,7 +2148,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2150 "sang_m.tab.c"
+#line 2152 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2366,7 +2368,7 @@ yyreturn:
 }
 
 
-#line 427 "sang_m.y"
+#line 429 "sang_m.y"
 
 void buildCheckForErrors(){
     printf("Jeronimo");
@@ -2412,54 +2414,53 @@ void generateCodeFromAST(char* filename){
     objFile.open(filename_e);
     
     objFile << header ;
-   
-   //CodeGeneration here
-   // set global vars
-   
-   //TODO check global vars numbers
-   std::vector<std::string> globals = ts.getGlobalVars();
-   objFile << "\tSTAT(0)\n";
-   for(int i = 0; i < globals.size(); i++){
-       if(ts[globals[i]].getType() == real){
-        stackPointer -= sizeof(double);
-        objFile << "\tMEM("+int_to_hexString(stackPointer)+"," + std::to_string(sizeof(double)) +");\n" ;
-       }
-       else{ //se guarda una dirección donde estará reservado el vector.
-           stackPointer -= sizeof(double)*10;
-           objFile << "\tFIL("+int_to_hexString(stackPointer)+",10,0);\n" ;
-       }
-        ts.setAddress(globals[i],stackPointer);
-   }
-   int returnLabel = -1;
-   
-   vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
-   
-   for(int i = 0; i < nonInitFunction.size(); i++){
-       
-       vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
-       for(int j = 0; j < functionNodes.size(); j++ ){
-           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
-       }
-       
-   }
-   
-   
-   SymbolTableRecord initFunc = ts.getInit();
-   
-   
-   objFile << "\tCODE(0)\n";
-   //codeLabel +=1;
-   objFile << "L 0:";
-   objFile << "R6=R7;\n";
-   vector<Node*> mainFuncNodes = initFunc.getNodeStack();
-   for(int i = 0; i < mainFuncNodes.size(); i++){
-       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
-   }
-   objFile << "GT(-2);\n" ;
-   objFile << "END" ;
-
+    
+    //CodeGeneration here
+    // set global vars
+    
+    //TODO check global vars numbers
+    std::vector<std::string> globals = ts.getGlobalVars();
+    objFile << "\tSTAT(0)\n";
+    for(int i = 0; i < globals.size(); i++){
+        if(ts[globals[i]].getType() == real){
+            staticMem -= sizeof(double);
+            objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
+        }
+        else{ //se guarda una dirección donde estará reservado el vector.
+            staticMem -= sizeof(double)*10;
+            objFile << "\tFIL("+int_to_hexString(staticMem)+",10,0);\n" ;
+        }
+        ts.setAddress(globals[i],staticMem);
+    }
+    int returnLabel = -1;
+    
+    vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
+    
+    for(int i = 0; i < nonInitFunction.size(); i++){
+        
+        vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
+        for(int j = 0; j < functionNodes.size(); j++ ){
+            objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+        }
+        
+    }
+    
+    
+    SymbolTableRecord initFunc = ts.getInit();
+    
+    
+    objFile << "\tCODE(0)\n";
+    //codeLabel +=1;
+    objFile << "L 0:";
+    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
+    for(int i = 0; i < mainFuncNodes.size(); i++){
+        objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+    }
+    objFile << "GT(-2);\n" ;
+    objFile << "END" ;
+    
     objFile.close();
-
+    
 }
 
 void checkErrors(){

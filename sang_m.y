@@ -7,13 +7,13 @@
     #include  <iostream>
     #include  <sstream>
     
-
+    
     #include "ASTNodes.hpp"
     #include "SymbolTable.hpp"
     #include "data_type.h"
     
     using  namespace  std;
-       
+    
     vector<Node*> param_vector;
     vector<Node*> lines_vector;
     vector<Node*> spaces_vector;
@@ -41,10 +41,10 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
-    int functionLabel = -20;
-    //int stackPointer = 73728; // 0x12000 hex
-    int stackPointer = 0x0012000;
-%}
+    int functionLabel = 1;
+    int staticMem = 73728; // 0x12000 hex
+    
+    %}
 
 %locations
 
@@ -75,195 +75,195 @@
 
 
 parsetree: { spaces_vector = *new vector<Node*>(); current_depth = 0; ts = *new SymbolTable(); nameStack = *new std::vector<string>();} espacios {}
-        |error { spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear(); current_depth = 0;} // colocamos el error en la raíz del árbol para limpiar facilmente el árbol de nodos.
-        ;
+|error { spaces_vector.clear(); lines_vector.clear(); param_vector.clear(); current_vector.clear(); current_depth = 0;} // colocamos el error en la raíz del árbol para limpiar facilmente el árbol de nodos.
+;
 
 espacios: {current_depth -= 1;}
-    |{ current_depth += 1;} variablesGlobales {spaces_vector.push_back($2); current_depth -= 1;}espacios
-|{ current_depth += 1;} funcion {ts.setFunctionDefinition(*(((FunctionDefinition*) $2)->id), $2); spaces_vector.push_back($2);current_depth -= 1;}espacios
-    ;
+|{ current_depth += 1;} variablesGlobales {spaces_vector.push_back($2); current_depth -= 1;}espacios
+|{ current_depth += 1;} funcion {spaces_vector.push_back($2);current_depth -= 1;}espacios
+;
 
 variablesGlobales:  GLOBAL declaracion PUNTOYCOMA
-    {
-        $$ = new GlobalVar($2);
-        if(Declaration* n = dynamic_cast<Declaration*>($2)){
-            DataType type;
-            if(n->isReal()){
-                type = real;
-            }else{
-                type = DataTypeVector;
-            }
-            SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,$2);
-            ts.insertRecord(*(n->getIdentification()), record );
+{
+    $$ = new GlobalVar($2);
+    if(Declaration* n = dynamic_cast<Declaration*>($2)){
+        DataType type;
+        if(n->isReal()){
+            type = real;
+        }else{
+            type = DataTypeVector;
         }
-    };
+        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,$2);
+        ts.insertRecord(*(n->getIdentification()), record );
+    }
+};
 
 
 
 funcion: FUNC INICIO
-    {
-        nameStack.push_back("inicio");
-        DataType type = initFunction;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        ts.insertRecord("inicio", record);
-        
-    }
-    bloque
-    {
-        $$ = new FunctionDefinition($2,ts.getNodeVector("inicio"));
-        nameStack.pop_back();
-    }
-    |FUNC VARIABLE ABREPARENTESIS //Hey yu //Sigue por aquí :D
+{
+    nameStack.push_back("inicio");
+    DataType type = initFunction;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord("inicio", record);
+    
+}
+bloque
+{
+    $$ = new FunctionDefinition($2,ts.getNodeVector("inicio"));
+    nameStack.pop_back();
+}
+|FUNC VARIABLE ABREPARENTESIS //Hey yu //Sigue por aquí :D
 
-    {
-        nameStack.push_back(*$2);
-        DataType type = voidFunction;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        record.setAddress(functionLabel);
-        ts.insertRecord(*$2, record);
-        param_vector = *new vector<Node*>();
-        
-        functionLabel -= 1;
-    }
-    parametros CIERRAPARENTESIS bloque
-    {
-        $$ = new FunctionDefinition($2,param_vector,ts.getNodeVector(*$2));
-        nameStack.pop_back();
-    }
+{
+    nameStack.push_back(*$2);
+    DataType type = voidFunction;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    record.setAddress(functionLabel);
+    ts.insertRecord(*$2, record);
+    param_vector = *new vector<Node*>();
+    
+    functionLabel += 1;
+}
+parametros CIERRAPARENTESIS bloque
+{
+    $$ = new FunctionDefinition($2,param_vector,ts.getNodeVector(*$2));
+    nameStack.pop_back();
+}
 
-    |FUNC REAL VARIABLE ABREPARENTESIS
-    {
-        nameStack.push_back(*$3);
-        DataType type = realFunction;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        record.setAddress(functionLabel);
-        ts.insertRecord(*$3, record);
-        param_vector = *new vector<Node*>();
-        functionLabel -= 1;
-
-    }
-    parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES
-    {
-        ts.setParams(param_vector,*$3);
-        $$ = new FunctionDefinition($3,param_vector,ts.getNodeVector(*$3),true,$9);
-        nameStack.pop_back();
-    }
-    ;
+|FUNC REAL VARIABLE ABREPARENTESIS
+{
+    nameStack.push_back(*$3);
+    DataType type = realFunction;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    record.setAddress(functionLabel);
+    ts.insertRecord(*$3, record);
+    param_vector = *new vector<Node*>();
+    functionLabel += 1;
+    
+}
+parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES
+{
+    ts.setParams(param_vector,*$3);
+    $$ = new FunctionDefinition($3,param_vector,ts.getNodeVector(*$3),true,$9);
+    nameStack.pop_back();
+}
+;
 
 
 
 line:declaracion PUNTOYCOMA
-    {
-        $$ = $1;
-        string blockName;
-        stringStack(&blockName);
-    }
+{
+    $$ = $1;
+    string blockName;
+    stringStack(&blockName);
+}
 
-    |asignacion PUNTOYCOMA
-    {
-        $$ = $1;
-        string blockName;
-        stringStack(&blockName);
-    }
+|asignacion PUNTOYCOMA
+{
+    $$ = $1;
+    string blockName;
+    stringStack(&blockName);
+}
 
-    |IF
-    {
-        nameStack.push_back("If");
-        string blockName;
-        stringStack(&blockName);
-        DataType type = flowControlIf;
-        SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
-        ts.insertRecord(blockName, record);
-        
-    }
-    ABREPARENTESIS expresion CIERRAPARENTESIS bloque
-    {
-        string blockName;
-        stringStack(&blockName);
-        $$ = new FlowControl(false,$4,ts.getNodeVector(blockName));
-        ts.removeRecord(blockName);
-        nameStack.pop_back();
-    }
+|IF
+{
+    nameStack.push_back("If");
+    string blockName;
+    stringStack(&blockName);
+    DataType type = flowControlIf;
+    SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord(blockName, record);
+    
+}
+ABREPARENTESIS expresion CIERRAPARENTESIS bloque
+{
+    string blockName;
+    stringStack(&blockName);
+    $$ = new FlowControl(false,$4,ts.getNodeVector(blockName));
+    ts.removeRecord(blockName);
+    nameStack.pop_back();
+}
 //////////////////////_________________________________________________________
-    |WHILE
-    {
-        nameStack.push_back("While");
-        string blockName;
-        stringStack(&blockName);
-        DataType type = flowControlIf;
-        SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
-        ts.insertRecord(blockName, record);
+|WHILE
+{
+    nameStack.push_back("While");
+    string blockName;
+    stringStack(&blockName);
+    DataType type = flowControlIf;
+    SymbolTableRecord record = *new SymbolTableRecord(true,type,current_depth,*new std::vector<Node*>());
+    ts.insertRecord(blockName, record);
+    
+}
+ABREPARENTESIS expresion CIERRAPARENTESIS bloque
+{
+    string blockName;
+    stringStack(&blockName);
+    $$ = new FlowControl(true,$4,ts.getNodeVector(blockName));
+    ts.removeRecord(blockName);
+    nameStack.pop_back();
+}
 
+|VARIABLE ASIGNA INPUT PUNTOYCOMA
+{
+    $$ = new AsignationInput();
+    if(!heightSearch($1, current_depth)  ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
-    ABREPARENTESIS expresion CIERRAPARENTESIS bloque
-    {
-        string blockName;
-        stringStack(&blockName);
-        $$ = new FlowControl(true,$4,ts.getNodeVector(blockName));
-        ts.removeRecord(blockName);
-        nameStack.pop_back();
-    }
+    
+}
 
-    |VARIABLE ASIGNA INPUT PUNTOYCOMA
-    {
-        $$ = new AsignationInput();
-        if(!heightSearch($1, current_depth)  ){
-            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-        }
-       
-    }
+|VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA
+{
+    $$ = new AsignationFunctionCall($1,$3);
+    if(!heightSearch($1, current_depth)  ){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
+}
+| CALL llamadaFuncion PUNTOYCOMA
+{
+    $$ = new AsignationFunctionCall(nullptr,$2);
+}
 
-    |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA
-    {
-        $$ = new AsignationFunctionCall($1,$3);
-        if(!heightSearch($1, current_depth)  ){
-            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-        } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
+|OUTPUT VARIABLE PUNTOYCOMA
+{
+    $$ = new Output_Expression(true, $2);
+    int n = ts.exists(*$2);
+    if(n == -1 || n > current_depth){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
-    | CALL llamadaFuncion PUNTOYCOMA
-    {
-        $$ = new AsignationFunctionCall(nullptr,$2);
+}
+|OUTPUT STRING PUNTOYCOMA
+{
+    $$ = new Output_Expression(false, $2);
+}
+|BREAK PUNTOYCOMA
+{
+    $$ = new BreakNode();
+    string blockName;
+    stringStack(&blockName);
+    if(blockName.find("While") == std::string::npos){
+        yyerror("TU TAS TO LOCO PEPE JUAN para que haces un break fuera de un while tas tonto ¬¬\n");
     }
-
-    |OUTPUT VARIABLE PUNTOYCOMA
-    {
-        $$ = new Output_Expression(true, $2);
-        int n = ts.exists(*$2);
-        if(n == -1 || n > current_depth){
-            yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-        }
-    }
-    |OUTPUT STRING PUNTOYCOMA
-    {
-        $$ = new Output_Expression(false, $2);
-    }
-    |BREAK PUNTOYCOMA
-    {
-        $$ = new BreakNode();
-        string blockName;
-        stringStack(&blockName);
-        if(blockName.find("While") == std::string::npos){
-            yyerror("TU TAS TO LOCO PEPE JUAN para que haces un break fuera de un while tas tonto ¬¬\n");
-        }
-    }
-    ;
+}
+;
 
 bloque: ABRELLAVES {current_depth += 1;} lineas { current_depth -= 1;}CIERRALLAVES ;
 
 lineas:  line
-    {
-        string blockName;
-        stringStack(&blockName);
-        ts.saveNode(blockName,$1);
-    }lineas
+{
+    string blockName;
+    stringStack(&blockName);
+    ts.saveNode(blockName,$1);
+}lineas
 
-    |line
-    {
-        string blockName;
-        stringStack(&blockName);
-        ts.saveNode(blockName,$1);
-    }
-    ;
+|line
+{
+    string blockName;
+    stringStack(&blockName);
+    ts.saveNode(blockName,$1);
+}
+;
 
 devuelve: DEVUELVE devolucion PUNTOYCOMA { $$ = new ReturnNode($2);};
 
@@ -288,27 +288,27 @@ parametros:
 vectorNT: ABRECORCHETES {current_vector = *new vector<double>();} elementos CIERRACORCHETES;
 
 elementos: VALORREAL {current_vector.push_back($1);}
-        | VALORREAL COMA elementos {current_vector.push_back($1);}
-        ;
+| VALORREAL COMA elementos {current_vector.push_back($1);}
+;
 
 termino: VALORREAL {$$ = new Math_Term<double>($1);}
-        |VARIABLE {$$ = new Math_Term<std::string>(*$1);}
-        ;
+|VARIABLE {$$ = new Math_Term<std::string>(*$1);}
+;
 
 operacion: SUMA {$$ = '+';}
-        | MENOS {$$ = '-';}
-        |DIVIDE {$$ = '/';}
-        |MULTIPLICA {$$ = '*';}
-        |OR {$$ = '|';}
-        |AND {$$ = '&';}
-        |NOT {$$ = '!';}
-        |IGUALVALOR {$$ = '=';}
-        |DISTINTOVALOR {$$ = '~';}
-        |MAYORQUE {$$ = '>';}
-        |MAYORIGUAL {$$ = 'Z';}
-        |MENORQUE {$$ = '<';}
-        |MENORIGUAL {$$ = 'z';}
-        ;
+| MENOS {$$ = '-';}
+|DIVIDE {$$ = '/';}
+|MULTIPLICA {$$ = '*';}
+|OR {$$ = '|';}
+|AND {$$ = '&';}
+|NOT {$$ = '!';}
+|IGUALVALOR {$$ = '=';}
+|DISTINTOVALOR {$$ = '~';}
+|MAYORQUE {$$ = '>';}
+|MAYORIGUAL {$$ = 'Z';}
+|MENORQUE {$$ = '<';}
+|MENORIGUAL {$$ = 'z';}
+;
 
 expresion: termino operacion termino
 {
@@ -318,17 +318,19 @@ expresion: termino operacion termino
 
 declaracion: REAL VARIABLE
 {
-    if(!ts.exists(*$2)){
+    
+    if(!heightSearch($2, current_depth)){
+        
         DataType type = real ;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*$2, record);
     }
     $$ = new Declaration($2,true);
-
+    
 }
 |VECTOR VARIABLE
 {
-    if(!ts.exists(*$1)){
+    if(!heightSearch($2, current_depth)){
         DataType type = DataTypeVector;
         SymbolTableRecord record = *new SymbolTableRecord(false,type,current_depth,*new std::vector<Node*>());
         ts.insertRecord(*$2, record);
@@ -379,7 +381,7 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 
 |VARIABLE ASIGNA expresion{
     $$ = new Expression2Var($1,$3);
-
+    
     if(!ts.exists(*$1)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
     }
@@ -396,10 +398,10 @@ asignacion: REAL VARIABLE ASIGNA VALORREAL
 |VARIABLE ABRECORCHETES VALORREAL CIERRACORCHETES ASIGNA expresion
 {
     $$ = new Expression2Var($1,$3,$6);
-   
-   if(!ts.exists(*$1)){
-       yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-   }
+    
+    if(!ts.exists(*$1)){
+        yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
+    }
 }
 |VARIABLE ASIGNA VARIABLE
 {
@@ -469,54 +471,53 @@ void generateCodeFromAST(char* filename){
     objFile.open(filename_e);
     
     objFile << header ;
-   
-   //CodeGeneration here
-   // set global vars
-   
-   //TODO check global vars numbers
-   std::vector<std::string> globals = ts.getGlobalVars();
-   objFile << "\tSTAT(0)\n";
-   for(int i = 0; i < globals.size(); i++){
-       if(ts[globals[i]].getType() == real){
-        stackPointer -= sizeof(double);
-        objFile << "\tMEM("+int_to_hexString(stackPointer)+"," + std::to_string(sizeof(double)) +");\n" ;
-       }
-       else{ //se guarda una dirección donde estará reservado el vector.
-           stackPointer -= sizeof(double)*10;
-           objFile << "\tFIL("+int_to_hexString(stackPointer)+",10,0);\n" ;
-       }
-        ts.setAddress(globals[i],stackPointer);
-   }
-   int returnLabel = -1;
-   
-   vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
-   
-   for(int i = 0; i < nonInitFunction.size(); i++){
-       
-       vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
-       for(int j = 0; j < functionNodes.size(); j++ ){
-           objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
-       }
-       
-   }
-   
-   
-   SymbolTableRecord initFunc = ts.getInit();
-   
-   
-   objFile << "\tCODE(0)\n";
-   //codeLabel +=1;
-   objFile << "L 0:";
-   objFile << "R6=R7;\n";
-   vector<Node*> mainFuncNodes = initFunc.getNodeStack();
-   for(int i = 0; i < mainFuncNodes.size(); i++){
-       objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&stackPointer,&ts,&returnLabel);
-   }
-   objFile << "GT(-2);\n" ;
-   objFile << "END" ;
-
+    
+    //CodeGeneration here
+    // set global vars
+    
+    //TODO check global vars numbers
+    std::vector<std::string> globals = ts.getGlobalVars();
+    objFile << "\tSTAT(0)\n";
+    for(int i = 0; i < globals.size(); i++){
+        if(ts[globals[i]].getType() == real){
+            staticMem -= sizeof(double);
+            objFile << "\tMEM("+int_to_hexString(staticMem)+"," + std::to_string(sizeof(double)) +");\n" ;
+        }
+        else{ //se guarda una dirección donde estará reservado el vector.
+            staticMem -= sizeof(double)*10;
+            objFile << "\tFIL("+int_to_hexString(staticMem)+",10,0);\n" ;
+        }
+        ts.setAddress(globals[i],staticMem);
+    }
+    int returnLabel = -1;
+    
+    vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
+    
+    for(int i = 0; i < nonInitFunction.size(); i++){
+        
+        vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
+        for(int j = 0; j < functionNodes.size(); j++ ){
+            objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+        }
+        
+    }
+    
+    
+    SymbolTableRecord initFunc = ts.getInit();
+    
+    
+    objFile << "\tCODE(0)\n";
+    //codeLabel +=1;
+    objFile << "L 0:";
+    vector<Node*> mainFuncNodes = initFunc.getNodeStack();
+    for(int i = 0; i < mainFuncNodes.size(); i++){
+        objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+    }
+    objFile << "GT(-2);\n" ;
+    objFile << "END" ;
+    
     objFile.close();
-
+    
 }
 
 void checkErrors(){
