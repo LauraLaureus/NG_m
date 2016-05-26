@@ -382,13 +382,7 @@ public:
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
-        //if(std::is_same<Data, double>::value){
-            
-            result += toStack(value_d,label,codeLabel,staticLabel,staticMem,ts,returnLabel);
-        //}
-        //else if(std::is_same<Data, std::string>::value){
-        //    toStack(value_d);
-        //}
+        result += toStack(value_d,label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         
         return result;
     }
@@ -398,17 +392,15 @@ public:
 
         
         result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
-        result += "\tD(R7)=" + std::to_string(d) +";\n";
+        result += "\tRR1="+ std::to_string(d) + ";\n";
+        result += "\tD(R7)=RR1;\n";
+        //result += "\tDAT(R7,D," + std::to_string(d) + ");\n";
         
         return result;
     }
     
     string toStack(string d, int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
         string result;
-        //TODO
-        //Cargar en el registro 6 lo que haya en la cima de la pila.
-        //Cargar en la pila todo el vector.
-        //Dejar en la cima de la pila el registro 6 +1
         
         /*
          TODO  v2
@@ -431,7 +423,8 @@ public:
                 //result += d;
                 result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
                 mem_pos_conversor << std::hex << dir;
-                result += "\tR7=D(0x" + mem_pos_conversor.str() + ");\n";
+                result += "\tRR3=D(0x" + mem_pos_conversor.str() + ");\n";
+                result += "\tD(R7)=RR3;\n";
         }else{
                 result +="v";
                 //result += d;
@@ -485,7 +478,7 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
-        //result += "\tR6=R7;\n";
+        result += "\tR6=R7;\n";
         //result += "\tP(R7)=0;\n";
         string result1  = term1->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         string result2  = term2->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
@@ -640,9 +633,9 @@ public:
                     R5=R5-8;
                     GT(<etiqueta_nueva>);
                  */
-                result += "\tR5=R6+" +std::to_string(sizeof(double)) +";\n";
+                result += "\tR5=R6-" +std::to_string(sizeof(double)) +";\n";
                 result += "\tRR1=D(R5);\n";
-                result += "\tR5=R5+"+ std::to_string(sizeof(double)) +";\n";
+                result += "\tR5=R5-"+ std::to_string(sizeof(double)) +";\n";
                 result += "\tR0=R5;\n";
                 result += "\tR1=R7;\n";
                 
@@ -658,9 +651,9 @@ public:
                  R5=R5-8;
                  GT(<etiqueta_nueva>);
                  */
-                result +=  "\tR5=R7+"+ std::to_string(sizeof(double)) +";\n";
+                result +=  "\tR5=R7-"+ std::to_string(sizeof(double)) +";\n";
                 result += "\tRR1=D(R5);\n";
-                result +=  "\tR5=R6+"+ std::to_string(sizeof(double)) +";\n";
+                result +=  "\tR5=R6-"+ std::to_string(sizeof(double)) +";\n";
                 result += "\tR0=R7;\n";
                 result += "\tR1=R7+8;\n";
             }
@@ -1278,7 +1271,7 @@ public:
         result += "L " + std::to_string(n_l) + ":";
         result += "IF(!RR0) GT(" + std::to_string((*label)) + ");\n";
         for (int i = 0; i < block.size(); i++) {
-            block[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,label);
+            result += block[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,label);
         }
         result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         result += "\tGT(" + std::to_string(n_l) + ");\n";

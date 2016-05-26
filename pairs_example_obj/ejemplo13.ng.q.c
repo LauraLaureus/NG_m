@@ -10,7 +10,8 @@ L 1:	STAT(2)
 	DAT(0x11fe0,D,3.000000);
 	DAT(0x11fd8,D,4.000000);
 	CODE(2)
-L 2:	R7=R7-24;
+L 2:	R6=R7;
+	R7=R7-24;
 	RR3=D(0x11fd8);
 	D(R7+16)=RR3;
 	RR3=D(0x11fd0);

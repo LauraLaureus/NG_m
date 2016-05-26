@@ -1,0 +1,9 @@
+func inicio {
+	REAL a = 1;
+	si (a > 0){
+		escribe "hellow";	
+	}
+	si (a < 0){
+		escribe "from the other siiiide";
+	}
+}
