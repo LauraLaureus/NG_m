@@ -3,7 +3,7 @@ func inicio {
 	si (a > 0){
 		escribe "hellow";	
 	}
-	si (a < 0){
-		escribe "from the other siiiide";
+	si(a <2){
+		escribe "from the other side";
 	}
 }

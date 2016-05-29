@@ -390,7 +390,7 @@ public:
     string toStack(double d,int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
         string result;
 
-        
+        result +="n";
         result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
         result += "\tRR1="+ std::to_string(d) + ";\n";
         result += "\tD(R7)=RR1;\n";
@@ -496,8 +496,8 @@ public:
         //DO this when n & n
         if(type_t1 == type_t2 && type_t1 == 'n'){
             
-            result += "\tRR1=D(R7);\n";
-            result += "\tRR2=D(R7+" + std::to_string(sizeof(double)) + ");\n";
+            result += "\tRR2=D(R7);\n";
+            result += "\tRR1=D(R7+" + std::to_string(sizeof(double)) + ");\n";
             
             switch (op) {
                 case '+':
@@ -658,7 +658,8 @@ public:
                 result += "\tR1=R7+8;\n";
             }
             
-            result +=  "\tR4=R7-R5;\n";
+            result +=  "\tR3=R5+8;\n";
+            result +=  "\tR4=R7-R3;\n";
             
             (*label) +=1;
             int n_l = (*label);
@@ -702,13 +703,15 @@ public:
                     //Operaciones lógicas no admitidas para los reales.
             }
             result += "\tR5=R5-"+ std::to_string(sizeof(double)) +";\n";
-            result +=  "\tR4=R7-R5;\n";
+            result +=  "\tR3=R5+8;\n";
+            result +=  "\tR4=R7-R3;\n";
             result += "\tGT("+std::to_string(n_l)+");\n";
             result += "\tR2=R6-R7;\n";
             result += "\tR2=R2/8;\n";
             result += "\tR2=R2-1;\n";
         
         }
+        (*label) += 1;
         result += "L " + std::to_string((*label)) + ":";
         
         //Limpiar la pila. NO SE LIMPIA LA PILA para mantener en la pila el vector resultado. R0 indica donde comienza el entero  R1 indica donde comienza el vector. R2 indica el número de elementos.
@@ -1267,15 +1270,17 @@ public:
         (*label) +=2;
         int e_l =(*label);
         
-        result += "\tRR0=D(R0);\n";
+        //result += "\tRR0=D(R0);\n";
         result += "L " + std::to_string(n_l) + ":";
         result += "IF(!RR0) GT(" + std::to_string((*label)) + ");\n";
         for (int i = 0; i < block.size(); i++) {
             result += block[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,label);
         }
-        result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
-        result += "\tGT(" + std::to_string(n_l) + ");\n";
-        result += "L " + std::to_string(e_l) + ":";
+        if(loop){
+            result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+            result += "\tGT(" + std::to_string(n_l) + ");\n";
+            result += "L " + std::to_string(e_l) + ":";
+        }
         return result;
     }
 };

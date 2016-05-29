@@ -1,0 +1,7 @@
+func inicio{
+	REAL a = 4;
+	mientras (a > 0){
+		escribe "azumbague\n";
+		a = a-1;
+	}
+}
