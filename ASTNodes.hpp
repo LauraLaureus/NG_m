@@ -67,9 +67,6 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         std::string result;
-        //*staticLabel += 1; //calculate label position.
-        
-        //result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
         
         
         int mem_dir;
@@ -92,8 +89,7 @@ public:
         
         
         
-        /**codeLabel += 1;
-        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";*/
+       
         
         *label +=1;
         result+= "L " + std::to_string((*label)) + ":";

@@ -113,3 +113,8 @@ std::vector<SymbolTableRecord*> SymbolTable::getNonInitFunctions(){
     return result;
     
 }
+
+/*
+void SymbolTable::swapContentNodesToDefinitionNode(string ide, Node* d){
+    this->table[ide].swapContentNodesToDefinitionNode(d);
+}*/

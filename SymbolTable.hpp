@@ -19,46 +19,48 @@ class SymbolTableRecord {
     bool global;
     DataType type;
     int depth;
-    vector<Node*> vector;
+    vector<Node*> v;
     std::vector<Node*> params;
     int address;
     std::vector<double> array_value;
-    Node* functionDefinition;
+    
     
 public:
+    
+    Node* functionDefinition;
     
     SymbolTableRecord(){
         this->global = false;
         this->type = real;
         this->depth = 0;
-        this->vector = *new std::vector<Node*>();
+        this->v = *new std::vector<Node*>();
         this->address = 0;
         this->array_value =  *new std::vector<double>();
     }
     
-    SymbolTableRecord(bool g, DataType dt, int d,Node* v){
+    SymbolTableRecord(bool g, DataType dt, int d,Node* v2){
         this->global = g;
         this->type = dt;
         this->depth = d;
-        this->vector = *new std::vector<Node*>();
-        this->vector.push_back(v);
+        this->v = *new std::vector<Node*>();
+        this->v.push_back(v2);
         this->address = 0;
     }
     
-    SymbolTableRecord(bool g, DataType dt, int d,std::vector<Node*> v){
+    SymbolTableRecord(bool g, DataType dt, int d,std::vector<Node*> v2){
         this->global = g;
         this->type = dt;
         this->depth = d;
-        this->vector = v;
+        this->v = v;
         this->address = 0;
         this->array_value =  *new std::vector<double>();
     }
     
-    SymbolTableRecord(bool g, DataType dt, int d,std::vector<Node*> v, std::vector<double> vect){
+    SymbolTableRecord(bool g, DataType dt, int d,std::vector<Node*> v2, std::vector<double> vect){
         this->global = g;
         this->type = dt;
         this->depth = d;
-        this->vector = v;
+        this->v = v2;
         this->address = 0;
         this->array_value = vect;
     }
@@ -76,7 +78,7 @@ public:
     }
     
     void addNode(Node* n){
-        this->vector.push_back(n);
+        this->v.push_back(n);
     }
 
     
@@ -93,7 +95,7 @@ public:
         cout <<  "|" << global << "|" << "\t";
         cout << type << "|" << "\t";
         cout << depth << "|" << "\t";
-        cout << vector.size() << "|" ;
+        cout << v.size() << "|" ;
         
         if(this->type >2 && this->type < 5){
             cout << "\t" << params.size() <<"|";
@@ -103,7 +105,7 @@ public:
     }
     
     std::vector<Node*> getNodeStack(){
-        return this->vector;
+        return this->v;
     }
     
     int giveDepth(){ return this->depth;}
@@ -123,6 +125,11 @@ public:
     
     int vectorSize(){
         return this->array_value.size();
+    }
+    
+    void swapContentNodesToDefinitionNode(Node* d){
+        //this->vector.clear();
+        //this->vector.push_back(d);
     }
 };
 
@@ -177,4 +184,6 @@ public:
     void setFunctionDefinition(std::string* id, Node* def){
         this->table[*id].setFunctionDefinition(def);
     }
+    
+    //void swapContentNodesToDefinitionNode(string ide, Node*);
 };

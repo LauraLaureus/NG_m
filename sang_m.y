@@ -41,7 +41,7 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
-    int functionLabel = 1;
+    int functionLabel = -50;
     int staticMem = 73728; // 0x12000 hex
     
     %}
@@ -123,7 +123,7 @@ bloque
     ts.insertRecord(*$2, record);
     param_vector = *new vector<Node*>();
     
-    functionLabel += 1;
+    functionLabel -= 1;
 }
 parametros CIERRAPARENTESIS bloque
 {
@@ -139,13 +139,15 @@ parametros CIERRAPARENTESIS bloque
     record.setAddress(functionLabel);
     ts.insertRecord(*$3, record);
     param_vector = *new vector<Node*>();
-    functionLabel += 1;
+    functionLabel -= 1;
     
 }
 parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES
 {
     ts.setParams(param_vector,*$3);
-    $$ = new FunctionDefinition($3,param_vector,ts.getNodeVector(*$3),true,$9);
+    $$ = new FunctionDefinition($3,param_vector,ts.getNodeVector(*$3),true,$10);
+    SymbolTableRecord* r = ts.getRecord(*$3);
+    r->setFunctionDefinition($$);
     nameStack.pop_back();
 }
 ;
@@ -500,6 +502,9 @@ void generateCodeFromAST(char* filename){
     for(int i = 0; i < nonInitFunction.size(); i++){
         
         vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
+        
+        printf("IS null? %d\n", nonInitFunction[i]->functionDefinition == nullptr);
+        
         for(int j = 0; j < functionNodes.size(); j++ ){
             objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
             objFile << "\tGT(R5);\n";
