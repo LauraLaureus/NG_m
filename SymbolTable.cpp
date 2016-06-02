@@ -114,7 +114,16 @@ std::vector<SymbolTableRecord*> SymbolTable::getNonInitFunctions(){
     
 }
 
-/*
-void SymbolTable::swapContentNodesToDefinitionNode(string ide, Node* d){
-    this->table[ide].swapContentNodesToDefinitionNode(d);
-}*/
+SymbolTable SymbolTable::getACopyWithOnlyGlobals(){
+    
+    SymbolTable result;
+    
+    std::vector<std::string> global_ids = this->getGlobalVars();
+    
+    for (int i = 0; i < global_ids.size(); i++) {
+        result.insertRecord(global_ids[i],*(this->getRecord(global_ids[i])));
+    }
+    
+    return result;
+
+}

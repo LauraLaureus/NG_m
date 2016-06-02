@@ -2,7 +2,7 @@
     BEGIN
 	STAT(0)
 	CODE(0)
-	R6=R7;
+L -50:	R6=R7;
 	R7=R7-8;
 	RR3=D(0x0);
 	D(R7)=RR3;

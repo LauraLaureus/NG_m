@@ -503,7 +503,9 @@ void generateCodeFromAST(char* filename){
         
         vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
         
-        printf("IS null? %d\n", nonInitFunction[i]->functionDefinition == nullptr);
+        //printf("IS null? %d\n", nonInitFunction[i]->functionDefinition == nullptr);
+        
+        objFile << "L " + std::to_string(nonInitFunction[i]->getAddress()) + ":";
         
         for(int j = 0; j < functionNodes.size(); j++ ){
             objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);

@@ -127,10 +127,6 @@ public:
         return this->array_value.size();
     }
     
-    void swapContentNodesToDefinitionNode(Node* d){
-        //this->vector.clear();
-        //this->vector.push_back(d);
-    }
 };
 
 
@@ -185,5 +181,6 @@ public:
         this->table[*id].setFunctionDefinition(def);
     }
     
-    //void swapContentNodesToDefinitionNode(string ide, Node*);
+    
+    SymbolTable getACopyWithOnlyGlobals();
 };
