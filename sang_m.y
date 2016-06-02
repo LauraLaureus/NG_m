@@ -216,13 +216,16 @@ ABREPARENTESIS expresion CIERRAPARENTESIS bloque
 |VARIABLE ASIGNA llamadaFuncion PUNTOYCOMA
 {
     $$ = new AsignationFunctionCall($1,$3);
-    if(!heightSearch($1, current_depth)  ){
+    if(!ts.exists(*$1)){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-    } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
+    }
+    //if(!heightSearch($1, current_depth)  ){
+    //
+    //} //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
 }
-| CALL llamadaFuncion PUNTOYCOMA
+| llamadaFuncion PUNTOYCOMA
 {
-    $$ = new AsignationFunctionCall(nullptr,$2);
+    //$$ = new AsignationFunctionCall(nullptr,$2);
 }
 
 |OUTPUT VARIABLE PUNTOYCOMA
@@ -272,7 +275,7 @@ devolucion: VALORREAL  {$$ = new Math_Term<double>($1);}
 ;
 
 
-llamadaFuncion: VARIABLE ABREPARENTESIS {param_vector = *new std::vector<Node*>();} parametros CIERRAPARENTESIS { $$ = new FunctionCall($1,param_vector);}
+llamadaFuncion: CALL VARIABLE ABREPARENTESIS {param_vector = *new std::vector<Node*>();} parametros CIERRAPARENTESIS { $$ = new FunctionCall($2,param_vector);}
 ;
 
 parametros:
@@ -491,6 +494,7 @@ void generateCodeFromAST(char* filename){
     }
     int returnLabel = -1;
     
+    objFile << "\tCODE(0)\n";
     vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
     
     for(int i = 0; i < nonInitFunction.size(); i++){
@@ -498,6 +502,7 @@ void generateCodeFromAST(char* filename){
         vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
         for(int j = 0; j < functionNodes.size(); j++ ){
             objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+            objFile << "\tGT(R5);\n";
         }
         
     }
@@ -506,7 +511,7 @@ void generateCodeFromAST(char* filename){
     SymbolTableRecord initFunc = ts.getInit();
     
     
-    objFile << "\tCODE(0)\n";
+   
     //codeLabel +=1;
     objFile << "L 0:";
     vector<Node*> mainFuncNodes = initFunc.getNodeStack();

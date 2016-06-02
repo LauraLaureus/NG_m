@@ -532,9 +532,9 @@ static const yytype_uint8 yyprhs[] =
 {
        0,     0,     3,     4,     7,     9,    10,    11,    12,    17,
       18,    19,    24,    28,    29,    34,    35,    43,    44,    56,
-      59,    62,    63,    70,    71,    78,    83,    88,    92,    96,
-     100,   103,   104,   105,   111,   112,   116,   118,   122,   124,
-     126,   127,   133,   134,   136,   137,   142,   143,   148,   150,
+      59,    62,    63,    70,    71,    78,    83,    88,    91,    95,
+      99,   102,   103,   104,   110,   111,   115,   117,   121,   123,
+     125,   126,   133,   134,   136,   137,   142,   143,   148,   150,
      154,   156,   158,   160,   162,   164,   166,   168,   170,   172,
      174,   176,   178,   180,   182,   184,   188,   191,   194,   199,
      204,   212,   216,   223,   230,   234,   241
@@ -551,11 +551,11 @@ static const yytype_int8 yyrhs[] =
       28,    24,    61,    63,    25,    -1,    75,    36,    -1,    76,
       36,    -1,    -1,    30,    56,    27,    74,    28,    58,    -1,
       -1,    31,    57,    27,    74,    28,    58,    -1,    34,     3,
-      21,    36,    -1,    34,     3,    65,    36,    -1,    33,    65,
-      36,    -1,    22,    34,    36,    -1,    22,    38,    36,    -1,
-      32,    36,    -1,    -1,    -1,    24,    59,    61,    60,    25,
-      -1,    -1,    55,    62,    61,    -1,    55,    -1,    29,    64,
-      36,    -1,    40,    -1,    34,    -1,    -1,    34,    27,    66,
+      21,    36,    -1,    34,     3,    65,    36,    -1,    65,    36,
+      -1,    22,    34,    36,    -1,    22,    38,    36,    -1,    32,
+      36,    -1,    -1,    -1,    24,    59,    61,    60,    25,    -1,
+      -1,    55,    62,    61,    -1,    55,    -1,    29,    64,    36,
+      -1,    40,    -1,    34,    -1,    -1,    33,    34,    27,    66,
       67,    28,    -1,    -1,    75,    -1,    -1,    75,    68,     6,
       67,    -1,    -1,     4,    70,    71,     5,    -1,    40,    -1,
       40,     6,    71,    -1,    40,    -1,    34,    -1,     8,    -1,
@@ -575,12 +575,12 @@ static const yytype_uint16 yyrline[] =
 {
        0,    77,    77,    77,    78,    81,    82,    82,    82,    83,
       83,    83,    86,   104,   103,   118,   116,   135,   134,   155,
-     162,   170,   169,   189,   188,   207,   216,   223,   228,   236,
-     240,   251,   251,   251,   254,   253,   260,   268,   270,   271,
-     275,   275,   278,   279,   284,   284,   288,   288,   290,   291,
-     294,   295,   298,   299,   300,   301,   302,   303,   304,   305,
-     306,   307,   308,   309,   310,   313,   319,   331,   343,   356,
-     369,   382,   390,   398,   406,   413,   420
+     162,   170,   169,   189,   188,   207,   216,   226,   231,   239,
+     243,   254,   254,   254,   257,   256,   263,   271,   273,   274,
+     278,   278,   281,   282,   287,   287,   291,   291,   293,   294,
+     297,   298,   301,   302,   303,   304,   305,   306,   307,   308,
+     309,   310,   311,   312,   313,   316,   322,   334,   346,   359,
+     372,   385,   393,   401,   409,   416,   423
 };
 #endif
 
@@ -636,9 +636,9 @@ static const yytype_uint8 yyr2[] =
 {
        0,     2,     0,     2,     1,     0,     0,     0,     4,     0,
        0,     4,     3,     0,     4,     0,     7,     0,    11,     2,
-       2,     0,     6,     0,     6,     4,     4,     3,     3,     3,
+       2,     0,     6,     0,     6,     4,     4,     2,     3,     3,
        2,     0,     0,     5,     0,     3,     1,     3,     1,     1,
-       0,     5,     0,     1,     0,     4,     0,     4,     1,     3,
+       0,     6,     0,     1,     0,     4,     0,     4,     1,     3,
        1,     1,     1,     1,     1,     1,     1,     1,     1,     1,
        1,     1,     1,     1,     1,     3,     2,     2,     4,     4,
        7,     3,     6,     6,     3,     6,     6
@@ -654,9 +654,9 @@ static const yytype_uint8 yydefact[] =
       66,    67,    12,     8,    15,     0,     0,    11,    42,    17,
       31,    14,     0,    43,    42,     0,     0,     0,     0,     0,
       21,    23,     0,     0,     0,     0,     0,    34,    32,     0,
-       0,    16,    42,     0,     0,     0,     0,     0,    30,     0,
-       0,     0,     0,    66,    67,     0,     0,    19,    20,    45,
-       0,    28,    29,     0,     0,    40,    27,     0,    51,    50,
+       0,     0,    16,    42,     0,     0,     0,     0,     0,    30,
+       0,     0,     0,    66,    67,     0,     0,    27,    19,    20,
+      45,     0,    28,    29,     0,     0,    40,     0,    51,    50,
        0,     0,    71,     0,     0,     0,    35,    33,     0,    51,
        0,     0,    42,    25,     0,    26,    52,    53,    54,    55,
       56,    57,    58,    59,    60,    61,    63,    62,    64,     0,
@@ -670,40 +670,40 @@ static const yytype_uint8 yydefact[] =
 static const yytype_int16 yydefgoto[] =
 {
       -1,     2,     3,     5,     6,    15,     7,    19,     9,    11,
-      26,    28,    34,    47,    56,    57,    31,    35,    66,    48,
-      65,   116,   128,    60,    92,    32,    37,   114,   124,   138,
-      81,   109,    82,    33,    50
+      26,    28,    34,    47,    57,    58,    31,    35,    66,    48,
+      65,   116,   128,    49,    92,    32,    37,   114,   124,   138,
+      81,   109,    82,    33,    51
 };
 
 /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
    STATE-NUM.  */
-#define YYPACT_NINF -71
+#define YYPACT_NINF -72
 static const yytype_int8 yypact[] =
 {
-       7,   -71,    12,    31,   -71,   -71,    24,    -9,   -12,   -71,
-     -13,   -71,    21,    25,    20,    31,    34,    28,   -71,    31,
-     -71,   -71,   -71,   -71,   -71,    50,    54,   -71,   -12,   -71,
-     -71,   -71,    51,    74,   -12,     9,    54,    77,    57,    11,
-     -71,   -71,    48,    52,    32,    53,    55,    22,   -71,    58,
-      59,   -71,   -12,    64,    60,    61,    63,    65,   -71,    66,
-      62,   -16,    67,    88,    96,     9,    75,   -71,   -71,   -71,
-       9,   -71,   -71,   -25,   -25,   -71,   -71,    68,     2,   -71,
-      69,    56,   -71,    97,    70,    30,   -71,   -71,    72,   -71,
-      78,    80,   -12,   -71,   -24,   -71,   -71,   -71,   -71,   -71,
-     -71,   -71,   -71,   -71,   -71,   -71,   -71,   -71,   -71,   -25,
-     100,   -71,   -71,   105,   -71,   -23,    86,    54,    54,    84,
-     108,   109,   -71,   -21,    76,    79,   -71,   -71,    81,   -71,
-     -71,   -71,   -71,   -71,   -71,    82,   -71,   114,   110,   116,
-     -71,    76,   -71,   -71,   -71
+       6,   -72,    25,    -6,   -72,   -72,    10,     4,    19,   -72,
+      -1,   -72,    14,    21,    23,    -6,     8,    29,   -72,    -6,
+     -72,   -72,   -72,   -72,   -72,    30,    54,   -72,    19,   -72,
+     -72,   -72,    51,    74,    19,     9,    54,    77,    56,   -12,
+     -72,   -72,    49,    52,    58,    53,    55,    20,   -72,    59,
+      60,    61,   -72,    19,    64,    62,    63,    65,    66,   -72,
+      67,   -10,    50,    88,    97,     9,    76,   -72,   -72,   -72,
+     -72,     9,   -72,   -72,   -26,   -26,   -72,    68,     1,   -72,
+      69,    57,   -72,    98,    70,    46,   -72,   -72,    73,   -72,
+      78,    79,    19,   -72,   -25,   -72,   -72,   -72,   -72,   -72,
+     -72,   -72,   -72,   -72,   -72,   -72,   -72,   -72,   -72,   -26,
+     105,   -72,   -72,   107,   -72,   -24,    84,    54,    54,    85,
+     109,   110,   -72,   -22,    72,    80,   -72,   -72,    81,   -72,
+     -72,   -72,   -72,   -72,   -72,    82,   -72,   113,   111,   116,
+     -72,    72,   -72,   -72,   -72
 };
 
 /* YYPGOTO[NTERM-NUM].  */
 static const yytype_int8 yypgoto[] =
 {
-     -71,   -71,   -71,    33,   -71,   -71,   -71,   -71,   -71,   -71,
-     -71,   -71,   -71,   -71,   -71,   -71,   -36,   -71,   -71,   -38,
-     -71,   -71,   -71,    71,   -71,   -32,   -71,   -71,   -71,   -19,
-      14,   -71,   -70,    -7,   -71
+     -72,   -72,   -72,    32,   -72,   -72,   -72,   -72,   -72,   -72,
+     -72,   -72,   -72,   -72,   -72,   -72,   -36,   -72,   -72,   -52,
+     -72,   -72,   -72,    71,   -72,   -32,   -72,   -72,   -72,   -19,
+      15,   -72,   -71,    -7,   -72
 };
 
 /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -713,37 +713,37 @@ static const yytype_int8 yypgoto[] =
 #define YYTABLE_NINF -75
 static const yytype_int16 yytable[] =
 {
-      51,    14,    38,    90,    91,    77,    94,    -2,     1,    89,
-     120,   126,     4,    89,    10,    79,   121,   127,    78,   135,
-      69,    16,    17,    12,    79,    13,    18,    86,    49,    75,
-      -2,    39,    88,    -2,   112,    61,    62,   113,   -74,    40,
-      41,    42,    43,    44,    45,    54,    46,   -36,    23,    55,
-       8,   -36,    27,   136,    -9,    20,    22,    -6,    49,    21,
-     119,    24,    25,    49,    96,    97,    98,    99,   100,   101,
-     102,   103,   104,   105,   106,   107,   108,    29,    30,    36,
-     -44,   130,   131,    52,    58,    53,    59,    63,    70,    64,
-      73,    84,    74,    75,    67,    68,    71,    72,    76,    85,
-      87,   115,   110,   123,    93,    95,   117,    83,   118,   125,
-     111,   129,   132,   133,   134,   142,   137,   140,   -72,   139,
-     141,   143,   144,   122,     0,     0,     0,     0,     0,     0,
+      52,    14,    38,    90,    91,    94,    -2,     1,    89,   120,
+     126,    77,    89,    86,    79,   121,   127,    -9,   135,    88,
+      -6,    70,    55,    43,    78,     4,    56,    10,    50,    -2,
+      79,    39,    -2,    16,    17,    24,     8,   -74,    18,    40,
+      41,    42,    43,    44,    45,   -36,    46,    23,    20,   -36,
+     112,    27,   136,   113,    12,    21,    13,    29,    50,    22,
+     119,    61,    62,    25,    50,    96,    97,    98,    99,   100,
+     101,   102,   103,   104,   105,   106,   107,   108,    30,    36,
+     -44,   130,   131,    53,    54,    59,    60,    63,    71,    64,
+      83,    84,    74,    75,    76,    67,    68,    69,    72,    73,
+      85,    87,   115,   110,    93,    95,   117,   118,   123,   129,
+     111,   125,   137,   132,   133,   134,   142,   140,   -72,   141,
+     139,   143,   144,     0,   122,     0,     0,     0,     0,     0,
        0,     0,    80
 };
 
 static const yytype_int16 yycheck[] =
 {
-      36,     8,    34,    73,    74,    21,     4,     0,     1,    34,
-      34,    34,     0,    34,    23,    40,    40,    40,    34,    40,
-      52,    34,    35,    35,    40,    37,    39,    65,    35,    27,
-      23,    22,    70,    26,     4,     3,     4,     7,    36,    30,
-      31,    32,    33,    34,    35,    34,    37,    25,    15,    38,
-      26,    29,    19,   123,    23,    34,    36,    26,    65,    34,
-      92,    27,    34,    70,     8,     9,    10,    11,    12,    13,
-      14,    15,    16,    17,    18,    19,    20,    27,    24,    28,
-       6,   117,   118,     6,    36,    28,    34,    34,    24,    34,
-      27,     3,    27,    27,    36,    36,    36,    36,    36,     3,
-      25,    29,     5,     3,    36,    36,    28,    40,    28,     4,
-      40,    25,    28,     5,     5,     5,    40,    36,    36,    40,
-       6,     5,   141,   109,    -1,    -1,    -1,    -1,    -1,    -1,
+      36,     8,    34,    74,    75,     4,     0,     1,    34,    34,
+      34,    21,    34,    65,    40,    40,    40,    23,    40,    71,
+      26,    53,    34,    33,    34,     0,    38,    23,    35,    23,
+      40,    22,    26,    34,    35,    27,    26,    36,    39,    30,
+      31,    32,    33,    34,    35,    25,    37,    15,    34,    29,
+       4,    19,   123,     7,    35,    34,    37,    27,    65,    36,
+      92,     3,     4,    34,    71,     8,     9,    10,    11,    12,
+      13,    14,    15,    16,    17,    18,    19,    20,    24,    28,
+       6,   117,   118,     6,    28,    36,    34,    34,    24,    34,
+      40,     3,    27,    27,    27,    36,    36,    36,    36,    36,
+       3,    25,    29,     5,    36,    36,    28,    28,     3,    25,
+      40,     4,    40,    28,     5,     5,     5,    36,    36,     6,
+      40,     5,   141,    -1,   109,    -1,    -1,    -1,    -1,    -1,
       -1,    -1,    61
 };
 
@@ -755,10 +755,10 @@ static const yytype_uint8 yystos[] =
       23,    51,    35,    37,    75,    47,    34,    35,    39,    49,
       34,    34,    36,    45,    27,    34,    52,    45,    53,    27,
       24,    58,    67,    75,    54,    59,    28,    68,    67,    22,
-      30,    31,    32,    33,    34,    35,    37,    55,    61,    75,
-      76,    58,     6,    28,    34,    38,    56,    57,    36,    34,
-      65,     3,     4,    34,    34,    62,    60,    36,    36,    67,
-      24,    36,    36,    27,    27,    27,    36,    21,    34,    40,
+      30,    31,    32,    33,    34,    35,    37,    55,    61,    65,
+      75,    76,    58,     6,    28,    34,    38,    56,    57,    36,
+      34,     3,     4,    34,    34,    62,    60,    36,    36,    36,
+      67,    24,    36,    36,    27,    27,    27,    21,    34,    40,
       65,    72,    74,    40,     3,     3,    61,    25,    61,    34,
       74,    74,    66,    36,     4,    36,     8,     9,    10,    11,
       12,    13,    14,    15,    16,    17,    18,    19,    20,    73,
@@ -1803,21 +1803,24 @@ yyreduce:
 #line 217 "sang_m.y"
     {
     (yyval.node) = new AsignationFunctionCall((yyvsp[(1) - (4)].str_val),(yyvsp[(3) - (4)].node));
-    if(!heightSearch((yyvsp[(1) - (4)].str_val), current_depth)  ){
+    if(!ts.exists(*(yyvsp[(1) - (4)].str_val))){
         yyerror("TU TAS TO LOCO PEPE JUAN declara la variable\n");
-    } //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
+    }
+    //if(!heightSearch($1, current_depth)  ){
+    //
+    //} //TODO control de errores: controlar que la funcion que se llama existe tras construir todo el árbol.
 ;}
     break;
 
   case 27:
-#line 224 "sang_m.y"
+#line 227 "sang_m.y"
     {
-    (yyval.node) = new AsignationFunctionCall(nullptr,(yyvsp[(2) - (3)].node));
+    //$$ = new AsignationFunctionCall(nullptr,$2);
 ;}
     break;
 
   case 28:
-#line 229 "sang_m.y"
+#line 232 "sang_m.y"
     {
     (yyval.node) = new Output_Expression(true, (yyvsp[(2) - (3)].str_val));
     int n = ts.exists(*(yyvsp[(2) - (3)].str_val));
@@ -1828,14 +1831,14 @@ yyreduce:
     break;
 
   case 29:
-#line 237 "sang_m.y"
+#line 240 "sang_m.y"
     {
     (yyval.node) = new Output_Expression(false, (yyvsp[(2) - (3)].str_val));
 ;}
     break;
 
   case 30:
-#line 241 "sang_m.y"
+#line 244 "sang_m.y"
     {
     (yyval.node) = new BreakNode();
     string blockName;
@@ -1847,17 +1850,17 @@ yyreduce:
     break;
 
   case 31:
-#line 251 "sang_m.y"
+#line 254 "sang_m.y"
     {current_depth += 1;;}
     break;
 
   case 32:
-#line 251 "sang_m.y"
+#line 254 "sang_m.y"
     { current_depth -= 1;;}
     break;
 
   case 34:
-#line 254 "sang_m.y"
+#line 257 "sang_m.y"
     {
     string blockName;
     stringStack(&blockName);
@@ -1866,7 +1869,7 @@ yyreduce:
     break;
 
   case 36:
-#line 261 "sang_m.y"
+#line 264 "sang_m.y"
     {
     string blockName;
     stringStack(&blockName);
@@ -1875,141 +1878,141 @@ yyreduce:
     break;
 
   case 37:
-#line 268 "sang_m.y"
+#line 271 "sang_m.y"
     { (yyval.node) = new ReturnNode((yyvsp[(2) - (3)].node));;}
     break;
 
   case 38:
-#line 270 "sang_m.y"
+#line 273 "sang_m.y"
     {(yyval.node) = new Math_Term<double>((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 39:
-#line 271 "sang_m.y"
+#line 274 "sang_m.y"
     {(yyval.node) = new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
   case 40:
-#line 275 "sang_m.y"
+#line 278 "sang_m.y"
     {param_vector = *new std::vector<Node*>();;}
     break;
 
   case 41:
-#line 275 "sang_m.y"
-    { (yyval.node) = new FunctionCall((yyvsp[(1) - (5)].str_val),param_vector);;}
+#line 278 "sang_m.y"
+    { (yyval.node) = new FunctionCall((yyvsp[(2) - (6)].str_val),param_vector);;}
     break;
 
   case 43:
-#line 280 "sang_m.y"
+#line 283 "sang_m.y"
     {
     param_vector.push_back((yyvsp[(1) - (1)].node));
 ;}
     break;
 
   case 44:
-#line 284 "sang_m.y"
+#line 287 "sang_m.y"
     { param_vector.push_back((yyvsp[(1) - (1)].node));;}
     break;
 
   case 46:
-#line 288 "sang_m.y"
+#line 291 "sang_m.y"
     {current_vector = *new vector<double>();;}
     break;
 
   case 48:
-#line 290 "sang_m.y"
+#line 293 "sang_m.y"
     {current_vector.push_back((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 49:
-#line 291 "sang_m.y"
+#line 294 "sang_m.y"
     {current_vector.push_back((yyvsp[(1) - (3)].double_val ));;}
     break;
 
   case 50:
-#line 294 "sang_m.y"
+#line 297 "sang_m.y"
     {(yyval.node) = new Math_Term<double>((yyvsp[(1) - (1)].double_val ));;}
     break;
 
   case 51:
-#line 295 "sang_m.y"
+#line 298 "sang_m.y"
     {(yyval.node) = new Math_Term<std::string>(*(yyvsp[(1) - (1)].str_val));;}
     break;
 
   case 52:
-#line 298 "sang_m.y"
+#line 301 "sang_m.y"
     {(yyval.int_val) = '+';;}
     break;
 
   case 53:
-#line 299 "sang_m.y"
+#line 302 "sang_m.y"
     {(yyval.int_val) = '-';;}
     break;
 
   case 54:
-#line 300 "sang_m.y"
+#line 303 "sang_m.y"
     {(yyval.int_val) = '/';;}
     break;
 
   case 55:
-#line 301 "sang_m.y"
+#line 304 "sang_m.y"
     {(yyval.int_val) = '*';;}
     break;
 
   case 56:
-#line 302 "sang_m.y"
+#line 305 "sang_m.y"
     {(yyval.int_val) = '|';;}
     break;
 
   case 57:
-#line 303 "sang_m.y"
+#line 306 "sang_m.y"
     {(yyval.int_val) = '&';;}
     break;
 
   case 58:
-#line 304 "sang_m.y"
+#line 307 "sang_m.y"
     {(yyval.int_val) = '!';;}
     break;
 
   case 59:
-#line 305 "sang_m.y"
+#line 308 "sang_m.y"
     {(yyval.int_val) = '=';;}
     break;
 
   case 60:
-#line 306 "sang_m.y"
+#line 309 "sang_m.y"
     {(yyval.int_val) = '~';;}
     break;
 
   case 61:
-#line 307 "sang_m.y"
+#line 310 "sang_m.y"
     {(yyval.int_val) = '>';;}
     break;
 
   case 62:
-#line 308 "sang_m.y"
+#line 311 "sang_m.y"
     {(yyval.int_val) = 'Z';;}
     break;
 
   case 63:
-#line 309 "sang_m.y"
+#line 312 "sang_m.y"
     {(yyval.int_val) = '<';;}
     break;
 
   case 64:
-#line 310 "sang_m.y"
+#line 313 "sang_m.y"
     {(yyval.int_val) = 'z';;}
     break;
 
   case 65:
-#line 314 "sang_m.y"
+#line 317 "sang_m.y"
     {
     (yyval.node) = new  Math_Expression((yyvsp[(1) - (3)].node),(yyvsp[(2) - (3)].int_val),(yyvsp[(3) - (3)].node));
 ;}
     break;
 
   case 66:
-#line 320 "sang_m.y"
+#line 323 "sang_m.y"
     {
     
     if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
@@ -2024,7 +2027,7 @@ yyreduce:
     break;
 
   case 67:
-#line 332 "sang_m.y"
+#line 335 "sang_m.y"
     {
     if(!heightSearch((yyvsp[(2) - (2)].str_val), current_depth)){
         DataType type = DataTypeVector;
@@ -2037,7 +2040,7 @@ yyreduce:
     break;
 
   case 68:
-#line 344 "sang_m.y"
+#line 347 "sang_m.y"
     {
     (yyval.node) = new REAL_Asignation(true, (yyvsp[(2) - (4)].str_val), (yyvsp[(4) - (4)].double_val ));
     if(heightSearch((yyvsp[(2) - (4)].str_val),1)){
@@ -2053,7 +2056,7 @@ yyreduce:
     break;
 
   case 69:
-#line 357 "sang_m.y"
+#line 360 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (4)].str_val),current_vector,current_vector.size());
     current_vector.clear();
@@ -2069,7 +2072,7 @@ yyreduce:
     break;
 
   case 70:
-#line 370 "sang_m.y"
+#line 373 "sang_m.y"
     {
     (yyval.node) = new VECTOR_Asignation(true, (yyvsp[(2) - (7)].str_val), *new std::vector<double>,(int)(yyvsp[(6) - (7)].double_val ));
     if(heightSearch((yyvsp[(2) - (7)].str_val),1)){
@@ -2084,7 +2087,7 @@ yyreduce:
     break;
 
   case 71:
-#line 382 "sang_m.y"
+#line 385 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].node));
     
@@ -2095,7 +2098,7 @@ yyreduce:
     break;
 
   case 72:
-#line 391 "sang_m.y"
+#line 394 "sang_m.y"
     {
     (yyval.node) = new ELEM_VECTOR_Asignation((yyvsp[(1) - (6)].str_val),(int)(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].double_val ));
     
@@ -2106,7 +2109,7 @@ yyreduce:
     break;
 
   case 73:
-#line 399 "sang_m.y"
+#line 402 "sang_m.y"
     {
     (yyval.node) = new Expression2Var((yyvsp[(1) - (6)].str_val),(yyvsp[(3) - (6)].double_val ),(yyvsp[(6) - (6)].node));
     
@@ -2117,7 +2120,7 @@ yyreduce:
     break;
 
   case 74:
-#line 407 "sang_m.y"
+#line 410 "sang_m.y"
     {
     (yyval.node) = new VAR2VAR_Asignation((yyvsp[(1) - (3)].str_val),(yyvsp[(3) - (3)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (3)].str_val)) || !ts.exists(*(yyvsp[(3) - (3)].str_val)) ){
@@ -2127,7 +2130,7 @@ yyreduce:
     break;
 
   case 75:
-#line 414 "sang_m.y"
+#line 417 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].double_val ), (yyvsp[(1) - (6)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
@@ -2137,7 +2140,7 @@ yyreduce:
     break;
 
   case 76:
-#line 421 "sang_m.y"
+#line 424 "sang_m.y"
     {
     (yyval.node) = new  ELEM_VECTOR2VAR_Asignation ((yyvsp[(3) - (6)].str_val),(yyvsp[(5) - (6)].str_val), (yyvsp[(1) - (6)].str_val));
     if(!ts.exists(*(yyvsp[(1) - (6)].str_val)) || !ts.exists(*(yyvsp[(3) - (6)].str_val)) ){
@@ -2148,7 +2151,7 @@ yyreduce:
 
 
 /* Line 1267 of yacc.c.  */
-#line 2152 "sang_m.tab.c"
+#line 2155 "sang_m.tab.c"
       default: break;
     }
   YY_SYMBOL_PRINT ("-> $$ =", yyr1[yyn], &yyval, &yyloc);
@@ -2368,7 +2371,7 @@ yyreturn:
 }
 
 
-#line 429 "sang_m.y"
+#line 432 "sang_m.y"
 
 void buildCheckForErrors(){
     printf("Jeronimo");
@@ -2434,6 +2437,7 @@ void generateCodeFromAST(char* filename){
     }
     int returnLabel = -1;
     
+    objFile << "\tCODE(0)\n";
     vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
     
     for(int i = 0; i < nonInitFunction.size(); i++){
@@ -2441,6 +2445,7 @@ void generateCodeFromAST(char* filename){
         vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
         for(int j = 0; j < functionNodes.size(); j++ ){
             objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+            objFile << "\tGT(R5);\n";
         }
         
     }
@@ -2449,7 +2454,7 @@ void generateCodeFromAST(char* filename){
     SymbolTableRecord initFunc = ts.getInit();
     
     
-    objFile << "\tCODE(0)\n";
+   
     //codeLabel +=1;
     objFile << "L 0:";
     vector<Node*> mainFuncNodes = initFunc.getNodeStack();

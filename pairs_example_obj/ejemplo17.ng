@@ -1,0 +1,6 @@
+func inicio {
+	VECTOR a = [1,2];
+	VECTOR b = [3,6];
+	b = a + b;
+	escribe b;
+}

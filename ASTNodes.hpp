@@ -21,7 +21,7 @@
 #include "data_type.h"
 #include "global.h"
 #include <math.h>
-#include <typeinfo>
+//#include <typeinfo>
 
 
 
@@ -67,28 +67,33 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         std::string result;
-        *staticLabel += 1; //calculate label position.
+        //*staticLabel += 1; //calculate label position.
         
-        result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
+        //result += "\tSTAT(" +  std::to_string(*staticLabel) + ")\n";
         
         
         int mem_dir;
         if (ts->getRecord(*identification)->isGlobal()) {
             mem_dir = ts->getRecord(*identification)->getAddress();
+            
+            stringstream mem_pos_conversor;
+            mem_pos_conversor << std::hex << mem_dir;
+            result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value) +");\n";
+            
         }else{
             *staticMem -= sizeof(double);
             ts->getRecord(*identification)->setAddress(*staticMem);
-            mem_dir = *staticMem;
+            //mem_dir = *staticMem;
+            result += "\tR7=R7-8;\n";
+            result += "\tD(R7)=" + std::to_string(this->value) + ";\n";
         }
         
         
-        stringstream mem_pos_conversor;
-        mem_pos_conversor << std::hex << mem_dir;
-        result += "\tDAT(0x" + mem_pos_conversor.str() + ",D," + std::to_string(this->value) +");\n";
         
         
-        *codeLabel += 1;
-        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";
+        
+        /**codeLabel += 1;
+        result += "\tCODE(" + std::to_string(*codeLabel) +")\n";*/
         
         *label +=1;
         result+= "L " + std::to_string((*label)) + ":";
@@ -1069,54 +1074,61 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
-        /*
-         TODO
-         guardar los registros. DONE
-         Dejar R6 en la posición de R7 cuando ya está llena la pila.DONE
-         cargar los valores de los parámetros a pasar.
-         GT(etiqueta) DONE
-         recarga de los registros.DONE
-         Ojo calcular y establecer returnLabel. !!!!!!
-         Ojo que lo devuelto vuelve en el RR0
-         */
-        result +="\tR7=R7+24;\n";
+        
+        //Guarda todos los registros enteros
+        
+        result +="\tR7=R7-24;\n";
         result +="\tP(R7)=R0;\n";
         result +="\tP(R7+4)=R1;\n";
         result +="\tP(R7+8)=R2;\n";
         result +="\tP(R7+12)=R3;\n";
         result +="\tP(R7+16)=R4;\n";
         result +="\tP(R7+20)=R5;\n";
-        result +="\tR6=R7;\n";
         
-        //TODO cargar los parámetros
-        /*
-         para todo los params
-            cargar direccion de la tabla de símbolos -->TODOESTO lo hace el método declaracion
-            cargar tipo.
-            hacer hueco en la pila
-            poner el valor en la pila.
-         */
         
-        (*label) += 1;
+        //Guarda todos los registros en coma flotante
+        result += "\tR7=R7-24;\n";
+        result +="\tD(R7)=RR1;\n";
+        result +="\tD(R7+8)=RR2;\n";
+        result +="\tD(R7+16)=RR3;\n";
         
-        //declarations se añadiran a la pila
+        //Nota: no se guarda RR0 porque es en donde esperamos recibir el parámetro. :P
+        
         for (int i = 0; i < params.size(); i++) {
             params[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         }
         
-        result += "\tR5=" + std::to_string((*label)) + ";\n";
+        
+        result += "\tR7=R7-4;\n";
+        result += "\tP(R7)=R6;\n"; // se guarda la base de la pila
+        
+        
+        (*label) += 1;
+        result += "\tR5=" + std::to_string((*label)) + ";\n"; // se carga la etiqueta de retorno.
+        result += "\tR7=R7-4;\n";
+        result += "\tP(R7)=R5;\n"; // se guarda la etiqueta de retorno en la pila
+        
+        result +="\tR6=R7;\n";//se modifica la base de la pila
         
         int func_label = (*ts)[*identification].getAddress();
-        result += "\tGT(" + std::to_string(func_label) + ");\n";
+        result += "\tGT(" + std::to_string(func_label) + ");\n"; //Nos movemos a la funcion
         
         
-        result += "\tR0=P(R7)\n";
-        result += "\tR1=P(R7+4)\n";
-        result += "\tR2=P(R7+8)\n";
-        result += "\tR3=P(R7+12)\n";
-        result += "\tR4=P(R7+16)\n";
-        result += "\tR5=P(R7+20)\n";
-        result += "\tR7=R6\n";
+        //Recuperar R6
+        
+        result += "\tR6=D(R7);\n";
+        
+        result += "\tRR3=D(R7+4);\n";
+        result += "\tRR2=D(R7+12);\n";
+        result += "\tRR1=D(R7+20);\n";
+        
+        result += "\tR0=P(R7+28);\n";
+        result += "\tR1=P(R7+32);\n";
+        result += "\tR2=P(R7+36);\n";
+        result += "\tR3=P(R7+40);\n";
+        result += "\tR4=P(R7+44);\n";
+        result += "\tR5=P(R7+48);\n";
+        result += "\tR7=R7+52;\n"; //sospechoso de ser eliminado.
         
         return result;
     }
@@ -1196,13 +1208,29 @@ public:
          obtener la dirección de la variable.
          guardar en la dirección el valor de RR0;
          */
-        stringstream mem_pos_conversor;
+        /*stringstream mem_pos_conversor;
         mem_pos_conversor << std::hex <<(*ts)[*identification].getAddress();
         expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         result += "\tR7=R7-4;\t";
         result += "\tP(R7)=R0;\t";
         result += "\tR0=P(" +  mem_pos_conversor.str() + ");\n";
-        result += "\tD(R0)=RR0;\n";
+        result += "\tD(R0)=RR0;\n";*/
+        
+        /*
+         TODO 
+         llamar al nodo de llamada a la funcion.
+         recibir el parámetro en RR0.
+         asignárselo a la variable correspondiente.
+         */
+        
+        result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+        
+        
+        stringstream mem_pos_conversor;
+        mem_pos_conversor << std::hex <<(*ts)[*identification].getAddress();
+    
+        result += "\tD(0x" + mem_pos_conversor.str() + ")=RR0;\n";
+        
         
         return result;
     }
@@ -1249,7 +1277,7 @@ public:
         if(currentDepth > maxDepth) return false;
         bool returnable = false;
         for (int i = 0; i< block.size(); i++) {
-            printf("SearchByHeight: flow control %d th son\n",i);
+            //printf("SearchByHeight: flow control %d th son\n",i);
             if(block[i]->searchByHeight(id, currentDepth+1, maxDepth)) return true;
         }
         return returnable;
@@ -1351,7 +1379,7 @@ public:
             recuperar los parámetros en el orden inverso.
                 para ello desarrollar una funcion en el nodo declaración al que se le pasa el
          --->Esto no sirve de nada  Aja! No hay facil acceso desde la tabla de símbolos a este tipo de nodo AÚN.
-         Y las instrucciones cargan los datos directamente de la zona estática.
+         Y las instrucciones cargan los datos directamente de la zona estática.AÚN
          */
         
         return result;
