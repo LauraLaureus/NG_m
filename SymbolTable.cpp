@@ -116,7 +116,7 @@ std::vector<SymbolTableRecord*> SymbolTable::getNonInitFunctions(){
 
 SymbolTable SymbolTable::getACopyWithOnlyGlobals(){
     
-    SymbolTable result;
+    SymbolTable result = *new SymbolTable();
     
     std::vector<std::string> global_ids = this->getGlobalVars();
     

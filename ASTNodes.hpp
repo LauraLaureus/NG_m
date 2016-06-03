@@ -983,16 +983,16 @@ public:
 
 ////////////////////////DECLARATION
 class Declaration : public Node {
-    bool real; //for true is an real otherwise is a vector
+    bool real_type; //for true is an real otherwise is a vector
     std::string* identification;
 public:
     Declaration(std::string* id,bool r){
         this->identification = id;
-        this->real = r;
+        this->real_type = r;
     }
     
     bool isReal(){
-        return this->real;
+        return this->real_type;
     }
     
     std::string* getIdentification(){
@@ -1015,17 +1015,19 @@ public:
         
         //tienen dirección
         if((*ts)[*identification].getAddress() > 0){
-            
+        //ts->printState();
+        //printf("value for real enum: %d\n", real);
+        //printf("type for id: %d\n",(*ts)[*identification].getType() );
+        
             stringstream mem_pos_conversor;
             if((*ts)[*identification].getType() == real){
                 
                 result += "\tR7=R7+8;\n";
                 mem_pos_conversor <<std::hex << (*ts)[*identification].getAddress();
-                result += "\tRR0=D(" + mem_pos_conversor.str() +"\n";
+                result += "\tRR0=D(0x" + mem_pos_conversor.str() +");\n";
                 result += "\tD(R7)=RR0;\n";
                 
             }else{
-                
                 for (int i = (*ts)[*identification].vectorSize()-1; i > -1; i--) {
                     result += "\tR7=R7+8;\n";
                     mem_pos_conversor <<std::hex << (*ts)[*identification].getAddress();
@@ -1073,13 +1075,13 @@ public:
         
         //Guarda todos los registros enteros
         
-        result +="\tR7=R7-24;\n";
-        result +="\tP(R7)=R0;\n";
-        result +="\tP(R7+4)=R1;\n";
-        result +="\tP(R7+8)=R2;\n";
-        result +="\tP(R7+12)=R3;\n";
-        result +="\tP(R7+16)=R4;\n";
-        result +="\tP(R7+20)=R5;\n";
+        result +="\tR7=R7-24; //Generate code of function call\n";
+        result +="\tI(R7)=R0;\n";
+        result +="\tI(R7+4)=R1;\n";
+        result +="\tI(R7+8)=R2;\n";
+        result +="\tI(R7+12)=R3;\n";
+        result +="\tI(R7+16)=R4;\n";
+        result +="\tI(R7+20)=R5;\n";
         
         
         //Guarda todos los registros en coma flotante
@@ -1091,18 +1093,21 @@ public:
         //Nota: no se guarda RR0 porque es en donde esperamos recibir el parámetro. :P
         
         for (int i = 0; i < params.size(); i++) {
-            params[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+            printf("magic\n");
+            Declaration* n = dynamic_cast<Declaration*>(params[i]);
+            result += n->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
+            //params[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         }
         
         
         result += "\tR7=R7-4;\n";
-        result += "\tP(R7)=R6;\n"; // se guarda la base de la pila
+        result += "\tI(R7)=R6;\n"; // se guarda la base de la pila
         
         
         (*label) += 1;
         result += "\tR5=" + std::to_string((*label)) + ";\n"; // se carga la etiqueta de retorno.
         result += "\tR7=R7-4;\n";
-        result += "\tP(R7)=R5;\n"; // se guarda la etiqueta de retorno en la pila
+        result += "\tI(R7)=R5;\n"; // se guarda la etiqueta de retorno en la pila
         
         result +="\tR6=R7;\n";//se modifica la base de la pila
         
@@ -1112,18 +1117,19 @@ public:
         
         //Recuperar R6
         
-        result += "\tR6=D(R7);\n";
+        result += "L " + std::to_string(*label) + ":";
+        result += "\tR6=D(R7+4);\n //Return from function call";
         
         result += "\tRR3=D(R7+4);\n";
         result += "\tRR2=D(R7+12);\n";
         result += "\tRR1=D(R7+20);\n";
         
-        result += "\tR0=P(R7+28);\n";
-        result += "\tR1=P(R7+32);\n";
-        result += "\tR2=P(R7+36);\n";
-        result += "\tR3=P(R7+40);\n";
-        result += "\tR4=P(R7+44);\n";
-        result += "\tR5=P(R7+48);\n";
+        result += "\tR0=I(R7+28);\n";
+        result += "\tR1=I(R7+32);\n";
+        result += "\tR2=I(R7+36);\n";
+        result += "\tR3=I(R7+40);\n";
+        result += "\tR4=I(R7+44);\n";
+        result += "\tR5=I(R7+48);\n";
         result += "\tR7=R7+52;\n"; //sospechoso de ser eliminado.
         
         return result;
@@ -1151,14 +1157,18 @@ public:
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
         
+        //ts->printState();
         /*
          Dejar en el RR0 el real correspondiente.
          Limpiar la pila R7=R6;
          */
         
-        result += "\tRR0=D(R7);\n";
+        /*result += "\tRR0=D(R7);\n";
         result += "\tR7=R6;\n";
-        result += "\tGT("+ std::to_string((*returnLabel))+ ";\n";
+        result += "\tGT("+ std::to_string((*returnLabel))+ ";\n";*/
+        
+        result += "\tR5=I(R6); //Load label to jump \n";
+        result += "\tGT(R5);\n";
        
         return result;
     }
@@ -1374,9 +1384,19 @@ public:
          
             recuperar los parámetros en el orden inverso.
                 para ello desarrollar una funcion en el nodo declaración al que se le pasa el
-         --->Esto no sirve de nada  Aja! No hay facil acceso desde la tabla de símbolos a este tipo de nodo AÚN.
-         Y las instrucciones cargan los datos directamente de la zona estática.AÚN
-         */
+        */
+        
+        SymbolTable duplicate_ts = ts->getACopyWithOnlyGlobals();
+        
+        for (int i = 0; i < lines.size(); i++) {
+            result += lines[i]->generateCode(label,codeLabel,staticLabel,staticMem,&duplicate_ts,returnLabel);
+        }
+
+        
+        if(returnNode != nullptr){
+            result += returnNode->generateCode(label,codeLabel,staticLabel,staticMem,&duplicate_ts,returnLabel);
+
+        }
         
         return result;
     }

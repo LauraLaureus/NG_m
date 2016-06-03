@@ -1,8 +1,9 @@
 #include "Q.h"
     BEGIN
 	STAT(0)
+	MEM(0x11ff8,8);
 	CODE(0)
-L -50:	R6=R7;
+L 1000:	R6=R7;
 	R7=R7-8;
 	RR3=D(0x0);
 	D(R7)=RR3;
@@ -37,8 +38,7 @@ L 4:	RR0=D(R0);
 	D(0x00)=RR0;
 	R3=R2;
 	GT(5);
-	L 6:	GT(R5);
-	R6=R7;
+	L 6:	R6=R7;
 	R7=R7-8;
 	RR3=D(0x0);
 	D(R7)=RR3;
@@ -73,46 +73,50 @@ L 10:	RR0=D(R0);
 	D(0x00)=RR0;
 	R3=R2;
 	GT(11);
-	L 12:	GT(R5);
+	L 12:	R5=I(R6); //Load label to jump 
+	GT(R5);
 L 0:	R7=R7-8;
 	D(R7)=0.000000;
 L 13:	R7=R7-8;
 	D(R7)=0.000000;
-L 14:	R7=R7-24;
-	P(R7)=R0;
-	P(R7+4)=R1;
-	P(R7+8)=R2;
-	P(R7+12)=R3;
-	P(R7+16)=R4;
-	P(R7+20)=R5;
+L 14:	R7=R7-24; //Generate code of function call
+	I(R7)=R0;
+	I(R7+4)=R1;
+	I(R7+8)=R2;
+	I(R7+12)=R3;
+	I(R7+16)=R4;
+	I(R7+20)=R5;
 	R7=R7-24;
 	D(R7)=RR1;
 	D(R7+8)=RR2;
 	D(R7+16)=RR3;
+	R7=R7+8;
+	RR0=D(0x11ff0);
+	D(R7)=RR0;
 	R7=R7-4;
-	P(R7)=R6;
+	I(R7)=R6;
 	R5=15;
 	R7=R7-4;
-	P(R7)=R5;
+	I(R7)=R5;
 	R6=R7;
-	GT(-50);
-	R6=D(R7);
-	RR3=D(R7+4);
+	GT(1000);
+L 15:	R6=D(R7+4);
+ //Return from function call	RR3=D(R7+4);
 	RR2=D(R7+12);
 	RR1=D(R7+20);
-	R0=P(R7+28);
-	R1=P(R7+32);
-	R2=P(R7+36);
-	R3=P(R7+40);
-	R4=P(R7+44);
-	R5=P(R7+48);
+	R0=I(R7+28);
+	R1=I(R7+32);
+	R2=I(R7+36);
+	R3=I(R7+40);
+	R4=I(R7+44);
+	R5=I(R7+48);
 	R7=R7+52;
-	D(0x11ff0)=RR0;
+	D(0x11fe8)=RR0;
 	STAT(1)
-	STR(0x11fec, "%f\n");
+	STR(0x11fe4, "%f\n");
 	CODE(1)
-L 16:	R1=0x11fec;
-	RR2=D(0x11ff0);
+L 16:	R1=0x11fe4;
+	RR2=D(0x11fe8);
 	R0=17;
 	GT(putd_);
 L 17:GT(-2);

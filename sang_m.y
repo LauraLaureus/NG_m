@@ -41,7 +41,7 @@
     int codeLabel = 0;
     int statLabel = 0;
     int label = 0;
-    int functionLabel = -50;
+    int functionLabel = 1000;
     int staticMem = 73728; // 0x12000 hex
     
     %}
@@ -501,16 +501,18 @@ void generateCodeFromAST(char* filename){
     
     for(int i = 0; i < nonInitFunction.size(); i++){
         
-        vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
+        //vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
         
         //printf("IS null? %d\n", nonInitFunction[i]->functionDefinition == nullptr);
         
         objFile << "L " + std::to_string(nonInitFunction[i]->getAddress()) + ":";
         
-        for(int j = 0; j < functionNodes.size(); j++ ){
+        /*for(int j = 0; j < functionNodes.size(); j++ ){
             objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
             objFile << "\tGT(R5);\n";
-        }
+        }*/
+        
+        objFile << nonInitFunction[i]->functionDefinition->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
         
     }
     

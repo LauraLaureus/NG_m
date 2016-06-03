@@ -1,3 +1,4 @@
+global REAL prueba;
 func REAL fibo(REAL n){
 	
 	si (n == 0){
