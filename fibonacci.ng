@@ -1,4 +1,4 @@
-global REAL prueba;
+
 func REAL fibo(REAL n){
 	
 	si (n == 0){
@@ -12,7 +12,7 @@ func REAL fibo(REAL n){
 
 
 func inicio{
-	REAL n = 0;
+	REAL n = 1;
 	REAL d = 0;
 	 d = llama fibo(REAL n);
 	escribe d;

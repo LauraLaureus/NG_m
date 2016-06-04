@@ -84,12 +84,7 @@ public:
             result += "\tR7=R7-8;\n";
             result += "\tD(R7)=" + std::to_string(this->value) + ";\n";
         }
-        
-        
-        
-        
-        
-       
+    
         
         *label +=1;
         result+= "L " + std::to_string((*label)) + ":";
@@ -403,37 +398,28 @@ public:
     string toStack(string d, int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel ){
         string result;
         
-        /*
-         TODO  v2
-          buscar el nombre en la tabla de símbolos DONE
-          recuperar la direccion y el tipo. DONE
-          escribir como primer caracter v o n para decirle al nodo padre que es un vector o un numero real obtenido de la tabla de símbolos.DONE
-          escribir el vector o el entero en la pila.
-         */
-        
-        //result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
-        //result += "\tR7= D(" + d +");\n"; //TODO fix this.
-        
-        //result += "\tR6=P(R7);\n";
-        
 
         int dir = (*ts)[d].getAddress();
         stringstream mem_pos_conversor;
         if((*ts)[d].getType() == real){
                 result +="n";
-                //result += d;
+            
                 result += "\tR7=R7-" + std::to_string(sizeof(double)) + ";\n";
-                mem_pos_conversor << std::hex << dir;
-                result += "\tRR3=D(0x" + mem_pos_conversor.str() + ");\n";
+                if (dir < 73728){
+                    result += "\tRR3=D(R6+"+std::to_string(dir)+");\n";
+                }else{
+                    mem_pos_conversor << std::hex << dir;
+                    result += "\tRR3=D(0x" + mem_pos_conversor.str() + ");\n";
+                }
+            
                 result += "\tD(R7)=RR3;\n";
         }else{
                 result +="v";
-                //result += d;
+            
                 int length = (*ts)[d].vectorSize();
                 int dir_endPoint = dir + length*sizeof(double); //primer elemento
                 result += "\tR7=R7-" + std::to_string(sizeof(double)*length) + ";\n";
-                //stringstream mem_pos_conversor_stack;
-            int stack_position;
+                int stack_position;
             for (int i = 0; i < length; i++) {
                 stack_position = (length-i-1)*sizeof(double);
                 
@@ -479,7 +465,7 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
-        result += "\tR6=R7;\n";
+        //result += "\tR6=R7;\n";
         //result += "\tP(R7)=0;\n";
         string result1  = term1->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         string result2  = term2->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
@@ -535,7 +521,7 @@ public:
                     break;
                     //Operaciones lógicas no admitidas para los reales.
             }
-            result += "\tR7=R7+8;\n";
+            result += "\tR7=R7-8;\n";
             result += "\tD(R7)=RR0;\n";
             result += "\tR0=R7;\n";
             
@@ -939,6 +925,8 @@ public:
     
     string generateCode(int* label, int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* returnLabel){
         string result;
+        result += "\n//asignation an expression to a variable\n";
+        result += "\n//generate the expression code\n";
         result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         //R0 tiene la dirección del real
         //R1 tiene la direccion del vector
@@ -958,21 +946,36 @@ public:
         if((*ts)[*identification].getType() == real){
             result+="\tRR0=D(R0);\n";
             
-            mem_pos_conversor <<std::hex << memPos;
-            result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
+            if(memPos < 73728){
+                result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
+            }
+            else{
+                mem_pos_conversor <<std::hex << memPos;
+                result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
+            }
         }
         
         result += "\tR3=R2;\n";
         (*label) += 1;
         int n_l = (*label);
         (*label) += 1;
+        result += "\n//check if the asignation has finished because it was a real or the vector has ended.\n";
         result += "\tL " + std::to_string(n_l) + ": IF(!R3) GT(" + std::to_string((*label)) +");\n"; //mientras R3 no llegue a 0.
         result += "\tRR0=D(R1);\n";
-        mem_pos_conversor <<std::hex << memPos;
-        result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
+        if(memPos < 73728){
+            result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
+        }
+        else{
+            mem_pos_conversor <<std::hex << memPos;
+            result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
+        }
+        
+        //mem_pos_conversor <<std::hex << memPos;
+        //result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
         result += "\tR3=R2;\n";
         memPos += 8;
         mem_pos_conversor.str("");
+        result += "\n//continue in loop while asignation of every vector element wasn't done.\n";
         result += "\tGT(" + std::to_string(n_l) + ");\n";
         result += "\tL " + std::to_string((*label)) + ":";
         
@@ -1041,6 +1044,13 @@ public:
         
         return result;
     }
+    
+    
+    void load(SymbolTable* ts,int* pos ){
+        SymbolTableRecord r = *new SymbolTableRecord(false,real,-1,nullptr);
+        r.setAddress((*pos));
+        ts->insertRecord( *identification, r);
+    }
 };
 
 
@@ -1093,7 +1103,6 @@ public:
         //Nota: no se guarda RR0 porque es en donde esperamos recibir el parámetro. :P
         
         for (int i = 0; i < params.size(); i++) {
-            printf("magic\n");
             Declaration* n = dynamic_cast<Declaration*>(params[i]);
             result += n->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
             //params[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
@@ -1118,7 +1127,7 @@ public:
         //Recuperar R6
         
         result += "L " + std::to_string(*label) + ":";
-        result += "\tR6=D(R7+4);\n //Return from function call";
+        result += "\tR6=I(R7+4);\n //Return from function call";
         
         result += "\tRR3=D(R7+4);\n";
         result += "\tRR2=D(R7+12);\n";
@@ -1298,6 +1307,8 @@ public:
             Cargar el entero cuya direccion está en el R0. en R4.
          
          */
+        result += "//Flow control start\n";
+        result += "//Execute flow control expression\n";
         result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
         
         int n_l = (*label)+1;
@@ -1305,16 +1316,21 @@ public:
         int e_l =(*label);
         
         //result += "\tRR0=D(R0);\n";
+        result += "//check flow control expression\n";
         result += "L " + std::to_string(n_l) + ":";
-        result += "IF(!RR0) GT(" + std::to_string((*label)) + ");\n";
+        result += "IF(!RR0) GT(" + std::to_string((e_l)) + ");\n";
+        result += "//Flow control BLOCK start\n";
         for (int i = 0; i < block.size(); i++) {
             result += block[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,label);
         }
         if(loop){
+            result += "//Reevaluate expresion and jump for loop only\n";
             result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,returnLabel);
             result += "\tGT(" + std::to_string(n_l) + ");\n";
-            result += "L " + std::to_string(e_l) + ":";
+            
         }
+        result += "L " + std::to_string(e_l) + ":";
+        result += "//Flow control end\n";
         return result;
     }
 };
@@ -1386,15 +1402,32 @@ public:
                 para ello desarrollar una funcion en el nodo declaración al que se le pasa el
         */
         
-        SymbolTable duplicate_ts = ts->getACopyWithOnlyGlobals();
+        SymbolTable duplicated_ts = ts->getACopyWithOnlyGlobals();
+        
+        //TODO cargar los parámetros.
+        
+        int pos = +8; //posición relativa
+        for (int i = params.size()-1; i > -1; i--) {
+            Declaration* d = dynamic_cast<Declaration*>(params[i]);
+            if(d->isReal()){
+                d->load(&duplicated_ts, &pos );
+            }
+            else{
+                int v_pos = ts->getRecord(*(d->getIdentification()))->getAddress();
+                 d->load(&duplicated_ts, &v_pos );
+            }
+        }
+        
+        
+        //duplicated_ts.printState();
         
         for (int i = 0; i < lines.size(); i++) {
-            result += lines[i]->generateCode(label,codeLabel,staticLabel,staticMem,&duplicate_ts,returnLabel);
+            result += lines[i]->generateCode(label,codeLabel,staticLabel,staticMem,&duplicated_ts,returnLabel);
         }
 
         
         if(returnNode != nullptr){
-            result += returnNode->generateCode(label,codeLabel,staticLabel,staticMem,&duplicate_ts,returnLabel);
+            result += returnNode->generateCode(label,codeLabel,staticLabel,staticMem,&duplicated_ts,returnLabel);
 
         }
         

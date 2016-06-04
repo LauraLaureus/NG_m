@@ -101,6 +101,8 @@ public:
             cout << "\t" << params.size() <<"|";
         }
         
+        cout <<  "addr:" <<address << "|";
+        
         cout <<std::endl;
     }
     
