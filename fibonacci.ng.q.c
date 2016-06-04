@@ -100,7 +100,7 @@ L 10:	RR0=D(R0);
 L 0:	R6=R7;
 //Real asignation
 	R7=R7-8;
-	D(R7)=1.000000;
+	D(R7)=0.000000;
 L 13://Real asignation
 	R7=R7-8;
 	D(R7)=0.000000;
@@ -117,6 +117,9 @@ L 14://Generate code of function call
 	D(R7+8)=RR2;
 	D(R7+16)=RR3;
 //Load params into stack
+	R7=R7-8;
+	RR0=D(R6-8);
+	D(R7)=RR0;
 	R7=R7-4;
 	I(R7)=R6;
 	R5=15;
