@@ -94,13 +94,18 @@ L 10:	RR0=D(R0);
 //continue in loop while asignation of every vector element wasn't done.
 	GT(11);
 	L 12:L 9://Flow control end
+	R7=R6;
 	R5=I(R6); //Load label to jump 
 	GT(R5);
-L 0:	R7=R7-8;
+L 0:	R6=R7;
+//Real asignation
+	R7=R7-8;
 	D(R7)=1.000000;
-L 13:	R7=R7-8;
+L 13://Real asignation
+	R7=R7-8;
 	D(R7)=0.000000;
-L 14:	R7=R7-24; //Generate code of function call
+L 14://Generate code of function call
+	R7=R7-24;
 	I(R7)=R0;
 	I(R7+4)=R1;
 	I(R7+8)=R2;
@@ -111,9 +116,7 @@ L 14:	R7=R7-24; //Generate code of function call
 	D(R7)=RR1;
 	D(R7+8)=RR2;
 	D(R7+16)=RR3;
-	R7=R7+8;
-	RR0=D(0x11ff8);
-	D(R7)=RR0;
+//Load params into stack
 	R7=R7-4;
 	I(R7)=R6;
 	R5=15;
@@ -122,22 +125,25 @@ L 14:	R7=R7-24; //Generate code of function call
 	R6=R7;
 	GT(1000);
 L 15:	R6=I(R7+4);
- //Return from function call	RR3=D(R7+4);
-	RR2=D(R7+12);
-	RR1=D(R7+20);
-	R0=I(R7+28);
-	R1=I(R7+32);
-	R2=I(R7+36);
-	R3=I(R7+40);
-	R4=I(R7+44);
-	R5=I(R7+48);
-	R7=R7+52;
-	D(0x11ff0)=RR0;
+ //Return from function call
+	R7=R7+8;
+	RR3=D(R7);
+	RR2=D(R7+8);
+	RR1=D(R7+16);
+	R7=R7+24;
+	R0=I(R7);
+	R1=I(R7+4);
+	R2=I(R7+8);
+	R3=I(R7+12);
+	R4=I(R7+16);
+	R5=I(R7+20);
+	R7=R7+24;
+	D(R6-16)=RR0;
 	STAT(1)
-	STR(0x11fec, "%f\n");
+	STR(0x11ffc, "%f\n");
 	CODE(1)
-L 16:	R1=0x11fec;
-	RR2=D(0x11ff0);
+L 16:	R1=0x11ffc;
+	RR2=D(R6-16);
 	R0=17;
 	GT(putd_);
 L 17:GT(-2);

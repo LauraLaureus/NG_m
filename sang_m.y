@@ -494,24 +494,14 @@ void generateCodeFromAST(char* filename){
         }
         ts.setAddress(globals[i],staticMem);
     }
-    int returnLabel = -1;
+    int returnLabel = 0;
     
     objFile << "\tCODE(0)\n";
     vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
     
     for(int i = 0; i < nonInitFunction.size(); i++){
         
-        //vector<Node*> functionNodes = (nonInitFunction[i])->getNodeStack();
-        
-        //printf("IS null? %d\n", nonInitFunction[i]->functionDefinition == nullptr);
-        
         objFile << "L " + std::to_string(nonInitFunction[i]->getAddress()) + ":";
-        
-        /*for(int j = 0; j < functionNodes.size(); j++ ){
-            objFile << functionNodes[j] -> generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
-            objFile << "\tGT(R5);\n";
-        }*/
-        
         objFile << nonInitFunction[i]->functionDefinition->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
         
     }
@@ -524,7 +514,11 @@ void generateCodeFromAST(char* filename){
     //codeLabel +=1;
     objFile << "L 0:";
     vector<Node*> mainFuncNodes = initFunc.getNodeStack();
+    
+    objFile << "\tR6=R7;\n";
+    
     for(int i = 0; i < mainFuncNodes.size(); i++){
+        
         objFile << mainFuncNodes[i]->generateCode(&label,&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
     }
     objFile << "GT(-2);\n" ;
