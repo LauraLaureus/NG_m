@@ -12,7 +12,7 @@
  CODE(0)
 L 1000:
 
- R7=R7-8;
+L 1: R7=R7-8;
  RR3=D(R6+8);
  D(R7)=RR3;
  R7=R7-8;
@@ -20,12 +20,12 @@ L 1000:
  D(R7)=RR1;
  RR2=D(R7);
  RR1=D(R7+8);
- RR0=RR1==RR2;
+ RR1=RR1==RR2;
  R7=R7-8;
- D(R7)=RR0;
+ D(R7)=RR1;
  R0=R7;
-L 1:
-L 2:IF(!RR0) GT(3);
+L 2:
+IF(!RR1) GT(3);
 
 
 
@@ -39,9 +39,9 @@ L 2:IF(!RR0) GT(3);
  D(R7)=RR1;
  RR2=D(R7);
  RR1=D(R7+8);
- RR0=RR1+RR2;
+ RR1=RR1+RR2;
  R7=R7-8;
- D(R7)=RR0;
+ D(R7)=RR1;
  R0=R7;
 L 4: RR0=D(R0);
  D(R6+8)=RR0;
@@ -58,7 +58,7 @@ L 4: RR0=D(R0);
  L 6:L 3:
 
 
- R7=R7-8;
+L 7: R7=R7-8;
  RR3=D(R6+8);
  D(R7)=RR3;
  R7=R7-8;
@@ -66,12 +66,12 @@ L 4: RR0=D(R0);
  D(R7)=RR1;
  RR2=D(R7);
  RR1=D(R7+8);
- RR0=RR1==RR2;
+ RR1=RR1==RR2;
  R7=R7-8;
- D(R7)=RR0;
+ D(R7)=RR1;
  R0=R7;
-L 7:
-L 8:IF(!RR0) GT(9);
+L 8:
+IF(!RR1) GT(9);
 
 
 
@@ -85,9 +85,9 @@ L 8:IF(!RR0) GT(9);
  D(R7)=RR1;
  RR2=D(R7);
  RR1=D(R7+8);
- RR0=RR1+RR2;
+ RR1=RR1+RR2;
  R7=R7-8;
- D(R7)=RR0;
+ D(R7)=RR1;
  R0=R7;
 L 10: RR0=D(R0);
  D(R6+8)=RR0;
@@ -138,9 +138,9 @@ L 14:
 L 15: R6=I(R7+4);
 
  R7=R7+8;
- RR3=D(R7);
+ RR1=D(R7);
  RR2=D(R7+8);
- RR1=D(R7+16);
+ RR3=D(R7+16);
  R7=R7+24;
  R0=I(R7);
  R1=I(R7+4);

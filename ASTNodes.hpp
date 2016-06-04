@@ -506,42 +506,42 @@ public:
             
             switch (op) {
                 case '+':
-                    result += "\tRR0=RR1+RR2;\n";
+                    result += "\tRR1=RR1+RR2;\n";
                     break;
                 case '-':
-                    result += "\tRR0=RR1-RR2;\n";
+                    result += "\tRR1=RR1-RR2;\n";
                     break;
                     
                 case '*':
-                    result += "\tRR0=RR1*RR2;\n";
+                    result += "\tRR1=RR1*RR2;\n";
                     break;
                     
                 case '/':
-                    result += "\tRR0=RR1/RR2;\n";
+                    result += "\tRR1=RR1/RR2;\n";
                     break;
                 case '=':
-                    result += "\tRR0=RR1==RR2;\n";
+                    result += "\tRR1=RR1==RR2;\n";
                     break;
                 case '~':
-                    result += "\tRR0=RR1!=RR2;\n";
+                    result += "\tRR1=RR1!=RR2;\n";
                     break;
                 case '>':
-                    result += "\tRR0=RR1>RR2;\n";
+                    result += "\tRR1=RR1>RR2;\n";
                     break;
                 case '<':
-                    result += "\tRR0=RR1<RR2;\n";
+                    result += "\tRR1=RR1<RR2;\n";
                     break;
                 case 'Z':
-                    result += "\tRR0=RR1>=RR2;\n";
+                    result += "\tRR1=RR1>=RR2;\n";
                     break;
                 case 'z':
-                    result += "\tRR0=RR1<=RR2;\n";
+                    result += "\tRR1=RR1<=RR2;\n";
                     break;
                     //Operaciones lógicas no admitidas para los reales.
             }
 
             result += mallocR7(sizeof(double));
-            result += "\tD(R7)=RR0;\n";
+            result += "\tD(R7)=RR1;\n";
             result += "\tR0=R7;\n";
             
         }else if(type_t1 == type_t2 && type_t1 == 'v'){
@@ -565,40 +565,40 @@ public:
             result += "\tRR2=D(R5);\n"; //da 8.
             switch (op) {
                 case '+':
-                    result += "\tRR0=RR1+RR2;\n";
+                    result += "\tRR1=RR1+RR2;\n";
                     break;
                 case '-':
-                    result += "\tRR0=RR1-RR2;\n";
+                    result += "\tRR1=RR1-RR2;\n";
                     break;
                     
                 case '*':
-                    result += "\tRR0=RR1*RR2;\n";
+                    result += "\tRR1=RR1*RR2;\n";
                     break;
                     
                 case '/':
-                    result += "\tRR0=RR1/RR2;\n";
+                    result += "\tRR1=RR1/RR2;\n";
                     break;
                 case '=':
-                    result += "\tRR0=RR1==RR2;\n";
+                    result += "\tRR1=RR1==RR2;\n";
                     break;
                 case '~':
-                    result += "\tRR0=RR1!=RR2;\n";
+                    result += "\tRR1=RR1!=RR2;\n";
                     break;
                 case '>':
-                    result += "\tRR0=RR1>RR2;\n";
+                    result += "\tRR1=RR1>RR2;\n";
                     break;
                 case '<':
-                    result += "\tRR0=RR1<RR2;\n";
+                    result += "\tRR1=RR1<RR2;\n";
                     break;
                 case 'Z':
-                    result += "\tRR0=RR1>=RR2;\n";
+                    result += "\tRR1=RR1>=RR2;\n";
                     break;
                 case 'z':
-                    result += "\tRR0=RR1<=RR2;\n";
+                    result += "\tRR1=RR1<=RR2;\n";
                     break;
                     //Operaciones lógicas no admitidas para los reales.
             }
-            result += "\tD(R5)=RR0;\n";
+            result += "\tD(R5)=RR1;\n";
             result += "\tR5=R5+8;\n";
             result += "\tR4=R4+8;\n";
             result += "\tR3=R6-R4;\n";
@@ -637,36 +637,36 @@ public:
             result += "\tRR2=D(R5);\n";
             switch (op) {
                 case '+':
-                    result += "\tRR0=RR1+RR2;\n";
+                    result += "\tRR1=RR1+RR2;\n";
                     break;
                 case '-':
-                    result += "\tRR0=RR1-RR2;\n";
+                    result += "\tRR1=RR1-RR2;\n";
                     break;
                     
                 case '*':
-                    result += "\tRR0=RR1*RR2;\n";
+                    result += "\tRR1=RR1*RR2;\n";
                     break;
                     
                 case '/':
-                    result += "\tRR0=RR1/RR2;\n";
+                    result += "\tRR1=RR1/RR2;\n";
                     break;
                 case '=':
-                    result += "\tRR0=RR1==RR2;\n";
+                    result += "\tRR1=RR1==RR2;\n";
                     break;
                 case '~':
-                    result += "\tRR0=RR1!=RR2;\n";
+                    result += "\tRR1=RR1!=RR2;\n";
                     break;
                 case '>':
-                    result += "\tRR0=RR1>RR2;\n";
+                    result += "\tRR1=RR1>RR2;\n";
                     break;
                 case '<':
-                    result += "\tRR0=RR1<RR2;\n";
+                    result += "\tRR1=RR1<RR2;\n";
                     break;
                 case 'Z':
-                    result += "\tRR0=RR1>=RR2;\n";
+                    result += "\tRR1=RR1>=RR2;\n";
                     break;
                 case 'z':
-                    result += "\tRR0=RR1<=RR2;\n";
+                    result += "\tRR1=RR1<=RR2;\n";
                     break;
                     //Operaciones lógicas no admitidas para los reales.
             }
@@ -1002,11 +1002,12 @@ public:
                 
                 int dir =(*ts)[*identification].getAddress();
                 if (dir > 0){
-                    result += "\tRR0=D(R6+" + mem_pos_conversor.str() +");\n";
+    
+                    result += "\tRR0=D(R6+" + std::to_string(dir) +");\n";
                 }
                 else{
-                    mem_pos_conversor  << dir;
-                    result += "\tRR0=D(R6" + mem_pos_conversor.str() +");\n";
+                    //mem_pos_conversor  << dir;
+                    result += "\tRR0=D(R6" + std::to_string(dir) +");\n";
                 }
                 
                 result += "\tD(R7)=RR0;\n";
@@ -1113,9 +1114,9 @@ public:
         result += freeR7(sizeof(int)*2);
         
         
-        result += "\tRR3=D(R7);\n";
+        result += "\tRR1=D(R7);\n";
         result += "\tRR2=D(R7+8);\n";
-        result += "\tRR1=D(R7+16);\n";
+        result += "\tRR3=D(R7+16);\n";
         result += freeR7(sizeof(double)*3);
         
         result += "\tR0=I(R7);\n";
@@ -1263,15 +1264,17 @@ public:
     
         result += "//Flow control start\n";
         result += "//Execute flow control expression\n";
+        int n_l = (*label)+1;
+        result += "L " + std::to_string(n_l) + ":";
+        (*label) += 1;
         result += expression->generateCode(label,codeLabel,staticLabel,staticMem,ts,relativePositionToR6);
         
-        int n_l = (*label)+1;
-        (*label) +=2;
+        
+        (*label) +=1;
         int e_l =(*label);
         
         result += "//check flow control expression\n";
-        result += "L " + std::to_string(n_l) + ":";
-        result += "IF(!RR0) GT(" + std::to_string((e_l)) + ");\n";
+        result += "IF(!RR1) GT(" + std::to_string((e_l)) + ");\n";
         result += "//Flow control BLOCK start\n";
         for (int i = 0; i < block.size(); i++) {
             result += block[i]->generateCode(label,codeLabel,staticLabel,staticMem,ts,label);
@@ -1363,7 +1366,6 @@ public:
                  d->load(&duplicated_ts, &v_pos );
             }
         }
-        
         
         
         for (int i = 0; i < lines.size(); i++) {

@@ -4,7 +4,7 @@
 	CODE(0)
 L 1000://Flow control start
 //Execute flow control expression
-	R7=R7-8;
+L 1:	R7=R7-8;
 	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
@@ -12,12 +12,12 @@ L 1000://Flow control start
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR0=RR1==RR2;
+	RR1=RR1==RR2;
 	R7=R7-8;
-	D(R7)=RR0;
+	D(R7)=RR1;
 	R0=R7;
-L 1://check flow control expression
-L 2:IF(!RR0) GT(3);
+L 2://check flow control expression
+IF(!RR1) GT(3);
 //Flow control BLOCK start
 
 //asignation an expression to a variable
@@ -31,9 +31,9 @@ L 2:IF(!RR0) GT(3);
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR0=RR1+RR2;
+	RR1=RR1+RR2;
 	R7=R7-8;
-	D(R7)=RR0;
+	D(R7)=RR1;
 	R0=R7;
 L 4:	RR0=D(R0);
 	D(R6+8)=RR0;
@@ -50,7 +50,7 @@ L 4:	RR0=D(R0);
 	L 6:L 3://Flow control end
 //Flow control start
 //Execute flow control expression
-	R7=R7-8;
+L 7:	R7=R7-8;
 	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
@@ -58,12 +58,12 @@ L 4:	RR0=D(R0);
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR0=RR1==RR2;
+	RR1=RR1==RR2;
 	R7=R7-8;
-	D(R7)=RR0;
+	D(R7)=RR1;
 	R0=R7;
-L 7://check flow control expression
-L 8:IF(!RR0) GT(9);
+L 8://check flow control expression
+IF(!RR1) GT(9);
 //Flow control BLOCK start
 
 //asignation an expression to a variable
@@ -77,9 +77,9 @@ L 8:IF(!RR0) GT(9);
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR0=RR1+RR2;
+	RR1=RR1+RR2;
 	R7=R7-8;
-	D(R7)=RR0;
+	D(R7)=RR1;
 	R0=R7;
 L 10:	RR0=D(R0);
 	D(R6+8)=RR0;

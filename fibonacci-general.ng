@@ -1,0 +1,21 @@
+
+func REAL fibo(REAL n){
+	
+	si (n == 0){
+		n = 0 + 0;
+	}
+	
+	si (n == 1){
+		n = 1 + 0;
+	}
+	
+	devuelve n;
+}
+
+
+func inicio{
+	REAL n = 0;
+	REAL d = 0;
+	 d = llama fibo(REAL n);
+	escribe d;
+}
