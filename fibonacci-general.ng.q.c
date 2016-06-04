@@ -70,8 +70,8 @@ IF(!RR1) GT(9);
 
 //generate the expression code
 	R7=R7-8;
-	RR1=1.000000;
-	D(R7)=RR1;
+	RR3=D(R6+8);
+	D(R7)=RR3;
 	R7=R7-8;
 	RR1=0.000000;
 	D(R7)=RR1;
@@ -94,17 +94,125 @@ L 10:	RR0=D(R0);
 //continue in loop while asignation of every vector element wasn't done.
 	GT(11);
 	L 12:L 9://Flow control end
+//Flow control start
+//Execute flow control expression
+L 13:	R7=R7-8;
+	RR3=D(R6+8);
+	D(R7)=RR3;
+	R7=R7-8;
+	RR1=1.000000;
+	D(R7)=RR1;
+	RR2=D(R7);
+	RR1=D(R7+8);
+	RR1=RR1>RR2;
+	R7=R7-8;
+	D(R7)=RR1;
+	R0=R7;
+L 14://check flow control expression
+IF(!RR1) GT(15);
+//Flow control BLOCK start
+//Real asignation
+	R7=R7-8;
+	D(R7)=0.000000;
+
+//asignation an expression to a variable
+
+//generate the expression code
+	R7=R7-8;
+	RR3=D(R6+8);
+	D(R7)=RR3;
+	R7=R7-8;
+	RR1=1.000000;
+	D(R7)=RR1;
+	RR2=D(R7);
+	RR1=D(R7+8);
+	RR1=RR1-RR2;
+	R7=R7-8;
+	D(R7)=RR1;
+	R0=R7;
+L 16:	RR0=D(R0);
+	D(R6+7)=RR0;
+	R3=R2;
+
+//check if the asignation has finished because it was a real or the vector has ended.
+	L 17: IF(!R3) GT(18);
+	RR0=D(R1);
+	D(R6+7)=RR0;
+	R3=R2;
+
+//continue in loop while asignation of every vector element wasn't done.
+	GT(17);
+	L 18://Real asignation
+	R7=R7-8;
+	D(R7)=0.000000;
+
+//asignation an expression to a variable
+
+//generate the expression code
+	R7=R7-8;
+	RR3=D(R6+7);
+	D(R7)=RR3;
+	R7=R7-8;
+	RR1=1.000000;
+	D(R7)=RR1;
+	RR2=D(R7);
+	RR1=D(R7+8);
+	RR1=RR1-RR2;
+	R7=R7-8;
+	D(R7)=RR1;
+	R0=R7;
+L 19:	RR0=D(R0);
+	D(R6+-1)=RR0;
+	R3=R2;
+
+//check if the asignation has finished because it was a real or the vector has ended.
+	L 20: IF(!R3) GT(21);
+	RR0=D(R1);
+	D(R6+-1)=RR0;
+	R3=R2;
+
+//continue in loop while asignation of every vector element wasn't done.
+	GT(20);
+	L 21:
+//asignation an expression to a variable
+
+//generate the expression code
+	R7=R7-8;
+	RR3=D(R6-1);
+	D(R7)=RR3;
+	R7=R7-8;
+	RR1=0.000000;
+	D(R7)=RR1;
+	RR2=D(R7);
+	RR1=D(R7+8);
+	RR1=RR1+RR2;
+	R7=R7-8;
+	D(R7)=RR1;
+	R0=R7;
+L 22:	RR0=D(R0);
+	D(R6+8)=RR0;
+	R3=R2;
+
+//check if the asignation has finished because it was a real or the vector has ended.
+	L 23: IF(!R3) GT(24);
+	RR0=D(R1);
+	D(R6+8)=RR0;
+	R3=R2;
+
+//continue in loop while asignation of every vector element wasn't done.
+	GT(23);
+	L 24:L 15://Flow control end
 	R7=R6;
 	R5=I(R6); //Load label to jump 
 	GT(R5);
 L 0:	R6=R7;
 //Real asignation
 	R7=R7-8;
-	D(R7)=0.000000;
-L 13://Real asignation
+	D(R7)=3.000000;
+//Real asignation
 	R7=R7-8;
 	D(R7)=0.000000;
-L 14://Generate code of function call
+//Generate code of function call
 	R7=R7-24;
 	I(R7)=R0;
 	I(R7+4)=R1;
@@ -122,12 +230,12 @@ L 14://Generate code of function call
 	D(R7)=RR0;
 	R7=R7-4;
 	I(R7)=R6;
-	R5=15;
+	R5=25;
 	R7=R7-4;
 	I(R7)=R5;
 	R6=R7;
 	GT(1000);
-L 15:	R6=I(R7+4);
+L 25:	R6=I(R7+4);
  //Return from function call
 	R7=R7+8;
 	RR1=D(R7);
@@ -145,9 +253,9 @@ L 15:	R6=I(R7+4);
 	STAT(1)
 	STR(0x11ffc, "%f\n");
 	CODE(1)
-L 16:	R1=0x11ffc;
+L 26:	R1=0x11ffc;
 	RR2=D(R6-16);
-	R0=17;
+	R0=27;
 	GT(putd_);
-L 17:GT(-2);
+L 27:GT(-2);
 END

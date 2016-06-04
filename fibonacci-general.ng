@@ -4,17 +4,23 @@ func REAL fibo(REAL n){
 	si (n == 0){
 		n = 0 + 0;
 	}
-	
 	si (n == 1){
-		n = 1 + 0;
+		n = n + 0;
 	}
-	
+
+	si (n > 1){
+		REAL a = 0;
+		a = n - 1;
+		REAL b = 0;
+		b = a - 1;
+		n = b + 0;
+	}		
 	devuelve n;
 }
 
 
 func inicio{
-	REAL n = 0;
+	REAL n = 3;
 	REAL d = 0;
 	 d = llama fibo(REAL n);
 	escribe d;
