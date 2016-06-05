@@ -43,6 +43,7 @@
     int label = 0;
     int functionLabel = 1000;
     int staticMem = 73728; // 0x12000 hex
+    int relativePositionToR6 = 0;
     
     %}
 
@@ -494,7 +495,7 @@ void generateCodeFromAST(char* filename){
         }
         ts.setAddress(globals[i],staticMem);
     }
-    int returnLabel = 0;
+    
     
     objFile << "\tCODE(0)\n";
     vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
@@ -504,7 +505,7 @@ void generateCodeFromAST(char* filename){
     for(int i = 0; i < nonInitFunction.size(); i++){
         
         objFile << "L " + std::to_string(nonInitFunction[i]->getAddress()) + ":";
-        std::string r = nonInitFunction[i]->functionDefinition->generateCode(&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+        std::string r = nonInitFunction[i]->functionDefinition->generateCode(&codeLabel, &statLabel,&staticMem,&ts);
         
         objFile << r;
         
@@ -521,7 +522,7 @@ void generateCodeFromAST(char* filename){
     objFile << "\tR6=R7;\n";
     
     for(int i = 0; i < mainFuncNodes.size(); i++){
-        objFile << mainFuncNodes[i]->generateCode(&codeLabel, &statLabel,&staticMem,&ts,&returnLabel);
+        objFile << mainFuncNodes[i]->generateCode(&codeLabel, &statLabel,&staticMem,&ts);
     }
     objFile << "GT(-2);\n" ;
     objFile << "END" ;

@@ -131,13 +131,13 @@ IF(!RR1) GT(15);
 	D(R7)=RR1;
 	R0=R7;
 L 16:	RR0=D(R0);
-	D(R6+7)=RR0;
+	D(R6+-8)=RR0;
 	R3=R2;
 
 //check if the asignation has finished because it was a real or the vector has ended.
 	L 17: IF(!R3) GT(18);
 	RR0=D(R1);
-	D(R6+7)=RR0;
+	D(R6-8)=RR0;
 	R3=R2;
 
 //continue in loop while asignation of every vector element wasn't done.
@@ -150,7 +150,7 @@ L 16:	RR0=D(R0);
 
 //generate the expression code
 	R7=R7-8;
-	RR3=D(R6+7);
+	RR3=D(R6-8);
 	D(R7)=RR3;
 	R7=R7-8;
 	RR1=1.000000;
@@ -162,13 +162,13 @@ L 16:	RR0=D(R0);
 	D(R7)=RR1;
 	R0=R7;
 L 19:	RR0=D(R0);
-	D(R6+-1)=RR0;
+	D(R6+-16)=RR0;
 	R3=R2;
 
 //check if the asignation has finished because it was a real or the vector has ended.
 	L 20: IF(!R3) GT(21);
 	RR0=D(R1);
-	D(R6-1)=RR0;
+	D(R6-16)=RR0;
 	R3=R2;
 
 //continue in loop while asignation of every vector element wasn't done.
@@ -178,7 +178,7 @@ L 19:	RR0=D(R0);
 
 //generate the expression code
 	R7=R7-8;
-	RR3=D(R6-1);
+	RR3=D(R6-16);
 	D(R7)=RR3;
 	R7=R7-8;
 	RR1=0.000000;
