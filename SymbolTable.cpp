@@ -124,7 +124,7 @@ SymbolTable SymbolTable::getACopyWithOnlyGlobals(){
         result.insertRecord(global_ids[i],*(this->getRecord(global_ids[i])));
     }
     
-    result.printState();
+    
     return result;
 
 }

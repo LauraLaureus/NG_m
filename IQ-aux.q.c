@@ -193,7 +193,7 @@ L 0: R6=R7;
  D(R7+16)=RR3;
 
  R7=R7-8;
- RR0=D(R6-8);
+ RR0=D(R6-80);
  D(R7)=RR0;
  R7=R7-4;
  I(R7)=R6;
@@ -216,7 +216,7 @@ L 25: R6=I(R7+4);
  R4=I(R7+16);
  R5=I(R7+20);
  R7=R7+24;
- D(R6-16)=RR0;
+ D(R6-88)=RR0;
  STAT(4)
   STR(0x11fcd, "resultado: ");
  CODE(4)
@@ -228,7 +228,7 @@ L 27: STAT(5)
  STR(0x11fc9, "%f\n");
  CODE(5)
 L 28: R1=0x11fc9;
- RR2=D(R6-16);
+ RR2=D(R6-88);
  R0=29;
  GT(-13);
 L 29: STAT(6)

@@ -71,7 +71,7 @@ public:
     string generateCode(int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts ){
         std::string result;
         
-        printf("Read relative position to  R6 is %d\n",relativePositionToR6);
+    
         result += "//Real asignation\n";
         int mem_dir;
         if (ts->getRecord(*identification)->isGlobal()) {
@@ -1366,16 +1366,17 @@ public:
                 int v_pos = ts->getRecord(*(d->getIdentification()))->getAddress();
                  d->load(&duplicated_ts, &v_pos );
             }
-            duplicated_ts.printState();
             
         }
+        duplicated_ts.printState();
+
         
         relativePositionToR6 = 0;
 
-        printf ("relative Position after load params %d\n" ,relativePositionToR6);
+        
         for (int i = 0; i < lines.size(); i++) {
-            printf ("relative Position before calling %d\n" ,relativePositionToR6);
             result += lines[i]->generateCode(codeLabel,staticLabel,staticMem,&duplicated_ts);
+            printf ("relative Position before calling the code node %d : %d\n" ,i,relativePositionToR6);
         }
 
         
