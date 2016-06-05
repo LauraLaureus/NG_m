@@ -15,14 +15,15 @@ func REAL fibo(REAL n){
 	si (n > 1){
 		REAL a = 0;
 		REAL b = 0;
-		n = 0 + a;
+		a = n - 1;
+		b = n - 2;
 	}		
 	devuelve n;
 }
 
 
 func inicio{
-	REAL n = 4;
+	REAL n = 2;
 	REAL d = 0;
 	 d = llama fibo(REAL n);
 	escribe "resultado: ";

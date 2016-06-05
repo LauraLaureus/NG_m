@@ -1157,11 +1157,11 @@ public:
         string result;
         
         if(Math_Term<double>* n = dynamic_cast<Math_Term<double>* >(return_value)){
-            n->toReturnRegister(ts);
+            result += n->toReturnRegister(ts);
         }
         
         if(Math_Term<std::string>* n = dynamic_cast<Math_Term<std::string>* >(return_value)){
-            n->toReturnRegister(ts);
+            result += n->toReturnRegister(ts);
         }
         
         return result;

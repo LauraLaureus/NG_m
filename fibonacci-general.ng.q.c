@@ -143,37 +143,66 @@ IF(!RR1) GT(21);
 
 //generate the expression code
 	R7=R7-8;
-	RR1=0.000000;
-	D(R7)=RR1;
-	R7=R7-8;
-	RR3=D(R6-80);
+	RR3=D(R6+8);
 	D(R7)=RR3;
+	R7=R7-8;
+	RR1=1.000000;
+	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR1=RR1+RR2;
+	RR1=RR1-RR2;
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
 L 22:	RR0=D(R0);
-	D(R6+8)=RR0;
+	D(R6+-80)=RR0;
 	R3=R2;
 
 //check if the asignation has finished because it was a real or the vector has ended.
 	L 23: IF(!R3) GT(24);
 	RR0=D(R1);
-	D(R6+8)=RR0;
+	D(R6-80)=RR0;
 	R3=R2;
 
 //continue in loop while asignation of every vector element wasn't done.
 	GT(23);
-	L 24:L 21://Flow control end
+	L 24:
+//asignation an expression to a variable
+
+//generate the expression code
+	R7=R7-8;
+	RR3=D(R6+8);
+	D(R7)=RR3;
+	R7=R7-8;
+	RR1=2.000000;
+	D(R7)=RR1;
+	RR2=D(R7);
+	RR1=D(R7+8);
+	RR1=RR1-RR2;
+	R7=R7-8;
+	D(R7)=RR1;
+	R0=R7;
+L 25:	RR0=D(R0);
+	D(R6+-88)=RR0;
+	R3=R2;
+
+//check if the asignation has finished because it was a real or the vector has ended.
+	L 26: IF(!R3) GT(27);
+	RR0=D(R1);
+	D(R6-88)=RR0;
+	R3=R2;
+
+//continue in loop while asignation of every vector element wasn't done.
+	GT(26);
+	L 27:L 21://Flow control end
+	RR0=D(R6+8);
 	R7=R6;
 	R5=I(R6); //Load label to jump 
 	GT(R5);
 L 0:	R6=R7;
 //Real asignation
 	R7=R7-8;
-	D(R7)=4.000000;
+	D(R7)=2.000000;
 //Real asignation
 	R7=R7-8;
 	D(R7)=0.000000;
@@ -195,12 +224,12 @@ L 0:	R6=R7;
 	D(R7)=RR0;
 	R7=R7-4;
 	I(R7)=R6;
-	R5=25;
+	R5=28;
 	R7=R7-4;
 	I(R7)=R5;
 	R6=R7;
 	GT(1000);
-L 25:	R6=I(R7+4);
+L 28:	R6=I(R7+4);
  //Return from function call
 	R7=R7+8;
 	RR1=D(R7);
@@ -218,23 +247,23 @@ L 25:	R6=I(R7+4);
 	STAT(4)
 		STR(0x11fcd, "resultado: ");
 	CODE(4)
-L 26:	R1=0x11fcd;
+L 29:	R1=0x11fcd;
 	R2=0;
-	R0=27;
+	R0=30;
 	GT(putf_);
-L 27:	STAT(5)
+L 30:	STAT(5)
 	STR(0x11fc9, "%f\n");
 	CODE(5)
-L 28:	R1=0x11fc9;
+L 31:	R1=0x11fc9;
 	RR2=D(R6-16);
-	R0=29;
+	R0=32;
 	GT(putd_);
-L 29:	STAT(6)
+L 32:	STAT(6)
 		STR(0x11fc4, "\n");
 	CODE(6)
-L 30:	R1=0x11fc4;
+L 33:	R1=0x11fc4;
 	R2=0;
-	R0=31;
+	R0=34;
 	GT(putf_);
-L 31:GT(-2);
+L 34:GT(-2);
 END
