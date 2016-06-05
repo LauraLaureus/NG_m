@@ -1,7 +1,7 @@
 
 func REAL fibo(REAL n){
 
-	escribe "valor de n\n";
+	escribe "valor de n en la llamada ";
 	escribe n;
 	escribe "\n";
 	
@@ -23,5 +23,7 @@ func inicio{
 	REAL n = 3;
 	REAL d = 0;
 	 d = llama fibo(REAL n);
+	escribe "resultado: ";
 	escribe d;
+	escribe "\n";
 }

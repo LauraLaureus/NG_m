@@ -12,23 +12,23 @@
  STAT(0)
  CODE(0)
 L 1000: STAT(1)
-  STR(0x11ff1, "valor de n\n");
+  STR(0x11fe4, "valor de n en la llamada ");
  CODE(1)
-L 1: R1=0x11ff1;
+L 1: R1=0x11fe4;
  R2=0;
  R0=2;
  GT(-12);
 L 2: STAT(2)
- STR(0x11fed, "%f\n");
+ STR(0x11fe0, "%f\n");
  CODE(2)
-L 3: R1=0x11fed;
+L 3: R1=0x11fe0;
  RR2=D(R6+8);
  R0=4;
  GT(-13);
 L 4: STAT(3)
-  STR(0x11fe8, "\n");
+  STR(0x11fdb, "\n");
  CODE(3)
-L 5: R1=0x11fe8;
+L 5: R1=0x11fdb;
  R2=0;
  R0=6;
  GT(-12);
@@ -219,11 +219,25 @@ L 25: R6=I(R7+4);
  R7=R7+24;
  D(R6-16)=RR0;
  STAT(4)
- STR(0x11fe4, "%f\n");
+  STR(0x11fcd, "resultado: ");
  CODE(4)
-L 26: R1=0x11fe4;
- RR2=D(R6-16);
+L 26: R1=0x11fcd;
+ R2=0;
  R0=27;
+ GT(-12);
+L 27: STAT(5)
+ STR(0x11fc9, "%f\n");
+ CODE(5)
+L 28: R1=0x11fc9;
+ RR2=D(R6-16);
+ R0=29;
  GT(-13);
-L 27:GT(-2);
+L 29: STAT(6)
+  STR(0x11fc4, "\n");
+ CODE(6)
+L 30: R1=0x11fc4;
+ R2=0;
+ R0=31;
+ GT(-12);
+L 31:GT(-2);
 END

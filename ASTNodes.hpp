@@ -1354,17 +1354,20 @@ public:
         SymbolTable duplicated_ts = ts->getACopyWithOnlyGlobals();
         
         
-        
-        int pos = +8; //posición relativa
+        int pos = 0; //posición relativa
+        //printf("ParamsSize: %d\n", params.size()-1 ); entra una única vez en el bucle.
         for (int i = params.size()-1; i > -1; i--) {
             Declaration* d = dynamic_cast<Declaration*>(params[i]);
             if(d->isReal()){
+                pos += 8;
                 d->load(&duplicated_ts, &pos );
             }
             else{
                 int v_pos = ts->getRecord(*(d->getIdentification()))->getAddress();
                  d->load(&duplicated_ts, &v_pos );
             }
+            duplicated_ts.printState();
+            
         }
         
         relativePositionToR6 = 0;
