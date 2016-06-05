@@ -1359,8 +1359,8 @@ public:
     string generateCode( int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
         string result;
         
-        SymbolTable duplicated_ts = ts->getACopyWithOnlyGlobals();
-        
+        SymbolTable duplicated_ts = ts->getACopyWithOutInit();
+        duplicated_ts.printState();
         
         int pos = 0; //posición relativa
         //printf("ParamsSize: %d\n", params.size()-1 ); entra una única vez en el bucle.

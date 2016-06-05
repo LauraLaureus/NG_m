@@ -104,7 +104,7 @@ std::vector<SymbolTableRecord*> SymbolTable::getNonInitFunctions(){
     for(map<string,SymbolTableRecord>::iterator it =this->table.begin(); it != this->table.end(); ++it)
     {
         if(it->second.isGlobal() ) {
-            if( it->second.getType() == realFunction || it->second.getType() == realFunction){
+            if( it->second.getType() == realFunction || it->second.getType() == voidFunction){
                 result.push_back(&(it->second));
             }
         }
@@ -125,6 +125,7 @@ SymbolTable SymbolTable::getACopyWithOnlyGlobals(){
     }
     
     
+    
     return result;
 
 }
@@ -133,4 +134,27 @@ SymbolTable SymbolTable::getACopyWithOnlyGlobals(){
 void SymbolTable::insertRecord(string id, SymbolTableRecord* r){
     this->table[id]= *r;
     
+}
+
+
+SymbolTable SymbolTable::getACopyWithOutInit(){
+
+    
+    SymbolTable result = *new SymbolTable();
+    std::vector<std::string> global_ids = this->getGlobalVars();
+    
+    for (int i = 0; i < global_ids.size(); i++) {
+        result.insertRecord(global_ids[i],*(this->getRecord(global_ids[i])));
+    }
+    
+    for(map<string,SymbolTableRecord>::iterator it =this->table.begin(); it != this->table.end(); ++it)
+    {
+        if(it->second.isGlobal() ) {
+            if( it->second.getType() == realFunction || it->second.getType() == voidFunction){
+                result.insertRecord(it->first,it->second);
+            }
+        }
+    }
+    
+    return result;
 }

@@ -193,4 +193,6 @@ public:
     
     
     SymbolTable getACopyWithOnlyGlobals();
+    
+    SymbolTable getACopyWithOutInit();
 };
