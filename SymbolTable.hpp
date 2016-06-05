@@ -148,6 +148,8 @@ public:
     
     void insertRecord( string id, SymbolTableRecord r);
     
+    void insertRecord(string id, SymbolTableRecord* r);
+    
     void removeRecord(string id);
     
     void saveNode(string id, Node* n);
@@ -167,6 +169,10 @@ public:
     SymbolTableRecord operator[](std::string id){
         return table[id];
     }
+    
+    /*SymbolTableRecord const operator[](std::string id){
+        return table[id];
+    }*/
     
     SymbolTableRecord* getRecord(std::string id){
         return &table[id];

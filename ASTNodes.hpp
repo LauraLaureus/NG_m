@@ -767,7 +767,7 @@ private:
     }
     
     string genCodeForReal(int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts){
-
+        
         std::string result;
         *staticLabel += 1; //calculate label position.
         stringstream label_str_conversor;
@@ -788,14 +788,14 @@ private:
         stringstream code_label_conv;
         code_label_conv << (*codeLabel);
         result += "\tCODE(" + code_label_conv.str() + ")\n";
-
+        
         
         label +=1;
         result += "L " + std::to_string((label)) + ":";
         
         result += "\tR1="+ fstr_memPos + ";\n";
         
-        if(ts->getRecord((*str))->getAddress()){
+        if(ts->getRecord((*str))->getAddress() < 0){
             result += "\tRR2=D(R6" + std::to_string(ts->getRecord((*str))->getAddress()) + ");\n";
         }else{
             result += "\tRR2=D(R6+" + std::to_string(ts->getRecord((*str))->getAddress()) + ");\n";

@@ -1,5 +1,9 @@
 
 func REAL fibo(REAL n){
+
+	escribe "valor de n\n";
+	escribe n;
+	escribe "\n";
 	
 	si (n == 0){
 		n = 0 + 0;
@@ -9,11 +13,7 @@ func REAL fibo(REAL n){
 	}
 
 	si (n > 1){
-		REAL a = 0;
-		a = n - 1;
-		REAL b = 0;
-		b = a - 1;
-		n = b + 0;
+		n = n + 0;
 	}		
 	devuelve n;
 }

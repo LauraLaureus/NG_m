@@ -2,59 +2,34 @@
     BEGIN
 	STAT(0)
 	CODE(0)
-L 1000://Flow control start
-//Execute flow control expression
-L 1:	R7=R7-8;
-	RR3=D(R6+8);
-	D(R7)=RR3;
-	R7=R7-8;
-	RR1=0.000000;
-	D(R7)=RR1;
-	RR2=D(R7);
-	RR1=D(R7+8);
-	RR1=RR1==RR2;
-	R7=R7-8;
-	D(R7)=RR1;
-	R0=R7;
-L 2://check flow control expression
-IF(!RR1) GT(3);
-//Flow control BLOCK start
-
-//asignation an expression to a variable
-
-//generate the expression code
-	R7=R7-8;
-	RR1=0.000000;
-	D(R7)=RR1;
-	R7=R7-8;
-	RR1=0.000000;
-	D(R7)=RR1;
-	RR2=D(R7);
-	RR1=D(R7+8);
-	RR1=RR1+RR2;
-	R7=R7-8;
-	D(R7)=RR1;
-	R0=R7;
-L 4:	RR0=D(R0);
-	D(R6+8)=RR0;
-	R3=R2;
-
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 5: IF(!R3) GT(6);
-	RR0=D(R1);
-	D(R6+8)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(5);
-	L 6:L 3://Flow control end
-//Flow control start
+L 1000:	STAT(1)
+		STR(0x11ff1, "valor de n\n");
+	CODE(1)
+L 1:	R1=0x11ff1;
+	R2=0;
+	R0=2;
+	GT(putf_);
+L 2:	STAT(2)
+	STR(0x11fed, "%f\n");
+	CODE(2)
+L 3:	R1=0x11fed;
+	RR2=D(R6+8);
+	R0=4;
+	GT(putd_);
+L 4:	STAT(3)
+		STR(0x11fe8, "\n");
+	CODE(3)
+L 5:	R1=0x11fe8;
+	R2=0;
+	R0=6;
+	GT(putf_);
+L 6://Flow control start
 //Execute flow control expression
 L 7:	R7=R7-8;
 	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
-	RR1=1.000000;
+	RR1=0.000000;
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
@@ -70,8 +45,8 @@ IF(!RR1) GT(9);
 
 //generate the expression code
 	R7=R7-8;
-	RR3=D(R6+8);
-	D(R7)=RR3;
+	RR1=0.000000;
+	D(R7)=RR1;
 	R7=R7-8;
 	RR1=0.000000;
 	D(R7)=RR1;
@@ -104,16 +79,13 @@ L 13:	R7=R7-8;
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR1=RR1>RR2;
+	RR1=RR1==RR2;
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
 L 14://check flow control expression
 IF(!RR1) GT(15);
 //Flow control BLOCK start
-//Real asignation
-	R7=R7-8;
-	D(R7)=0.000000;
 
 //asignation an expression to a variable
 
@@ -122,63 +94,50 @@ IF(!RR1) GT(15);
 	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
-	RR1=1.000000;
+	RR1=0.000000;
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR1=RR1-RR2;
+	RR1=RR1+RR2;
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
 L 16:	RR0=D(R0);
-	D(R6+-8)=RR0;
+	D(R6+8)=RR0;
 	R3=R2;
 
 //check if the asignation has finished because it was a real or the vector has ended.
 	L 17: IF(!R3) GT(18);
 	RR0=D(R1);
-	D(R6-8)=RR0;
+	D(R6+8)=RR0;
 	R3=R2;
 
 //continue in loop while asignation of every vector element wasn't done.
 	GT(17);
-	L 18://Real asignation
-	R7=R7-8;
-	D(R7)=0.000000;
-
-//asignation an expression to a variable
-
-//generate the expression code
-	R7=R7-8;
-	RR3=D(R6-8);
+	L 18:L 15://Flow control end
+//Flow control start
+//Execute flow control expression
+L 19:	R7=R7-8;
+	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
 	RR1=1.000000;
 	D(R7)=RR1;
 	RR2=D(R7);
 	RR1=D(R7+8);
-	RR1=RR1-RR2;
+	RR1=RR1>RR2;
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
-L 19:	RR0=D(R0);
-	D(R6+-16)=RR0;
-	R3=R2;
+L 20://check flow control expression
+IF(!RR1) GT(21);
+//Flow control BLOCK start
 
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 20: IF(!R3) GT(21);
-	RR0=D(R1);
-	D(R6-16)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(20);
-	L 21:
 //asignation an expression to a variable
 
 //generate the expression code
 	R7=R7-8;
-	RR3=D(R6-16);
+	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
 	RR1=0.000000;
@@ -201,7 +160,7 @@ L 22:	RR0=D(R0);
 
 //continue in loop while asignation of every vector element wasn't done.
 	GT(23);
-	L 24:L 15://Flow control end
+	L 24:L 21://Flow control end
 	R7=R6;
 	R5=I(R6); //Load label to jump 
 	GT(R5);
@@ -250,10 +209,10 @@ L 25:	R6=I(R7+4);
 	R5=I(R7+20);
 	R7=R7+24;
 	D(R6-16)=RR0;
-	STAT(1)
-	STR(0x11ffc, "%f\n");
-	CODE(1)
-L 26:	R1=0x11ffc;
+	STAT(4)
+	STR(0x11fe4, "%f\n");
+	CODE(4)
+L 26:	R1=0x11fe4;
 	RR2=D(R6-16);
 	R0=27;
 	GT(putd_);

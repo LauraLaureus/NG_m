@@ -124,6 +124,13 @@ SymbolTable SymbolTable::getACopyWithOnlyGlobals(){
         result.insertRecord(global_ids[i],*(this->getRecord(global_ids[i])));
     }
     
+    result.printState();
     return result;
 
+}
+
+
+void SymbolTable::insertRecord(string id, SymbolTableRecord* r){
+    this->table[id]= *r;
+    
 }
