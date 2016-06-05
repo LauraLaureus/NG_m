@@ -521,6 +521,7 @@ void generateCodeFromAST(char* filename){
     
     objFile << "\tR6=R7;\n";
     
+    relativePositionToR6 = 0;
     for(int i = 0; i < mainFuncNodes.size(); i++){
         objFile << mainFuncNodes[i]->generateCode(&codeLabel, &statLabel,&staticMem,&ts);
     }

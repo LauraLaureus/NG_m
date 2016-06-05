@@ -33,10 +33,12 @@ public:
     
     
     std::string mallocR7(int requestedSpace){
+        relativePositionToR6 -= requestedSpace;
         return "\tR7=R7-" + std::to_string(requestedSpace) + ";\n";
     }
     
     std::string freeR7(int freeSpace){
+        relativePositionToR6 += freeSpace;
         return "\tR7=R7+" + std::to_string(freeSpace) + ";\n";
     }
 
@@ -83,12 +85,13 @@ public:
             
         }else{
 
-            relativePositionToR6 -= sizeof(double);
+            //relativePositionToR6 -= sizeof(double);
             
-            printf(("asignated relative position to " + (*identification) + " is %d\n").c_str(),(relativePositionToR6));
-            ts->getRecord(*identification)->setAddress(relativePositionToR6);
+            //printf(("asignated relative position to " + (*identification) + " is %d\n").c_str(),(relativePositionToR6));
+            
             
             result += mallocR7(8);
+            ts->getRecord(*identification)->setAddress(relativePositionToR6);
             result += "\tD(R7)=" + std::to_string(this->value) + ";\n";
         }
         
@@ -539,6 +542,7 @@ public:
             }
 
             result += mallocR7(sizeof(double));
+            //relativePositionToR6 -= sizeof(double);
             result += "\tD(R7)=RR1;\n";
             result += "\tR0=R7;\n";
             
@@ -997,7 +1001,8 @@ public:
                 
                 
                 int dir =(*ts)[*identification].getAddress();
-                if (dir > 0){
+                printf(" Dirección de la variable que se carga en la pil %d\n",dir);
+                if (dir >= 0){
     
                     result += "\tRR0=D(R6+" + std::to_string(dir) +");\n";
                 }
@@ -1065,6 +1070,7 @@ public:
         
         result +="//Generate code of function call\n";
         result += mallocR7(sizeof(int)*6);
+        //relativePositionToR6 -= sizeof(int)*6;
         result +="\tI(R7)=R0;\n";
         result +="\tI(R7+4)=R1;\n";
         result +="\tI(R7+8)=R2;\n";
@@ -1075,6 +1081,7 @@ public:
         
         //Guarda todos los registros en coma flotante
         result += mallocR7(sizeof(double)*3);
+        //relativePositionToR6 -= sizeof(double)*3;
         //result += "\tR7=R7-24;\n";
         result +="\tD(R7)=RR1;\n";
         result +="\tD(R7+8)=RR2;\n";
@@ -1090,6 +1097,7 @@ public:
         
         
         result += mallocR7(sizeof(int));
+        //relativePositionToR6 -= sizeof(int);
         result += "\tI(R7)=R6;\n"; // se guarda la base de la pila
         
         
@@ -1378,13 +1386,14 @@ public:
             result += lines[i]->generateCode(codeLabel,staticLabel,staticMem,&duplicated_ts);
             printf ("relative Position before calling the code node %d : %d\n" ,i,relativePositionToR6);
         }
-
+        duplicated_ts.printState();
         
         if(returnNode != nullptr){
             result += returnNode->generateCode(codeLabel,staticLabel,staticMem,&duplicated_ts);
 
         }
         result += "\tR7=R6;\n";
+        relativePositionToR6 = 0;
         result += "\tR5=I(R6); //Load label to jump \n";
         result += "\tGT(R5);\n";
         
