@@ -87,11 +87,6 @@ public:
             result += mallocR7(8);
             result += "\tD(R7)=" + std::to_string(this->value) + ";\n";
         }
-    
-        
-        //(label) +=1;
-        //result+= "L " + std::to_string((label)) + ":";
-   
         
         
         return result;
@@ -339,7 +334,6 @@ public:
             result +="\tR0=" + std::to_string(label) + ";\n"; //se indica a donde volver
             result += "\tGT(cast_);\n";
             result +="L " + std::to_string(label) + ":" ;
-            //now R1 = (int) RR0
             
             
             mem_pos_conversor.str("");
@@ -869,10 +863,8 @@ public:
     }
     
     string generateCode(int* codeLabel, int* staticLabel,int* staticMem,SymbolTable* ts, int* relativePositionToR6){
-        /*
-         TODO GT relativePositionToR6;
-         */
-        return "\tGT(" + std::to_string((*relativePositionToR6)) + ");\n";
+       
+        //return "\tGT(" + std::to_string((*relativePositionToR6)) + ");\n";
     }
 };
 
@@ -928,8 +920,6 @@ public:
             }
             else{
                 result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
-                //mem_pos_conversor <<std::hex << memPos;
-                //result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
             }
         }
         
@@ -940,12 +930,11 @@ public:
         result += "\n//check if the asignation has finished because it was a real or the vector has ended.\n";
         result += "\tL " + std::to_string(n_l) + ": IF(!R3) GT(" + std::to_string((label)) +");\n"; //mientras R3 no llegue a 0.
         result += "\tRR0=D(R1);\n";
-        if(memPos < 73728){
+        if(memPos > 0){
             result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
         }
         else{
-            mem_pos_conversor <<std::hex << memPos;
-            result += "\tD(0x" +mem_pos_conversor.str()+")=RR0;\n";
+            result += "\tD(R6" +std::to_string(memPos)+")=RR0;\n";
         }
         
         result += "\tR3=R2;\n";
@@ -993,14 +982,14 @@ public:
         string result;
         
        
-        //if((*ts)[*identification].getAddress() > 0){
+        
         
             stringstream mem_pos_conversor;
             if((*ts)[*identification].getType() == real){
                 
                
                 result += mallocR7(sizeof(double));
-                //mem_pos_conversor <<std::hex << ;
+                
                 
                 int dir =(*ts)[*identification].getAddress();
                 if (dir > 0){
@@ -1008,7 +997,6 @@ public:
                     result += "\tRR0=D(R6+" + std::to_string(dir) +");\n";
                 }
                 else{
-                    //mem_pos_conversor  << dir;
                     result += "\tRR0=D(R6" + std::to_string(dir) +");\n";
                 }
                 

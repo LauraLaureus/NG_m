@@ -168,7 +168,7 @@ L 19:	RR0=D(R0);
 //check if the asignation has finished because it was a real or the vector has ended.
 	L 20: IF(!R3) GT(21);
 	RR0=D(R1);
-	D(R6+-1)=RR0;
+	D(R6-1)=RR0;
 	R3=R2;
 
 //continue in loop while asignation of every vector element wasn't done.
