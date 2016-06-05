@@ -18,6 +18,7 @@
     vector<Node*> lines_vector;
     vector<Node*> spaces_vector;
     vector<double> current_vector;
+    vector<Node*> func_param_vector;
     
     vector<string> nameStack;
     
@@ -143,10 +144,14 @@ parametros CIERRAPARENTESIS bloque
     functionLabel -= 1;
     
 }
-parametros CIERRAPARENTESIS ABRELLAVES lineas devuelve CIERRALLAVES
+parametros CIERRAPARENTESIS
+{
+    func_param_vector = param_vector;
+}
+ABRELLAVES lineas devuelve CIERRALLAVES
 {
     ts.setParams(param_vector,*$3);
-    $$ = new FunctionDefinition($3,param_vector,ts.getNodeVector(*$3),true,$10);
+    $$ = new FunctionDefinition($3,func_param_vector,ts.getNodeVector(*$3),true,$11);
     SymbolTableRecord* r = ts.getRecord(*$3);
     r->setFunctionDefinition($$);
     nameStack.pop_back();
@@ -503,7 +508,7 @@ void generateCodeFromAST(char* filename){
     vector<SymbolTableRecord*> nonInitFunction = ts.getNonInitFunctions();
     
    
-    
+   printf("N non init functions %d\n", nonInitFunction.size());
     for(int i = 0; i < nonInitFunction.size(); i++){
         
         objFile << "L " + std::to_string(nonInitFunction[i]->getAddress()) + ":";

@@ -1032,6 +1032,7 @@ public:
     void load(SymbolTable* ts,int* pos ){
         SymbolTableRecord r = *new SymbolTableRecord(false,real,-1,nullptr);
         r.setAddress((*pos));
+        printf(("Carga: "+(*identification) +" en %d\n").c_str() ,(*pos));
         ts->insertRecord( *identification, r);
     }
 };
@@ -1361,9 +1362,7 @@ public:
         
         SymbolTable duplicated_ts = ts->getACopyWithOutInit();
         duplicated_ts.printState();
-        
         int pos = 0; //posición relativa
-        //printf("ParamsSize: %d\n", params.size()-1 ); entra una única vez en el bucle.
         for (int i = params.size()-1; i > -1; i--) {
             Declaration* d = dynamic_cast<Declaration*>(params[i]);
             if(d->isReal()){
