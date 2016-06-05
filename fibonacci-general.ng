@@ -17,6 +17,7 @@ func REAL fibo(REAL n){
 		REAL b = 0;
 		a = n - 1;
 		b = n - 2;
+		n = a  + b ;
 	}		
 	devuelve n;
 }

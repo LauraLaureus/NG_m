@@ -203,7 +203,35 @@ L 25: RR0=D(R0);
 
 
  GT(26);
- L 27:L 21:
+ L 27:
+
+
+
+ R7=R7-8;
+ RR3=D(R6-80);
+ D(R7)=RR3;
+ R7=R7-8;
+ RR3=D(R6-88);
+ D(R7)=RR3;
+ RR2=D(R7);
+ RR1=D(R7+8);
+ RR1=RR1+RR2;
+ R7=R7-8;
+ D(R7)=RR1;
+ R0=R7;
+L 28: RR0=D(R0);
+ D(R6+8)=RR0;
+ R3=R2;
+
+
+ L 29: IF(!R3) GT(30);
+ RR0=D(R1);
+ D(R6+8)=RR0;
+ R3=R2;
+
+
+ GT(29);
+ L 30:L 21:
  RR0=D(R6+8);
  R7=R6;
  R5=I(R6);
@@ -233,12 +261,12 @@ L 0: R6=R7;
  D(R7)=RR0;
  R7=R7-4;
  I(R7)=R6;
- R5=28;
+ R5=31;
  R7=R7-4;
  I(R7)=R5;
  R6=R7;
  GT(1000);
-L 28: R6=I(R7+4);
+L 31: R6=I(R7+4);
 
  R7=R7+8;
  RR1=D(R7);
@@ -256,23 +284,23 @@ L 28: R6=I(R7+4);
  STAT(4)
   STR(0x11fcd, "resultado: ");
  CODE(4)
-L 29: R1=0x11fcd;
+L 32: R1=0x11fcd;
  R2=0;
- R0=30;
+ R0=33;
  GT(-12);
-L 30: STAT(5)
+L 33: STAT(5)
  STR(0x11fc9, "%f\n");
  CODE(5)
-L 31: R1=0x11fc9;
+L 34: R1=0x11fc9;
  RR2=D(R6-16);
- R0=32;
+ R0=35;
  GT(-13);
-L 32: STAT(6)
+L 35: STAT(6)
   STR(0x11fc4, "\n");
  CODE(6)
-L 33: R1=0x11fc4;
+L 36: R1=0x11fc4;
  R2=0;
- R0=34;
+ R0=37;
  GT(-12);
-L 34:GT(-2);
+L 37:GT(-2);
 END

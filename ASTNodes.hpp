@@ -407,7 +407,7 @@ public:
                 result +="n";
             
                 result += mallocR7(sizeof(double));
-                if (dir > 0 ){
+                if (dir >= 0 ){
                     result += "\tRR3=D(R6+"+std::to_string(dir)+");\n";
                 }else{
                     result += "\tRR3=D(R6"+std::to_string(dir)+");\n";
@@ -939,7 +939,7 @@ public:
         result += "\n//check if the asignation has finished because it was a real or the vector has ended.\n";
         result += "\tL " + std::to_string(n_l) + ": IF(!R3) GT(" + std::to_string((label)) +");\n"; //mientras R3 no llegue a 0.
         result += "\tRR0=D(R1);\n";
-        if(memPos > 0){
+        if(memPos >= 0){
             result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
         }
         else{
