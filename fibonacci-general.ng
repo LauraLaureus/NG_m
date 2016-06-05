@@ -17,15 +17,16 @@ func REAL fibo(REAL n){
 		REAL b = 0;
 		a = n - 1;
 		b = n - 2;
-		n = llama fibo(REAL b);
-		n = 0  + b ;
+		b = llama fibo(REAL b);
+		a = llama fibo(REAL a);
+		n = a  + b ;
 	}		
 	devuelve n;
 }
 
 
 func inicio{
-	REAL n = 2;
+	REAL n = 5;
 	REAL d = 0;
 	 d = llama fibo(REAL n);
 	escribe "resultado: ";

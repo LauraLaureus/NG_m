@@ -58,20 +58,10 @@ IF(!RR1) GT(9);
 	R0=R7;
 L 10:	RR0=D(R0);
 	D(R6+8)=RR0;
-	R3=R2;
-
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 11: IF(!R3) GT(12);
-	RR0=D(R1);
-	D(R6+8)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(11);
-	L 12:L 9://Flow control end
+	L 11:L 9://Flow control end
 //Flow control start
 //Execute flow control expression
-L 13:	R7=R7-8;
+L 12:	R7=R7-8;
 	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
@@ -83,8 +73,8 @@ L 13:	R7=R7-8;
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
-L 14://check flow control expression
-IF(!RR1) GT(15);
+L 13://check flow control expression
+IF(!RR1) GT(14);
 //Flow control BLOCK start
 
 //asignation an expression to a variable
@@ -102,22 +92,12 @@ IF(!RR1) GT(15);
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
-L 16:	RR0=D(R0);
+L 15:	RR0=D(R0);
 	D(R6+8)=RR0;
-	R3=R2;
-
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 17: IF(!R3) GT(18);
-	RR0=D(R1);
-	D(R6+8)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(17);
-	L 18:L 15://Flow control end
+	L 16:L 14://Flow control end
 //Flow control start
 //Execute flow control expression
-L 19:	R7=R7-8;
+L 17:	R7=R7-8;
 	RR3=D(R6+8);
 	D(R7)=RR3;
 	R7=R7-8;
@@ -129,8 +109,8 @@ L 19:	R7=R7-8;
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
-L 20://check flow control expression
-IF(!RR1) GT(21);
+L 18://check flow control expression
+IF(!RR1) GT(19);
 //Flow control BLOCK start
 //Real asignation
 	R7=R7-8;
@@ -154,19 +134,9 @@ IF(!RR1) GT(21);
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
-L 22:	RR0=D(R0);
+L 20:	RR0=D(R0);
 	D(R6+-80)=RR0;
-	R3=R2;
-
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 23: IF(!R3) GT(24);
-	RR0=D(R1);
-	D(R6-80)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(23);
-	L 24:
+	L 21:
 //asignation an expression to a variable
 
 //generate the expression code
@@ -182,19 +152,9 @@ L 22:	RR0=D(R0);
 	R7=R7-8;
 	D(R7)=RR1;
 	R0=R7;
-L 25:	RR0=D(R0);
+L 22:	RR0=D(R0);
 	D(R6+-88)=RR0;
-	R3=R2;
-
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 26: IF(!R3) GT(27);
-	RR0=D(R1);
-	D(R6-88)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(26);
-	L 27://Generate code of function call
+	L 23://Generate code of function call
 	R7=R7-24;
 	I(R7)=R0;
 	I(R7+4)=R1;
@@ -209,6 +169,112 @@ L 25:	RR0=D(R0);
 //Load params into stack
 	R7=R7-8;
 	RR0=D(R6-88);
+	D(R7)=RR0;
+	R7=R7-4;
+	I(R7)=R6;
+	R5=24;
+	R7=R7-4;
+	I(R7)=R5;
+	R6=R7;
+	GT(1000);
+L 24:	R6=I(R7+4);
+ //Return from function call
+	R7=R7+8;
+	RR1=D(R7);
+	RR2=D(R7+8);
+	RR3=D(R7+16);
+	R7=R7+24;
+	R0=I(R7);
+	R1=I(R7+4);
+	R2=I(R7+8);
+	R3=I(R7+12);
+	R4=I(R7+16);
+	R5=I(R7+20);
+	R7=R7+24;
+	D(R6-88)=RR0;
+//Generate code of function call
+	R7=R7-24;
+	I(R7)=R0;
+	I(R7+4)=R1;
+	I(R7+8)=R2;
+	I(R7+12)=R3;
+	I(R7+16)=R4;
+	I(R7+20)=R5;
+	R7=R7-24;
+	D(R7)=RR1;
+	D(R7+8)=RR2;
+	D(R7+16)=RR3;
+//Load params into stack
+	R7=R7-8;
+	RR0=D(R6-80);
+	D(R7)=RR0;
+	R7=R7-4;
+	I(R7)=R6;
+	R5=25;
+	R7=R7-4;
+	I(R7)=R5;
+	R6=R7;
+	GT(1000);
+L 25:	R6=I(R7+4);
+ //Return from function call
+	R7=R7+8;
+	RR1=D(R7);
+	RR2=D(R7+8);
+	RR3=D(R7+16);
+	R7=R7+24;
+	R0=I(R7);
+	R1=I(R7+4);
+	R2=I(R7+8);
+	R3=I(R7+12);
+	R4=I(R7+16);
+	R5=I(R7+20);
+	R7=R7+24;
+	D(R6-80)=RR0;
+
+//asignation an expression to a variable
+
+//generate the expression code
+	R7=R7-8;
+	RR3=D(R6-80);
+	D(R7)=RR3;
+	R7=R7-8;
+	RR3=D(R6-88);
+	D(R7)=RR3;
+	RR2=D(R7);
+	RR1=D(R7+8);
+	RR1=RR1+RR2;
+	R7=R7-8;
+	D(R7)=RR1;
+	R0=R7;
+L 26:	RR0=D(R0);
+	D(R6+8)=RR0;
+	L 27:L 19://Flow control end
+	RR0=D(R6+8);
+	R7=R6;
+	R5=I(R6); //Load label to jump 
+	GT(R5);
+L 0:	R6=R7;
+//Real asignation
+	R7=R7-8;
+	D(R7)=5.000000;
+//Real asignation
+	R7=R7-8;
+	D(R7)=0.000000;
+//Generate code of function call
+	R7=R7-24;
+	I(R7)=R0;
+	I(R7+4)=R1;
+	I(R7+8)=R2;
+	I(R7+12)=R3;
+	I(R7+16)=R4;
+	I(R7+20)=R5;
+	R7=R7-24;
+	D(R7)=RR1;
+	D(R7+8)=RR2;
+	D(R7+16)=RR3;
+//Load params into stack
+	R7=R7-8;
+	RR0=D(R6-8);
 	D(R7)=RR0;
 	R7=R7-4;
 	I(R7)=R6;
@@ -231,105 +297,27 @@ L 28:	R6=I(R7+4);
 	R4=I(R7+16);
 	R5=I(R7+20);
 	R7=R7+24;
-	D(R6+8)=RR0;
-
-//asignation an expression to a variable
-
-//generate the expression code
-	R7=R7-8;
-	RR1=0.000000;
-	D(R7)=RR1;
-	R7=R7-8;
-	RR3=D(R6-88);
-	D(R7)=RR3;
-	RR2=D(R7);
-	RR1=D(R7+8);
-	RR1=RR1+RR2;
-	R7=R7-8;
-	D(R7)=RR1;
-	R0=R7;
-L 29:	RR0=D(R0);
-	D(R6+8)=RR0;
-	R3=R2;
-
-//check if the asignation has finished because it was a real or the vector has ended.
-	L 30: IF(!R3) GT(31);
-	RR0=D(R1);
-	D(R6+8)=RR0;
-	R3=R2;
-
-//continue in loop while asignation of every vector element wasn't done.
-	GT(30);
-	L 31:L 21://Flow control end
-	RR0=D(R6+8);
-	R7=R6;
-	R5=I(R6); //Load label to jump 
-	GT(R5);
-L 0:	R6=R7;
-//Real asignation
-	R7=R7-8;
-	D(R7)=2.000000;
-//Real asignation
-	R7=R7-8;
-	D(R7)=0.000000;
-//Generate code of function call
-	R7=R7-24;
-	I(R7)=R0;
-	I(R7+4)=R1;
-	I(R7+8)=R2;
-	I(R7+12)=R3;
-	I(R7+16)=R4;
-	I(R7+20)=R5;
-	R7=R7-24;
-	D(R7)=RR1;
-	D(R7+8)=RR2;
-	D(R7+16)=RR3;
-//Load params into stack
-	R7=R7-8;
-	RR0=D(R6-8);
-	D(R7)=RR0;
-	R7=R7-4;
-	I(R7)=R6;
-	R5=32;
-	R7=R7-4;
-	I(R7)=R5;
-	R6=R7;
-	GT(1000);
-L 32:	R6=I(R7+4);
- //Return from function call
-	R7=R7+8;
-	RR1=D(R7);
-	RR2=D(R7+8);
-	RR3=D(R7+16);
-	R7=R7+24;
-	R0=I(R7);
-	R1=I(R7+4);
-	R2=I(R7+8);
-	R3=I(R7+12);
-	R4=I(R7+16);
-	R5=I(R7+20);
-	R7=R7+24;
 	D(R6-16)=RR0;
 	STAT(4)
 		STR(0x11fcd, "resultado: ");
 	CODE(4)
-L 33:	R1=0x11fcd;
+L 29:	R1=0x11fcd;
+	R2=0;
+	R0=30;
+	GT(putf_);
+L 30:	STAT(5)
+	STR(0x11fc9, "%f\n");
+	CODE(5)
+L 31:	R1=0x11fc9;
+	RR2=D(R6-16);
+	R0=32;
+	GT(putd_);
+L 32:	STAT(6)
+		STR(0x11fc4, "\n");
+	CODE(6)
+L 33:	R1=0x11fc4;
 	R2=0;
 	R0=34;
 	GT(putf_);
-L 34:	STAT(5)
-	STR(0x11fc9, "%f\n");
-	CODE(5)
-L 35:	R1=0x11fc9;
-	RR2=D(R6-16);
-	R0=36;
-	GT(putd_);
-L 36:	STAT(6)
-		STR(0x11fc4, "\n");
-	CODE(6)
-L 37:	R1=0x11fc4;
-	R2=0;
-	R0=38;
-	GT(putf_);
-L 38:GT(-2);
+L 34:GT(-2);
 END

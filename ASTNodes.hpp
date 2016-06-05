@@ -924,7 +924,7 @@ public:
         if((*ts)[*identification].getType() == real){
             result+="\tRR0=D(R0);\n";
             
-            if(memPos > 0){
+            if(memPos >= 0){
                 result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
             }
             else{
@@ -932,12 +932,12 @@ public:
             }
         }
         
-        result += "\tR3=R2;\n";
+        //result += "\tR3=R2;\n";
         (label) += 1;
         int n_l = (label);
-        (label) += 1;
+        /*(label) += 1;
         result += "\n//check if the asignation has finished because it was a real or the vector has ended.\n";
-        result += "\tL " + std::to_string(n_l) + ": IF(!R3) GT(" + std::to_string((label)) +");\n"; //mientras R3 no llegue a 0.
+        result += "\tL " + std::to_string(n_l) + ": IF(!R2) GT(" + std::to_string((label)) +");\n"; //mientras R3 no llegue a 0.
         result += "\tRR0=D(R1);\n";
         if(memPos >= 0){
             result += "\tD(R6+" +std::to_string(memPos)+")=RR0;\n";
@@ -946,11 +946,11 @@ public:
             result += "\tD(R6" +std::to_string(memPos)+")=RR0;\n";
         }
         
-        result += "\tR3=R2;\n";
+        //result += "\tR3=R2;\n";
         memPos += 8;
         mem_pos_conversor.str("");
         result += "\n//continue in loop while asignation of every vector element wasn't done.\n";
-        result += "\tGT(" + std::to_string(n_l) + ");\n";
+        result += "\tGT(" + std::to_string(n_l) + ");\n";*/
         result += "\tL " + std::to_string((label)) + ":";
         
         return result;
