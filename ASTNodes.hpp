@@ -540,8 +540,8 @@ public:
                     break;
                     //Operaciones lógicas no admitidas para los reales.
             }
-
-            result += mallocR7(sizeof(double));
+            
+            result += freeR7(sizeof(double));
             //relativePositionToR6 -= sizeof(double);
             result += "\tD(R7)=RR1;\n";
             result += "\tR0=R7;\n";
@@ -932,6 +932,7 @@ public:
             }
         }
         
+        result += freeR7(8);
         //result += "\tR3=R2;\n";
         (label) += 1;
         int n_l = (label);
@@ -1272,6 +1273,7 @@ public:
         int n_l = label;
         result += "L " + std::to_string(n_l) + ":";
         result += expression->generateCode(codeLabel,staticLabel,staticMem,ts);
+        result += freeR7(8);
         
         
         (label) +=1;
@@ -1280,6 +1282,7 @@ public:
         result += "//check flow control expression\n";
         result += "IF(!RR1) GT(" + std::to_string((e_l)) + ");\n";
         result += "//Flow control BLOCK start\n";
+        
         
         int save = relativePositionToR6;
         int ll = label;
@@ -1291,6 +1294,7 @@ public:
         if(loop){
             result += "//Reevaluate expresion and jump for loop only\n";
             result += expression->generateCode(codeLabel,staticLabel,staticMem,ts);
+            result += freeR7(8);
             result += "\tGT(" + std::to_string(n_l) + ");\n";
             
         }

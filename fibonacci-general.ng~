@@ -1,9 +1,10 @@
-
+global REAL n;
 
 func REAL fibo(REAL n){
 
-	REAL a = 0;
-        REAL b = 0;
+	escribe "valor de n en la llamada ";
+	escribe n;
+	escribe "\n";
 	
 	si (n == 0){
 		n = 0 + 0;
@@ -13,6 +14,8 @@ func REAL fibo(REAL n){
 	}
 
 	si (n > 1){
+		REAL a = 0;
+		REAL b = 0;
 		a = n - 1;
 		b = n - 2;
 		b = llama fibo(REAL b);
@@ -24,14 +27,13 @@ func REAL fibo(REAL n){
 
 
 func inicio{
-
-	REAL n = 0;
+	n = 0;
 	REAL d = 0;
 	mientras (n < 20){
 		d = llama fibo(REAL n);
 		escribe "resultado: ";
 		escribe d;
 		escribe "\n";
-		n = n + 1;
+		n = n + i;
 	}
 }
